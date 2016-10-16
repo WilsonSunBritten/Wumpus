@@ -16,12 +16,12 @@ public class World {
     int x;
     int y;
     int direction = 0;
+    int[][] perceptMap;
     
     final int NORTH=1;
     final int EAST=2;
     final int SOUTH=3;
     final int WEST=4;
-    int[][] perceptMap;
     private final int BREEZE = 1;
     private final int STENTCH = 2;
     private final int BUMP = 4;

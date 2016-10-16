@@ -13,10 +13,23 @@ package wumpus;
 public class KnowledgeBase {
     
     public void initializeRules(){
-        
+        //Stentch(x,y)=>Wumpus(x-1,y)ORWumpus(x+1,y)ORWumpus(x,y-1)ORWumpus(x,y+1)
+        //Breeze mimics this
+        //Glitter(x,y)=>Gold(x,y)
+        //Bump(x,y)=>Obsticle(x,y)
+        //action(Move
+        //(!Wumpus(x,y)&&!Pit(x,y))=>Safe(x,y)
+        //
     }
     
     public boolean ask(String placeholder){
         return true;
+    }
+    
+    public void tell(String placeholder){
+    }
+    
+    public void untell(String placeholder){
+        //we need this for when say, a Wumpus is killed.
     }
 }
