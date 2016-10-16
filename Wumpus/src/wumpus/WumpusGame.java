@@ -30,8 +30,8 @@ public class WumpusGame {
     private final byte STENTCH = 0b0000010;
     private final byte BUMP = 0b00000100;
     private final byte GLITTER = 0b00001000;
-    private final byte WUMPUS = 0b00010000;
-    private final byte PIT = 0b00100000;
+    private final byte DEATH_BY_WUMPUS = 0b00010000;
+    private final byte DEATH_BY_PIT = 0b00100000;
     private final byte SCREAM = 0b01000000;
     private PrintWriter out = new PrintWriter(new File("PerceptBoard.txt"));
 
@@ -103,7 +103,7 @@ public class WumpusGame {
     public void placePit(int x, int y) {
         board[x][y].setHasHole(true);
         placeAdjacentPercept(x, y, BREEZE);
-        placePercept(x, y, PIT);
+        placePercept(x, y, DEATH_BY_PIT);
     }
 
     public void placeGold(int x, int y) {
@@ -114,7 +114,7 @@ public class WumpusGame {
     public void placeWumpus(int x, int y) {
         board[x][y].toggleWumpus();
         placeAdjacentPercept(x, y, STENTCH);
-        placePercept(x,y,WUMPUS);
+        placePercept(x,y,DEATH_BY_WUMPUS);
         wumpus++;
     }
 
