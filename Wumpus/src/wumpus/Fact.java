@@ -13,10 +13,12 @@ package wumpus;
 public class Fact {
     int x;
     boolean isXVariable;
-    int xVariableIdentifier;
+    Variable xVariable;
+    IFunction xFunction;
+    IFunction yFunction;
     int y;
     boolean isYVariable;
-    int yVariableIdentifier;
+    Variable yVariable;
     String predicate;
     boolean not;//if true then it's !Predicate(x,y)
 }

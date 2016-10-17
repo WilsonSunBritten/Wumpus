@@ -10,7 +10,7 @@ package wumpus;
  *
  * @author Wilson
  */
-public interface IFunction {
-    public int process(int value);
-    public void processVariable(Variable variable);
+public class Variable {
+    int variableId;
+    int modifier;
 }

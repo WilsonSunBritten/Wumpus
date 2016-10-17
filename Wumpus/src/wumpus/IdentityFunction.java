@@ -10,7 +10,11 @@ package wumpus;
  *
  * @author Wilson
  */
-public interface IFunction {
-    public int process(int value);
-    public void processVariable(Variable variable);
+public class IdentityFunction implements IFunction{
+    public int process(int value){
+        return value;
+    }
+    
+    public void processVariable(Variable variable){
+    }
 }

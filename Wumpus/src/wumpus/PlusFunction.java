@@ -10,7 +10,11 @@ package wumpus;
  *
  * @author Wilson
  */
-public interface IFunction {
-    public int process(int value);
-    public void processVariable(Variable variable);
+public class PlusFunction implements IFunction{
+    public int process(int value){
+        return value+1;
+    }
+    public void processVariable(Variable variable){
+        variable.modifier += 1;
+    }
 }
