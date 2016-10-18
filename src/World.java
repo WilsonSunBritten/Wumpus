@@ -4,9 +4,10 @@ public class World {
     private int size;
     private int x;
     private int y;
-    private int direction = 0;
+    protected int direction = 0;
     private int[][] perceptMap;
 
+    public enum direction {NORTH, SOUTH, EAST, WEST}
     final int NORTH = 1;
     final int EAST = 2;
     final int SOUTH = 3;
@@ -30,6 +31,15 @@ public class World {
         x = 0;
         y = 0;
         //read in file
+    }
+
+    public int[] getLocation() {
+        int[] location = {x, y};
+        return location;
+    }
+
+    public int getPercepts() {
+        return perceptMap[x][y];
     }
 
     public int action(int action) {
