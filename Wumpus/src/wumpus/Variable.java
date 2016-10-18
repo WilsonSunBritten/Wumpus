@@ -16,4 +16,10 @@ public class Variable {
     IFunction function;
     int variableId;
     int modifier;
+    
+    public void printVariable(){
+        if(isVariable){
+            System.out.print((char)(variableId + 32));
+        }
+    }
 }

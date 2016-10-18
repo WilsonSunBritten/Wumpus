@@ -71,7 +71,7 @@ public class InferenceEngine {
                 for(Quantifier quantifier:rule.quantifiers){
                     if(quantifier.not){ //we have a negated quantifier, move inwards
                         quantifier.not = false;
-                        quantifier.IsExistential = !quantifier.IsExistential;
+                        quantifier.isExistential = !quantifier.isExistential;
                         rule.negated = !rule.negated;
                     }
                 }

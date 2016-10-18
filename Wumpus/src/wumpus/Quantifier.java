@@ -12,6 +12,14 @@ package wumpus;
  */
 public class Quantifier {
     int variableId;
-    boolean IsExistential; //if false, assumed universal...
+    boolean isExistential; //if false, assumed universal...
     boolean not;
+    
+    public void printQuantifier(){
+        if(isExistential)
+                System.out.print("EXIST(");
+            else
+                System.out.print("FORALL(");
+            System.out.print((char)(variableId+32) + ") ");
+    }
 }

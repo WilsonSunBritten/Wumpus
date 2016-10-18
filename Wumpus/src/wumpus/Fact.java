@@ -18,4 +18,12 @@ public class Fact {
     boolean isEvaluation;
     int operator;
     
+    public void printFact(){
+        System.out.print(predicate+"(");
+        for (Variable var:variables) {
+            var.printVariable();
+            System.out.print(", ");
+        }
+        System.out.print(") ");
+    }
 }
