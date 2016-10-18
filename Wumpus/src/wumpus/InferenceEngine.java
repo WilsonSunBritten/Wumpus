@@ -64,18 +64,36 @@ public class InferenceEngine {
     }
     
     public void convertToCNFStepThree(ArrayList<Rule> rules){
+        //Deal with negated quantifiers, ie !(EXISTS x, p) to (Vx, !p) or !(Vx, p) to (Exists x, !p)
         while(!rules.isEmpty()){
             ArrayList<Rule> allRules = getAllRules(rules.get(0));
             for(Rule rule:allRules){
-                
+                for(Quantifier quantifier:rule.quantifiers){
+                    if(quantifier.not){ //we have a negated quantifier, move inwards
+                        quantifier.not = false;
+                        quantifier.IsExistential = !quantifier.IsExistential;
+                        rule.negated = !rule.negated;
+                    }
+                }
+                    
             }
         }
     }
     public void convertToCNFStepFour(ArrayList<Rule> rules){
+        //Move negation inwards, ie !(A&&B) to (!A V !B) also !(A V B) to (!A && !B)
         while(!rules.isEmpty()){
             ArrayList<Rule> allRules = getAllRules(rules.get(0));
-            for(Rule rule:allRules){
-                
+            for(Rule rule:allRules){//Maybe we have to order outter terms before inner terms for this to work??
+                if(rule.negated){ //We assume only connectors left are OR and AND
+                    rule.negated = false;
+                    rule.leftRule.negated = !rule.leftRule.negated;
+                    rule.rightRule.negated = !rule.rightRule.negated;
+                    if(rule.connector == Rule.OR){
+                        rule.connector = Rule.AND;
+                    }
+                    else
+                        rule.connector = Rule.OR;
+                }
             }
         }
     }
