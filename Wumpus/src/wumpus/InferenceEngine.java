@@ -15,6 +15,8 @@ import java.util.ArrayList;
 public class InferenceEngine {
     KnowledgeBase kb;
     
+    
+    
     public ArrayList<Rule> convertToCNF(Rule rule){
         ArrayList<Rule> cnfRules = new ArrayList<>();
         ArrayList<Rule> toConvertRules = new ArrayList<>();
@@ -27,7 +29,24 @@ public class InferenceEngine {
     }
     
     public void convertToCNFStepOne(ArrayList<Rule> rules){
-        
+        while(!rules.isEmpty()){
+            ArrayList<Rule> allRules = getAllRules(rules.get(0));
+            for(Rule rule:allRules){
+                if(rule.connector == Rule.IFF){ //for each a iff b we change it to ((a=>b)&&(b=>a))
+                    Rule newRule1 = new Rule();
+                    newRule1.leftRule = rule.leftRule;
+                    newRule1.rightRule = rule.rightRule;
+                    newRule1.connector = Rule.IMPLIES;
+                    Rule newRule2 = new Rule();
+                    newRule2.leftRule = rule.rightRule;
+                    newRule2.rightRule = rule.leftRule;
+                    newRule2.connector = Rule.IMPLIES;
+                    rule.leftRule = newRule1;
+                    rule.rightRule = newRule2;
+                    rule.connector = Rule.AND;
+                }
+            }
+        }
     }
     
     public void convertToCNFStepTwo(ArrayList<Rule> rules){
@@ -54,5 +73,18 @@ public class InferenceEngine {
     }
     public void convertToCNFStepNine(ArrayList<Rule> rules){
         
+    }
+    
+    public ArrayList<Rule> getAllRules(Rule rule){
+        ArrayList<Rule> allRules = new ArrayList<>();
+        if(rule.leftRule != null){
+            allRules.addAll(getAllRules(rule.leftRule));
+        }
+        if(rule.rightRule != null){
+            allRules.addAll(getAllRules(rule.rightRule));
+        }
+        allRules.add(rule);
+        
+        return allRules;
     }
 }

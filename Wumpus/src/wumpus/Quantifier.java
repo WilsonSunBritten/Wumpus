@@ -13,4 +13,5 @@ package wumpus;
 public class Quantifier {
     int variableId;
     boolean IsExistential; //if false, assumed universal...
+    boolean not;
 }

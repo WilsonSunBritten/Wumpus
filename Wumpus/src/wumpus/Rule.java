@@ -6,6 +6,8 @@
 
 package wumpus;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Wilson
@@ -16,6 +18,7 @@ public class Rule {
     public static final int IMPLIES = 3;
     public static final int IFF = 4;
     
+    ArrayList<Quantifier> quantifiers = new ArrayList<>();
     boolean overAllNot;
     boolean leftRuleNot;
     boolean rightRuleNot;
