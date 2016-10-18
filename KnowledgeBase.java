@@ -1,60 +1,87 @@
 
+
 public class KnowledgeBase {
-
-    public void initializeRules() {
-        //Special predicate: Evaluate
-
-        //Percepts come in as Glitter(t) Stench(t) Breeze(t) Bump(t)
-        //Vx,y,a,b Adjacent(x,y,a,b) iff [a,b] in {(x-1,y),(x+1,y),(x,y-1),(x,y+1)}
-        //Vd,t Facing(d,t) => Facing(d,t+1) OR Action(Turnleft,t) OR Action(TurnRight,t)
-        //Vt,v Facing(d,t) AND Action(Turnleft,t)=>Facing((d-1)%4, t+1)
-        //Vt,v Facing(d,t) AND Action(TurnRight,t)=>Facing((d+1)%4,t+1)
-        //Vt,x Arrows(x,t) => Arrows(x,t+1) OR Action(SHOOT,t)
-        //Vt,x HasArrow(t) iff Arrows(x,t) && x>0
-        //Vt,x Action(SHOOT,t) AND Arrows(x,t)AND HasArrow(t) => Arrows(x-1,t+1)
-        //Vt At(Agent,x,y,t) && Facing(NORTH,t)&&Action(SHOOT,t)=>(Exists(a) st Scream(t+1) AND WumpusDead(x+a,y
-        //Vt,x Action(x,t) => !(Action(y,t) AND True(EVALUATE(x,y,NOTEQUALS))
-        //True(1)
-        //!True(0)
-
-
-        //percept rules:
-        //At(Agent, x, y, t) && Stench(x,y,t) => At(Stink,x,y,t) 
-        //Stink(x,y,t) iff Exists(a,b) st Wumpus(a,b,t) ^ Adjacent(x,y,a,b)
-
-        //Wumpus(x,y,t) => Wumpus(x,y,t+1) XOR WumpusDead(x,y,t+1)    p XOR q is (pVq)&&(!(p&&q))
-        //WumpusDead(x,y,t)=>WumpusDead(x,y,t+1)
-
-
+    
+    public void initializeRules(){
         //Stench(x,y)=>Wumpus(x-1,y)ORWumpus(x+1,y)ORWumpus(x,y-1)ORWumpus(x,y+1)
-
-
         initializeStenchRule();
-
-
+        
+        
         //Breeze mimics this
-        //Glitter(x,y,t)=>Gold(x,y,t)
+        //Glitter(x,y)=>Gold(x,y)
         //Bump(x,y)=>Obsticle(x,y)
         //action(Move
         //(!Wumpus(x,y)&&!Pit(x,y))=>Safe(x,y)
         //!Wumpus(-1,y)&&!Wumpus(x,-1)&&!Pit(-1,z)&&!Pit(-1,a)//no boarder things
         //!Wumpus(x,size)&&!Wumpus(size,y)&&!PIT(z,size)&&!Pit(size,a)
     }
-
-    public boolean ask(String placeholder) {
+    
+    public boolean ask(String placeholder){
         return true;
     }
+    
+    public void tell(String placeholder){
 
-    public void tell(String placeholder) {
     }
-
-
-    private void initializeStenchRule() {
+    
+    public void untell(String placeholder){
+        //we need this for when say, a Wumpus is killed.
+    }
+    
+    private void initializeStenchRule(){
         //Stench(x,y)=>Wumpus(x-1,y)OR(Wumpus(x+1,y)OR(Wumpus(x,y-1) OR Wumpus(x,y+1)))
-
-        //ClauseFormConvertion from here...
-
+        Fact leftSide = createFact("Stench", true, true, 0, 1, new IdentityFunction(), new IdentityFunction());
+        
+        Rule rightSide = new Rule();
+        Fact xMinusOne = createFact("Wumpus", true, true, 0, 1, new MinusFunction(), new IdentityFunction());
+        Fact xPlusOne = createFact("Wumpus", true, true, 0, 1, new PlusFunction(), new IdentityFunction());
+        Fact yMinusOne = createFact("Wumpus", true, true, 0, 1, new IdentityFunction(), new MinusFunction());
+        Fact yPlusOne = createFact("Wumpus", true, true, 0, 1, new IdentityFunction(), new PlusFunction());
+        Rule firstPart = new Rule();
+        firstPart.justFact = true;
+        firstPart.fact = xMinusOne;
+        rightSide.leftRule = firstPart;
+        
+        Rule mostInnerRule = new Rule();
+        mostInnerRule.leftRule = new Rule(yMinusOne);
+        mostInnerRule.rightRule = new Rule(yPlusOne);
+        mostInnerRule.connector = Rule.OR;
+        
+        Rule secondMostInnerRule = new Rule();
+        secondMostInnerRule.leftRule = new Rule(xPlusOne);
+        secondMostInnerRule.rightRule = mostInnerRule;
+        secondMostInnerRule.connector = Rule.OR;
+        
+        rightSide.rightRule = secondMostInnerRule;
+        rightSide.connector = Rule.OR;
+        
+        Rule stenchRule = new Rule();
+        stenchRule.leftRule = new Rule(leftSide);
+        stenchRule.rightRule = rightSide;
+        stenchRule.connector = Rule.IMPLIES;
+        
+        //ClauseFormConversion from here...
+        
     }
-
-
+    
+    private Fact createFact(String predicate, boolean isXVar, boolean isYVar, int xVarId, int yVarId, IFunction xFunc, IFunction yFunc){
+        Fact fact = new Fact();
+        fact.predicate = predicate;
+        fact.isXVariable = isXVar;
+        fact.isYVariable = isYVar;
+        if(fact.isXVariable){
+            Variable xVar = new Variable();
+            xVar.variableId = xVarId;
+            fact.xVariable = xVar;
+        }
+        if(fact.isYVariable){
+            Variable yVar = new Variable();
+            yVar.variableId = yVarId;
+            fact.yVariable = yVar;
+        }
+        fact.xFunction = xFunc;
+        fact.yFunction = yFunc;
+        
+        return fact;
+    }
 }

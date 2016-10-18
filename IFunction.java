@@ -1,6 +1,5 @@
 
 public interface IFunction {
     int process(int value);
-
-    Variable processVariable(Variable variable);
+    void processVariable(Variable variable);
 }

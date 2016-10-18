@@ -1,16 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 public class World {
-    int arrowCount;
-    int size;
-    int x;
-    int y;
-    int direction = 0;
-    int[][] perceptMap;
+
+    protected int arrowCount;
+    private int size;
+    private int x;
+    private int y;
+    protected int direction = 0;
+    private int[][] perceptMap;
 
     final int NORTH = 1;
     final int EAST = 2;
@@ -35,6 +31,15 @@ public class World {
         x = 0;
         y = 0;
         //read in file
+    }
+
+    public int[] getLocation() {
+        int[] location = {x, y};
+        return location;
+    }
+
+    public int getPercepts() {
+        return perceptMap[x][y];
     }
 
     public int action(int action) {
@@ -74,6 +79,55 @@ public class World {
                 return perceptMap[x][y];
             case SHOOT:
                 //shoot logic
+                if (arrowCount < 1) {
+                    return -1;      //out of arrows, which shouldn't be possible
+                }
+                arrowCount--;
+                switch (direction) {
+                    case 1: //shoot north
+                        for (int i = y; i < perceptMap.length; i++) {
+                            if (perceptMap[x][i] == 16) {       //hits Wumpus
+                                return SCREAM;
+                            } else if (perceptMap[x][i] == 4) { //hits Obstacle
+                                return perceptMap[x][y];
+                            }
+                        }
+                        return perceptMap[x][y];
+
+                    case 2: //shoot east
+                        for (int i = y; i < perceptMap.length; i++) {
+                            if (perceptMap[i][y] == 16) {       //hits Wumpus
+                                return SCREAM;
+                            } else if (perceptMap[i][y] == 4) { //hits Obstacle
+                                return perceptMap[x][y];
+                            }
+                        }
+                        return perceptMap[x][y];
+
+                    case 3: //shoot south
+                        for (int i = y; i > 0; i--) {
+                            if (perceptMap[x][i] == 16) {       //hits Wumpus
+                                return SCREAM;
+                            } else if (perceptMap[x][i] == 4) { //hits Obstacle
+                                return perceptMap[x][y];
+                            }
+                        }
+                        return perceptMap[x][y];
+
+                    case 4: //shoot west
+                        for (int i = y; i > 0; i--) {
+                            if (perceptMap[i][y] == 16) {       //hits Wumpus
+                                return SCREAM;
+                            } else if (perceptMap[i][y] == 4) { //hits Obstacle
+                                return perceptMap[x][y];
+                            }
+                        }
+                        return perceptMap[x][y];
+
+                    default:
+                        System.out.println("Error in shooting logic.");
+                }
+
             case END:
                 //needed?
         }

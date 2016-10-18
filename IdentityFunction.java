@@ -5,7 +5,7 @@ public class IdentityFunction implements IFunction {
         return value;
     }
 
-    public Variable processVariable(Variable variable) {
-        return variable;
+    public void processVariable(Variable variable) {
+
     }
 }
