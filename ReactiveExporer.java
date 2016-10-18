@@ -51,7 +51,7 @@ public class ReactiveExporer {
         if (action == 1) {
             percepts = world.action(action);
             if ((percepts & GLITTER) == GLITTER) {      //found gold
-                
+
             } else if ((percepts & DEATH_BY_PIT) == DEATH_BY_PIT || (percepts & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
                 //got dicked
             }
