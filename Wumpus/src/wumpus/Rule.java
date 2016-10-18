@@ -16,7 +16,9 @@ public class Rule {
     public static final int IMPLIES = 3;
     public static final int IFF = 4;
     
-    
+    boolean overAllNot;
+    boolean leftRuleNot;
+    boolean rightRuleNot;
     Fact fact;
     Rule leftRule;
     Rule rightRule;

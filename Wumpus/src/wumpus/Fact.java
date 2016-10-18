@@ -6,19 +6,13 @@
 
 package wumpus;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Wilson
  */
 public class Fact {
-    int x;
-    boolean isXVariable;
-    Variable xVariable;
-    IFunction xFunction;
-    IFunction yFunction;
-    int y;
-    boolean isYVariable;
-    Variable yVariable;
+    ArrayList<Variable> variables = new ArrayList<>();
     String predicate;
-    boolean not;//if true then it's !Predicate(x,y)
 }

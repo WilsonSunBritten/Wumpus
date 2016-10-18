@@ -10,10 +10,7 @@ package wumpus;
  *
  * @author Wilson
  */
-public class Variable {
-    boolean isVariable;
-    int value;
-    IFunction function;
+public class Quantifier {
     int variableId;
-    int modifier;
+    boolean IsExistential; //if false, assumed universal...
 }
