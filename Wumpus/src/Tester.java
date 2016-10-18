@@ -1,19 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-package wumpus;
-
-/**
- *
- * @author Wilson
- */
 public class Tester {
-     public void testInferenceEngine(){
+
+    public void testInferenceEngine() {
         InferenceEngine engine = new InferenceEngine();
-        
+
         //FORALL x, y, Commutative(x,y) IFF Commutative(y,x)
         Rule rule = new Rule();
         Quantifier x = new Quantifier();
@@ -45,9 +35,9 @@ public class Tester {
         rule.leftRule = leftRule;
         rule.rightRule = rightRule;
         rule.connector = Rule.IFF;
-        
+
         rule.printRule();
         //engine.convertToCNF(null);
-        
+
     }
 }

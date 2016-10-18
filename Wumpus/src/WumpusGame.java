@@ -8,15 +8,6 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Random;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author j48k851
- */
 public class WumpusGame {
 
     private int boardSize;
@@ -35,7 +26,7 @@ public class WumpusGame {
     private final byte SCREAM = 0b01000000;
     private PrintWriter out = new PrintWriter(new File("PerceptBoard.txt"));
 
-    public WumpusGame(int boardSize, int[] prob) throws FileNotFoundException{
+    public WumpusGame(int boardSize, int[] prob) throws FileNotFoundException {
         this.boardSize = boardSize;
         this.prob = prob;
         perceptBoard = new byte[boardSize][boardSize];
@@ -62,42 +53,40 @@ public class WumpusGame {
             }
         }
     }
-    
-    public void chooseState(int x, int y){
 
-        if((random.nextInt(100) + 1) <= prob[0]){
+    public void chooseState(int x, int y) {
+
+        if ((random.nextInt(100) + 1) <= prob[0]) {
             placePit(x, y);
-        }
-        else if((random.nextInt(100) + 1) <= prob[1]){
+        } else if ((random.nextInt(100) + 1) <= prob[1]) {
             placeObstacle(x, y);
-        }
-        else if((random.nextInt(100) + 1) <= prob[2]){
+        } else if ((random.nextInt(100) + 1) <= prob[2]) {
             placeWumpus(x, y);
         }
     }
-    
-    public void placePercept(int x, int y, byte percept){
+
+    public void placePercept(int x, int y, byte percept) {
         perceptBoard[x][y] |= percept;
     }
-    
-    public void placeAdjacentPercept(int x, int y, byte percept){
-        if(x > 0){
-            placePercept(x-1, y, percept);
+
+    public void placeAdjacentPercept(int x, int y, byte percept) {
+        if (x > 0) {
+            placePercept(x - 1, y, percept);
         }
-        if(x < boardSize - 1){
-            placePercept(x+1, y, percept);
+        if (x < boardSize - 1) {
+            placePercept(x + 1, y, percept);
         }
-        if(y > 0){
-            placePercept(x, y-1, percept);
+        if (y > 0) {
+            placePercept(x, y - 1, percept);
         }
-        if(y < boardSize - 1){
-            placePercept(x, y+1, percept);
+        if (y < boardSize - 1) {
+            placePercept(x, y + 1, percept);
         }
     }
 
     public void placeObstacle(int x, int y) {
         board[x][y].setHasObstacle(true);
-        placePercept(x,y,BUMP);
+        placePercept(x, y, BUMP);
     }
 
     public void placePit(int x, int y) {
@@ -114,7 +103,7 @@ public class WumpusGame {
     public void placeWumpus(int x, int y) {
         board[x][y].toggleWumpus();
         placeAdjacentPercept(x, y, STENTCH);
-        placePercept(x,y,DEATH_BY_WUMPUS);
+        placePercept(x, y, DEATH_BY_WUMPUS);
         wumpus++;
     }
 
@@ -122,33 +111,33 @@ public class WumpusGame {
 
     }
 
-    public void printBoards(){
+    public void printBoards() {
         printBoard();
         printPerceptBoard();
     }
-    public void printPerceptBoard(){
+
+    public void printPerceptBoard() {
         out.println(boardSize);
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
-                out.print(perceptBoard[i][j] +" ");
+                out.print(perceptBoard[i][j] + " ");
             }
             out.println();
         }
         out.close();
     }
+
     public void printBoard() {
         System.out.println(boardSize);
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 if (board[i][j].isHasWumpus()) {
                     System.out.print("W ");
-                } else if(board[i][j].isHasHole()) {
+                } else if (board[i][j].isHasHole()) {
                     System.out.print("H ");
-                }
-                else if(board[i][j].isHasObstacle()){
+                } else if (board[i][j].isHasObstacle()) {
                     System.out.print("I ");
-                }
-                else{
+                } else {
                     System.out.print("0 ");
                 }
             }

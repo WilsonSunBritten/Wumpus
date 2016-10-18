@@ -1,23 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package wumpus;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author Wilson
- */
 public class Rule {
+
     public static final int AND = 1;
     public static final int OR = 2;
     public static final int IMPLIES = 3;
     public static final int IFF = 4;
-    
+
     ArrayList<Quantifier> quantifiers = new ArrayList<>();
     boolean negated;
     //boolean leftRuleNot;
@@ -27,24 +17,28 @@ public class Rule {
     Rule rightRule;
     boolean justFact = false;
     int connector;
-    public Rule(){}
-    public Rule(Fact fact){
+
+    public Rule() {
+        
+    }
+
+    public Rule(Fact fact) {
         this.fact = fact;
         justFact = true;
     }
-    
-    public void printRule(){
-        if(justFact){
+
+    public void printRule() {
+        if (justFact) {
             fact.printFact();
             return;
         }
-        for(Quantifier quantifier : quantifiers){
+        for (Quantifier quantifier : quantifiers) {
             quantifier.printQuantifier();
         }
         System.out.print(" (");
         leftRule.printRule();
         System.out.print(") ");
-        switch(connector){
+        switch (connector) {
             case OR:
                 System.out.print("OR");
                 break;
@@ -60,6 +54,6 @@ public class Rule {
         System.out.print(" (");
         rightRule.printRule();
         System.out.println(")");
-        
+
     }
 }

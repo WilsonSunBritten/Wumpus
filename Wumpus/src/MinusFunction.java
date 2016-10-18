@@ -1,20 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-package wumpus;
+public class MinusFunction implements IFunction {
 
-/**
- *
- * @author Wilson
- */
-public class MinusFunction implements IFunction{
-    public int process(int value){
-        return value-1;
+    @Override
+    public int process(int value) {
+        return value - 1;
     }
-    public Variable processVariable(Variable variable){
+
+    @Override
+    public Variable processVariable(Variable variable) {
         Variable processedVariable = new Variable();
         processedVariable.function = variable.function;
         processedVariable.isSkolemConstant = variable.isSkolemConstant;

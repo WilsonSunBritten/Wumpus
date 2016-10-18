@@ -1,26 +1,25 @@
 
 public class Space {
-    
+
     private boolean hasWumpus = false;
     private boolean hasHole = false;
     private boolean hasObstacle = false;
     private boolean hasGold = false;
     private boolean filled = false;
-    
-    public Space(){
-        
+
+    public Space() {
+
     }
 
     public boolean isHasWumpus() {
         return hasWumpus;
     }
 
-    public void toggleWumpus(){
-        if(hasWumpus == true){
+    public void toggleWumpus() {
+        if (hasWumpus == true) {
             hasWumpus = false;
             filled = false;
-        }
-        else{
+        } else {
             hasWumpus = true;
             filled = true;
         }
@@ -60,6 +59,5 @@ public class Space {
     public void setFilled(boolean filled) {
         this.filled = filled;
     }
-    
-    
+
 }

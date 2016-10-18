@@ -1,20 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-package wumpus;
-
-/**
- *
- * @author Wilson
- */
 public class KnowledgeBase {
-    
-    public void initializeRules(){
+
+    public void initializeRules() {
         //Special predicate: Evaluate
-        
+
         //Percepts come in as Glitter(t) Stench(t) Breeze(t) Bump(t)
         //Vx,y,a,b Adjacent(x,y,a,b) iff [a,b] in {(x-1,y),(x+1,y),(x,y-1),(x,y+1)}
         //Vd,t Facing(d,t) => Facing(d,t+1) OR Action(Turnleft,t) OR Action(TurnRight,t)
@@ -27,22 +16,14 @@ public class KnowledgeBase {
         //Vt,x Action(x,t) => !(Action(y,t) AND True(EVALUATE(x,y,NOTEQUALS))
         //True(1)
         //!True(0)
-        
-        
         //percept rules:
         //At(Agent, x, y, t) && Stench(x,y,t) => At(Stink,x,y,t) 
         //Stink(x,y,t) iff Exists(a,b) st Wumpus(a,b,t) ^ Adjacent(x,y,a,b)
-        
         //Wumpus(x,y,t) => Wumpus(x,y,t+1) XOR WumpusDead(x,y,t+1)    p XOR q is (pVq)&&(!(p&&q))
         //WumpusDead(x,y,t)=>WumpusDead(x,y,t+1)
-        
-
         //Stench(x,y)=>Wumpus(x-1,y)ORWumpus(x+1,y)ORWumpus(x,y-1)ORWumpus(x,y+1)
-        
-        
         initializeStenchRule();
-        
-        
+
         //Breeze mimics this
         //Glitter(x,y,t)=>Gold(x,y,t)
         //Bump(x,y)=>Obsticle(x,y)
@@ -51,22 +32,19 @@ public class KnowledgeBase {
         //!Wumpus(-1,y)&&!Wumpus(x,-1)&&!Pit(-1,z)&&!Pit(-1,a)//no boarder things
         //!Wumpus(x,size)&&!Wumpus(size,y)&&!PIT(z,size)&&!Pit(size,a)
     }
-    
-    public boolean ask(String placeholder){
+
+    public boolean ask(String placeholder) {
         return true;
     }
-    
-    public void tell(String placeholder){
+
+    public void tell(String placeholder) {
     }
-    
-    
-    private void initializeStenchRule(){
+
+    private void initializeStenchRule() {
         //Stench(x,y)=>Wumpus(x-1,y)OR(Wumpus(x+1,y)OR(Wumpus(x,y-1) OR Wumpus(x,y+1)))
         Quantifier x = new Quantifier();
-       
+
         //ClauseFormConvertion from here...
-        
     }
-    
-   
+
 }
