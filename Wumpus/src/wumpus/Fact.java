@@ -15,4 +15,7 @@ import java.util.ArrayList;
 public class Fact {
     ArrayList<Variable> variables = new ArrayList<>();
     String predicate;
+    boolean isEvaluation;
+    int operator;
+    
 }
