@@ -62,7 +62,8 @@ public class KnowledgeBase {
     
     private void initializeStenchRule(){
         //Stench(x,y)=>Wumpus(x-1,y)OR(Wumpus(x+1,y)OR(Wumpus(x,y-1) OR Wumpus(x,y+1)))
-        
+        Quantifier x = new Quantifier();
+       
         //ClauseFormConvertion from here...
         
     }

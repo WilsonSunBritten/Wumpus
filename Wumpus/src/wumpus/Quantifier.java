@@ -20,6 +20,6 @@ public class Quantifier {
                 System.out.print("EXIST(");
             else
                 System.out.print("FORALL(");
-            System.out.print((char)(variableId+32) + ") ");
+            System.out.print((char)(variableId+97) + ") ");
     }
 }

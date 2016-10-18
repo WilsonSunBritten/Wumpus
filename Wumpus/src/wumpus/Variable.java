@@ -20,7 +20,7 @@ public class Variable {
     
     public void printVariable(){
         if(isVariable){
-            System.out.print((char)(variableId + 32));
+            System.out.print((char)(variableId + 97));
         }
     }
 }

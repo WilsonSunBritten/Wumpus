@@ -3,6 +3,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import wumpus.InferenceEngine;
+import wumpus.Quantifier;
+import wumpus.Rule;
+import wumpus.Tester;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -16,11 +19,13 @@ import wumpus.InferenceEngine;
  */
 public class Driver {
     public static void main(String[] args) throws IOException{
-        testInferenceEngine();
-        //makeGame();
+        Driver driver = new Driver();
+        Tester tester = new Tester();
+        tester.testInferenceEngine();
+        //driver.makeGame();
     }
     
-    public static void makeGame() throws IOException{
+    public void makeGame() throws IOException{
         
         BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in));
         int[] prob = new int[3];
@@ -37,11 +42,5 @@ public class Driver {
         WumpusGame game = new WumpusGame(5, prob);
     }
     
-    public static void testInferenceEngine(){
-        InferenceEngine engine = new InferenceEngine();
-        
-        
-        
-        engine.convertToCNF(null);
-    }
+   
 }
