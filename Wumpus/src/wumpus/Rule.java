@@ -19,9 +19,9 @@ public class Rule {
     public static final int IFF = 4;
     
     ArrayList<Quantifier> quantifiers = new ArrayList<>();
-    boolean overAllNot;
-    boolean leftRuleNot;
-    boolean rightRuleNot;
+    boolean negated;
+    //boolean leftRuleNot;
+    //boolean rightRuleNot;
     Fact fact;
     Rule leftRule;
     Rule rightRule;

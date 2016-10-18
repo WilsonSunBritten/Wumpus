@@ -29,6 +29,7 @@ public class InferenceEngine {
     }
     
     public void convertToCNFStepOne(ArrayList<Rule> rules){
+        //Convert every iff to two implies statements
         while(!rules.isEmpty()){
             ArrayList<Rule> allRules = getAllRules(rules.get(0));
             for(Rule rule:allRules){
@@ -50,29 +51,73 @@ public class InferenceEngine {
     }
     
     public void convertToCNFStepTwo(ArrayList<Rule> rules){
-        
+        //Convert every a=>b to !a V b
+        while(!rules.isEmpty()){
+            ArrayList<Rule> allRules = getAllRules(rules.get(0));
+            for(Rule rule:allRules){
+                if(rule.connector == Rule.IMPLIES){
+                    rule.leftRule.negated = !rule.leftRule.negated;
+                    rule.connector = Rule.OR;
+                }
+            }
+        }
     }
     
     public void convertToCNFStepThree(ArrayList<Rule> rules){
-        
+        while(!rules.isEmpty()){
+            ArrayList<Rule> allRules = getAllRules(rules.get(0));
+            for(Rule rule:allRules){
+                
+            }
+        }
     }
     public void convertToCNFStepFour(ArrayList<Rule> rules){
-        
+        while(!rules.isEmpty()){
+            ArrayList<Rule> allRules = getAllRules(rules.get(0));
+            for(Rule rule:allRules){
+                
+            }
+        }
     }
     public void convertToCNFStepFive(ArrayList<Rule> rules){
-        
+        while(!rules.isEmpty()){
+            ArrayList<Rule> allRules = getAllRules(rules.get(0));
+            for(Rule rule:allRules){
+                
+            }
+        }
     }
     public void convertToCNFStepSix(ArrayList<Rule> rules){
-        
+        while(!rules.isEmpty()){
+            ArrayList<Rule> allRules = getAllRules(rules.get(0));
+            for(Rule rule:allRules){
+                
+            }
+        }
     }
     public void convertToCNFStepSeven(ArrayList<Rule> rules){
-        
+        while(!rules.isEmpty()){
+            ArrayList<Rule> allRules = getAllRules(rules.get(0));
+            for(Rule rule:allRules){
+                
+            }
+        }
     }
     public void convertToCNFStepEight(ArrayList<Rule> rules){
-        
+        while(!rules.isEmpty()){
+            ArrayList<Rule> allRules = getAllRules(rules.get(0));
+            for(Rule rule:allRules){
+                
+            }
+        }
     }
     public void convertToCNFStepNine(ArrayList<Rule> rules){
-        
+        while(!rules.isEmpty()){
+            ArrayList<Rule> allRules = getAllRules(rules.get(0));
+            for(Rule rule:allRules){
+                
+            }
+        }
     }
     
     public ArrayList<Rule> getAllRules(Rule rule){
