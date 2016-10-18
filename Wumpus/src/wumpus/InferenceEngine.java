@@ -98,14 +98,31 @@ public class InferenceEngine {
         }
     }
     public void convertToCNFStepFive(ArrayList<Rule> rules){
+        //Pair every quantifier to a unique variable
+        int uniqueVariableId = 0;//We will increment this for each varId used.
         while(!rules.isEmpty()){
             ArrayList<Rule> allRules = getAllRules(rules.get(0));
-            for(Rule rule:allRules){
-                
+            
+            for(int i = allRules.size()-1; i >= 0; i--){//We want to work with most inner rules prior to the ones containing them
+                Rule rule = allRules.get(i);
+                for(Quantifier quantifier:rule.quantifiers){
+                    ArrayList<Rule> subRules = getAllRules(rule);
+                    for(Rule subRule:subRules){
+                        if(subRule.justFact){
+                            for(Variable var:subRule.fact.variables){
+                                if(var.variableId == quantifier.variableId){
+                                    var.variableId = uniqueVariableId;
+                                }
+                            }
+                        }
+                    }
+                    uniqueVariableId++;
+                }
             }
         }
     }
     public void convertToCNFStepSix(ArrayList<Rule> rules){
+        //Skolemizing existential variables... this'll be a bitch...
         while(!rules.isEmpty()){
             ArrayList<Rule> allRules = getAllRules(rules.get(0));
             for(Rule rule:allRules){
