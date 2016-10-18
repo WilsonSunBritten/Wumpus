@@ -122,15 +122,19 @@ public class InferenceEngine {
         }
     }
     public void convertToCNFStepSix(ArrayList<Rule> rules){
-        //Skolemizing existential variables... this'll be a bitch...
+        //Move all quantifiers to 'top' rule
         while(!rules.isEmpty()){
-            ArrayList<Rule> allRules = getAllRules(rules.get(0));
+            ArrayList<Rule> allRules = getAllRules(rules.get(0));//assume allRules.get(0) is topMost rule.
+            ArrayList<Quantifier> allQuantifiers = new ArrayList<>();
             for(Rule rule:allRules){
-                
+                allQuantifiers.addAll(rule.quantifiers);
+                rule.quantifiers = new ArrayList<>();
             }
+            allRules.get(0).quantifiers = allQuantifiers;
         }
     }
     public void convertToCNFStepSeven(ArrayList<Rule> rules){
+        //Skolemize existentials... this will be a bitch...
         while(!rules.isEmpty()){
             ArrayList<Rule> allRules = getAllRules(rules.get(0));
             for(Rule rule:allRules){

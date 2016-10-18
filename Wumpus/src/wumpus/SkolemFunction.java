@@ -10,12 +10,16 @@ package wumpus;
  *
  * @author Wilson
  */
-public class IdentityFunction implements IFunction{
-    public int process(int value){
-        return value;
+public class SkolemFunction implements IFunction{
+    Variable var;
+    public SkolemFunction(Variable variable){
+        var = variable;
     }
-    
+    public int process(int value){
+        return value;//idk yet
+    }
     public Variable processVariable(Variable variable){
-        return variable;
+        return var;
+        
     }
 }

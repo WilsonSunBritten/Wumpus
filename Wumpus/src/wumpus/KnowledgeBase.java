@@ -24,7 +24,9 @@ public class KnowledgeBase {
         //Vt,x HasArrow(t) iff Arrows(x,t) && x>0
         //Vt,x Action(SHOOT,t) AND Arrows(x,t)AND HasArrow(t) => Arrows(x-1,t+1)
         //Vt At(Agent,x,y,t) && Facing(NORTH,t)&&Action(SHOOT,t)=>(Exists(a) st Scream(t+1) AND WumpusDead(x+a,y
-        //Vt,x Action(x,t) => !(Action(y,t) AND EVALUATE(x,y,NOTEQUALS) 
+        //Vt,x Action(x,t) => !(Action(y,t) AND True(EVALUATE(x,y,NOTEQUALS))
+        //True(1)
+        //!True(0)
         
         
         //percept rules:
