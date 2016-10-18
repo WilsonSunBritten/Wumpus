@@ -37,6 +37,15 @@ public class World {
         //read in file
     }
 
+    public int[] getLocation() {
+        int[] location = {x, y};
+        return location;
+    }
+
+    public int getPercepts() {
+        return perceptMap[x][y];
+    }
+
     public int action(int action) {
         switch (action) {
             case GRAB:
