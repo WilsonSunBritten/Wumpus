@@ -1,9 +1,18 @@
 
 public class Tester {
 
+    public void addRule(String ruleString) {
+        ruleString = "Vd,t Facing(d,t) => Facing(d,t+1) OR Action(Turnleft,t) OR Action(TurnRight,t)";
+        Rule rule = new Rule();
+        if(ruleString.contains("V")){
+            String quant = ruleString.substring(ruleString.indexOf("V"), ruleString.indexOf(" "));
+            System.out.println(quant);
+        }
+    }
+
     public void testInferenceEngine() {
         InferenceEngine engine = new InferenceEngine();
-
+        
         //FORALL x, y, Commutative(x,y) IFF Commutative(y,x)
         Rule rule = new Rule();
         Quantifier x = new Quantifier();
@@ -37,7 +46,14 @@ public class Tester {
         rule.connector = Rule.IFF;
 
         rule.printRule();
-        //engine.convertToCNF(null);
 
+//        //Vd,t Facing(d,t) => Facing(d,t+1) OR Action(Turnleft,t) OR Action(TurnRight,t)
+//        Rule rule2 = new Rule();
+//        x.variableId = 0;
+//        y.variableId = 1;
+//        rule2.quantifiers.add(x);
+//        rule2.quantifiers.add(y);
+//        leftFact.predicate = "Facing";
+        //engine.convertToCNF(null);
     }
 }
