@@ -1,16 +1,12 @@
 
 import java.util.Random;
 
-public class ReactiveExplorer {
+public class ReactiveExplorer extends Agent {
 
     private World world;
-    private int arrowCount;
-    private int[] previousSpace;
-    private boolean previousSafe;
-    private int percepts;
-    private int[] currentSpace;
-    private boolean currentSafe;
-    private int direction;
+    private int[] currentLocation, previousLocation;
+    private boolean currentSafe, previousSafe;
+    private int percepts, direction, arrowCount;
 
     private final byte BREEZE = 0b00000001;
     private final byte STENTCH = 0b0000010;
@@ -20,17 +16,21 @@ public class ReactiveExplorer {
     private final byte DEATH_BY_PIT = 0b00100000;
     private final byte SCREAM = 0b01000000;
 
-    public ReactiveExplorer(World world) {
+    public ReactiveExplorer(World world, int[] location, int direction, int percepts, int arrowCount) {
         this.world = world;
-        this.arrowCount = world.arrowCount;
-        this.previousSpace = world.getLocation();
-        this.currentSpace = previousSpace;
-        this.percepts = world.getPercepts();
-        this.direction = world.direction;
+        this.arrowCount = arrowCount;
+        this.previousLocation = location;
+        this.currentLocation = location;
+        this.percepts = percepts;
+        this.direction = direction;
         if (((percepts & STENTCH) != STENTCH) && ((percepts & BREEZE) != BREEZE)) {
             previousSafe = true;
             currentSafe = true;
         }
+    }
+
+    private ReactiveExplorer() {
+
     }
 
     private void move(int action) {
@@ -39,21 +39,23 @@ public class ReactiveExplorer {
             percepts = world.action(action);
             if ((percepts & GLITTER) == GLITTER) {      //found gold
 
-            } else if ((percepts & DEATH_BY_PIT) == DEATH_BY_PIT || (percepts & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
-                //got dicked
+            } else if ((percepts & DEATH_BY_PIT) == DEATH_BY_PIT) {
+                death(DEATH_BY_PIT);
+            } else if ((percepts & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
+                death(DEATH_BY_WUMPUS);
             }
             if ((percepts & BUMP) != BUMP) {
                 previousSafe = currentSafe;
-                previousSpace = currentSpace;
+                previousLocation = currentLocation;
             }
-            currentSpace = world.getLocation();
+            currentLocation = world.getLocation();
             currentSafe = ((percepts & STENTCH) != STENTCH) && ((percepts & BREEZE) != BREEZE);
         } else {
             world.action(action);
         }
     }
 
-    public void decideAction() {
+    public void decideNextAction(byte percepts) {
 
         //select safe neighboring cell else select unsafe neighboring cell
         if (((percepts & STENTCH) != 0) && ((percepts & BREEZE) != 0)) {        //all adjacent spaces are safe
@@ -98,5 +100,12 @@ public class ReactiveExplorer {
                 }
             }
         }
+    }
+
+    private Agent death(byte killer) {
+
+        currentLocation = previousLocation;
+        currentSafe = previousSafe;
+        
     }
 }
