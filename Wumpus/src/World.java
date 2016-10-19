@@ -49,7 +49,7 @@ public class World {
                 int j = 0;
                 while (next.contains(" ") && !next.equals(" ")) {
                     perceptMap[i][j] = Integer.parseInt(next.substring(0, next.indexOf(" ")));
-                    
+
                     next = next.substring(next.indexOf(" ") + 1, next.length());
                     j++;
                 }
@@ -87,12 +87,28 @@ public class World {
             case MOVE:
                 if (direction == NORTH) {
                     if (y + 1 < size) {
+                        if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
+                            //subtract 1000 from score
+                            return DEATH_BY_WUMPUS;
+                        }
+                        if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
+                            //subtract 1000 from score
+                            return DEATH_BY_PIT;
+                        }
                         y = y + 1;
                         return perceptMap[x][y];
                     } else {
                         return BUMP;
                     }
                 } else if (direction == EAST) {
+                    if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
+                            //subtract 1000 from score
+                            return DEATH_BY_WUMPUS;
+                        }
+                        if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
+                            //subtract 1000 from score
+                            return DEATH_BY_PIT;
+                        }
                     if (x + 1 < size) {
                         x = x + 1;
                         return perceptMap[x][y];
@@ -100,6 +116,14 @@ public class World {
                         return BUMP;
                     }
                 } else if (direction == SOUTH) {
+                    if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
+                            //subtract 1000 from score
+                            return DEATH_BY_WUMPUS;
+                        }
+                        if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
+                            //subtract 1000 from score
+                            return DEATH_BY_PIT;
+                        }
                     if (y - 1 > 0) {
                         y -= 1;
                         return perceptMap[x][y];
@@ -107,6 +131,14 @@ public class World {
                         return BUMP;
                     }
                 } else if (direction == WEST) {
+                    if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
+                            //subtract 1000 from score
+                            return DEATH_BY_WUMPUS;
+                        }
+                        if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
+                            //subtract 1000 from score
+                            return DEATH_BY_PIT;
+                        }
                     if (x - 1 > 0) {
                         x -= 1;
                         return perceptMap[x][y];
