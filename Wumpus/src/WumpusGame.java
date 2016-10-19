@@ -52,6 +52,19 @@ public class WumpusGame {
                 chooseState(i, j);
             }
         }
+        int x = random.nextInt(boardSize);
+        int y = random.nextInt(boardSize);
+        while (board[x][y].isFilled()) {
+            x = random.nextInt(boardSize);
+            y = random.nextInt(boardSize);
+        }
+        placeGold(x, y);
+
+        while (board[x][y].isFilled()) {
+            x = random.nextInt(boardSize);
+            y = random.nextInt(boardSize);
+        }
+        placeStart(x, y);
     }
 
     public void chooseState(int x, int y) {
@@ -107,6 +120,10 @@ public class WumpusGame {
         wumpus++;
     }
 
+    public void placeStart(int x, int y) {
+        board[x][y].setStart(true);
+    }
+
     public void checkBlockedStart() {
 
     }
@@ -137,6 +154,10 @@ public class WumpusGame {
                     System.out.print("H ");
                 } else if (board[i][j].isHasObstacle()) {
                     System.out.print("I ");
+                } else if (board[i][j].isHasGold()) {
+                    System.out.print("G ");
+                } else if (board[i][j].isStart()) {
+                    System.out.print("S ");
                 } else {
                     System.out.print("0 ");
                 }

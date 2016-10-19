@@ -39,7 +39,7 @@ public class Unifier {
     }
     
     private static Map<Variable, Variable> unifyVariables(Variable x, Variable y, Map<Variable, Variable> theta) {
-        
+        return null;
     }
     
     private static Map<Variable, Variable> unifyOperators(String x, String y, Map<Variable, Variable> theta) {
