@@ -5,6 +5,29 @@ public class InferenceEngine {
 
     KnowledgeBase kb;
 
+    public void follows(Fact fact){
+        Clause clause = new Clause();
+        //Step 1: negate input fact
+        fact.not = !fact.not;
+        clause.facts.add(fact);
+        //Step 2: Run negated facts against all known facts
+        for(Clause kbClause:kb.clauses){
+            for(Fact kbFact:kbClause.facts){
+                
+                for(Fact followFact:clause.facts){
+                    if(kbFact.predicate.equals(followFact.predicate) && kbFact.not == !followFact.not){
+                        //extend clause with everything in kbClause, remove kbFact and followFact, start over
+                        //before starting over check if clause is empty...
+                        if(clause.facts.isEmpty())
+                            return;//true
+                    }
+                }
+            }
+        }
+        //Step 3: If all facts become empty, return true, else if all facts are exhausted, return false
+        
+        
+    }
     public ArrayList<Rule> convertToCNF(Rule rule) {
         ArrayList<Rule> cnfRules = new ArrayList<>();
         ArrayList<Rule> toConvertRules = new ArrayList<>();
