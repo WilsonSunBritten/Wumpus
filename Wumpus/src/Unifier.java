@@ -15,12 +15,11 @@ public class Unifier {
         return substitution;
     }
 
-    public static Map<Variable, Variable> unify(Sentence x, Sentence y) {
-        return (Map<Variable, Variable>) unify(x, y, new HashMap<>());
+    public static SubstitutionString unify(Sentence x, Sentence y) {
+        return unify(x, y, new SubstitutionString());
     }
 
-    private static Map<Variable, Variable> unify(Sentence x, Sentence y,
-            Map<Variable, Variable> theta) {
+    private static SubstitutionString unify(Sentence x, Sentence y,SubstitutionString theta) {
         if (theta == null) {            //return null in case of failure to find substitution
             return null;
         } else if (x.equals(y)) {       //if sentences are equal theta contains the complete substitution
@@ -31,19 +30,19 @@ public class Unifier {
         } else if (y instanceof Variable) {
             // else if VARIABLE?(y) then return UNIFY-VAR(y, x, theta)
             return unifyVariables((Variable) y, (Variable) x, theta);
-       // } else if () {      //if x and y are compound
-        //    return unify(x.getArguments(), y.getArguments(), unifyOperators(getOperator(x), y.getValue(), theta));
+            // } else if () {      //if x and y are compound
+            //    return unify(x.getArguments(), y.getArguments(), unifyOperators(getOperator(x), y.getValue(), theta));
         } else {
             return null;
         }
     }
-    
-    private static Map<Variable, Variable> unifyVariables(Variable x, Variable y, Map<Variable, Variable> theta) {
-        
+
+    private static SubstitutionString unifyVariables(Variable x, Variable y, SubstitutionString theta) {
+
     }
-    
-    private static Map<Variable, Variable> unifyOperators(String x, String y, Map<Variable, Variable> theta) {
-        
+
+    private static SubstitutionString unifyOperators(String x, String y, SubstitutionString theta) {
+
         if (theta == null) {
             return theta;
         } else if (x.equals(y)) {

@@ -1,5 +1,7 @@
 
 public class KnowledgeBase {
+    
+    private ComplexSentence knowledge;
 
     public void initializeRules() {
         //Special predicate: Evaluate
@@ -39,7 +41,12 @@ public class KnowledgeBase {
         return true;
     }
 
-    public void tell(String placeholder) {
+    public void tell(Sentence sentence) {
+        
+        //unify
+        ComplexSentence unifiedknowldge = Unifier.unify(this.knowledge, sentence);
+        //resolve
+        //add to database
     }
 
     private void initializeStenchRule() {
