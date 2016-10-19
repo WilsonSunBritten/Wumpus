@@ -64,7 +64,7 @@ public class LogicExplorer extends Agent{
             return World.GRAB;    //grab gold and end game
         } 
         else if(currentlyNavigatingToSafeSquare){
-            //continueNavigation
+            return continueNavigatingToSafeSquare();
         } 
        // else if(){
             
@@ -93,6 +93,11 @@ public class LogicExplorer extends Agent{
             }
         }
         
+        return -1;
+    }
+    
+    private int continueNavigatingToSafeSquare(){
+        //this should basically be RHW Traversal until adjacent to to goal state, then turn to face it
         return -1;
     }
     
