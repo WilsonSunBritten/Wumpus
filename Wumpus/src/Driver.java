@@ -6,13 +6,13 @@ import java.io.InputStreamReader;
 public class Driver {
 
     public static void main(String[] args) throws IOException {
-        Driver driver = new Driver();
-        Tester tester = new Tester();
-        tester.testInferenceEngine();
-        //driver.makeGame();
+//        Driver driver = new Driver();
+//        Tester tester = new Tester();
+//        tester.testInferenceEngine();
+        Driver.makeGame();
     }
 
-    public void makeGame() throws IOException {
+    public static void makeGame() throws IOException {
 
         BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in));
         int[] prob = new int[3];
