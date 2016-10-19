@@ -20,6 +20,11 @@ public class Clause extends Fact implements Iterable {
     }
     
     @Override
+    public ArrayList getArgs() {
+        return facts;
+    }
+    
+    @Override
     public Iterator iterator() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

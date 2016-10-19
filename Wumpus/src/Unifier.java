@@ -1,10 +1,93 @@
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+
 public class Unifier {
 
     public Unifier() {
 
     }
+    
+    public SubstitutionString unify(Variable x, Variable y) {
+        return unify(x, y, (SubstitutionString) new LinkedHashMap<>());
+    }
 
+    private Map<Clause, Fact> unify(Variable x, Variable y, Map<Clause, Fact> theta) {
+        
+        if (theta == null) {
+            return null;
+        } else if (x.equals(y)) {
+            return theta;
+        } else if (x instanceof Clause) {
+            return unifyClause((Clause) x, y, theta);
+        } else if (y instanceof Clause) {
+            return unifyClause((Clause) y, x, theta);
+        } else if (!x.isUnary() && !y.isUnary()) {
+            return unify(x.getArgs(), y.getArgs(), UnifyOps(x.getOp(), y.getOp(), theta));
+        } else {
+            return null;
+        }
+    }
+    
+    private Map<Clause, Fact> unifyClause(Clause clause, Variable var, Map<Clause, Fact> theta) {
+        
+        if (!Fact.class.isInstance(var)) {
+            return null;
+        } else if (theta.keySet().contains(clause)) {
+            return unify(theta.get(clause), var, theta);
+        } else if (theta.keySet().contains(var)) {
+            return unify(clause, theta.get(var), theta);
+        } else if (occurCheck(theta, clause, var)) {
+            return null;
+        } else {
+            cascadeSubstittution(theta, clause, (Fact) var);
+            return theta;
+        }   
+    }
+    
+    private Map<Clause, Fact> unifyOps(String x, String y, Map<Clause, Fact> theta) {
+        
+        if (theta == null) {
+            return null;
+        } else if (x.equals(y)) {
+            return theta;
+        } else {
+            return null;
+        }
+    }
+    
+    private ArrayList args(Variable x) {
+        
+    }
+    
+    private boolean occurCheck(Map<Clause, Fact> theta, Clause clause, Variable var) {
+        
+        if (clause.equals(var)) {
+            return true;
+        } else if (!theta.containsKey(var)) {
+            if (!var.isVariable) {       //is function
+                //recursivly perform occursCheck on each of functions arguments?
+                if (true) {     //tem
+                    return true;
+                }
+            }
+        } else {
+            return occurCheck(theta, clause, theta.get(var));
+        }
+        return false;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public static SubstitutionString unify(Variable x, Variable y, SubstitutionString theta) {
 
         if (theta == null) {

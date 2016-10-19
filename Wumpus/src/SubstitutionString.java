@@ -1,10 +1,16 @@
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 
-public class SubstitutionString {
+public class SubstitutionString extends LinkedHashMap {
     
     private ArrayList<Variable> string = new ArrayList<>();
+    
+    public SubstitutionString() {
+        
+    }
+    
     
     public boolean contains(Variable var) {
         //returns true if the string contains the variable

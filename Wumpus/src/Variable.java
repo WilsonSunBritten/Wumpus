@@ -1,4 +1,7 @@
 
+import java.util.ArrayList;
+
+
 public class Variable {
 
     boolean isVariable;
@@ -29,5 +32,9 @@ public class Variable {
     
     public int getOp() {
         return modifier;
+    }
+    
+    public ArrayList getArgs() {
+        return null;
     }
 }

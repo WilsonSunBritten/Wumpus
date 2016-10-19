@@ -36,6 +36,11 @@ public class Fact extends Variable implements Iterable {
     public int getOp() {
         return operator;
     }
+    
+    @Override
+    public ArrayList getArgs() {
+        return variables;
+    }
 
     @Override
     public Iterator iterator() {
