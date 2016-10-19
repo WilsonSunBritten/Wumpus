@@ -15,8 +15,9 @@ public class ReactiveExplorer extends Agent {
     private final byte DEATH_BY_WUMPUS = 0b00010000;
     private final byte DEATH_BY_PIT = 0b00100000;
     private final byte SCREAM = 0b01000000;
-    
+
     enum State {
+
         SAFE,
         UNSAFE,
         EXPLORED;
@@ -34,10 +35,10 @@ public class ReactiveExplorer extends Agent {
         }
         run();
     }
-    
+
     private void run() {
-        
-        while(true) {
+
+        while (true) {
             decideNextAction((byte) percepts);
         }
     }
@@ -52,10 +53,15 @@ public class ReactiveExplorer extends Agent {
                 prevPos = this.curPos;
                 prevState = curState;
                 curPos.moveDidMove();
-            } else if ((percepts & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {       //killed by a wumpus
-                death(DEATH_BY_PIT);
+            } else if ((percepts & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {       //killed by a wumpus, therefore use revive potion and take revenge
+                move(5);
+                move(2);
             } else if ((percepts & DEATH_BY_PIT) == DEATH_BY_PIT) {             //killed by a pit
-                death(DEATH_BY_PIT);
+                Position temp = curPos;
+                curPos = prevPos;
+                prevPos = temp;
+                prevState = State.UNSAFE;
+                curState = State.EXPLORED;
             }
         } else if (action == 3 || action == 4) {        //turn
             world.action(action);
@@ -117,14 +123,5 @@ public class ReactiveExplorer extends Agent {
                 }
             }
         }
-    }
-
-    private void death(byte killer) {       //there needs to be some record of what killed the agent in this space so it doesnt go back again..
-
-        Position temp = curPos;
-        curPos = prevPos;
-        prevPos = temp;
-        prevState = State.UNSAFE;
-        curState = State.EXPLORED;
     }
 }
