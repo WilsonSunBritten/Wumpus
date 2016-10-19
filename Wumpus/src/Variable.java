@@ -14,4 +14,8 @@ public class Variable {
             System.out.print((char) (variableId + 97));
         }
     }
+    
+    public int getValue() {
+        return value;
+    }
 }
