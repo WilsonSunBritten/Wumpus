@@ -5,7 +5,7 @@ import java.io.FileReader;
 public class World {
 
     protected int arrowCount;
-    private int size;
+    public int size;
     private int x;
     private int y;
     protected int direction = 0;
@@ -23,11 +23,11 @@ public class World {
     private final int DEATH_BY_PIT = 32;
     private final int SCREAM = 64;
 
-    final int GRAB = 1;
-    final int MOVE = 2;
-    final int TURN_LEFT = 3;
-    final int TURN_RIGHT = 4;
-    final int SHOOT = 5;
+    static final int GRAB = 1;
+    static final int MOVE = 2;
+    static final int TURN_LEFT = 3;
+    static final int TURN_RIGHT = 4;
+    static final int SHOOT = 5;
     final int END = 6;//needed?
 
     public World(String fileName) {

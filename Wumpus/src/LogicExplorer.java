@@ -1,12 +1,19 @@
 
+import java.util.ArrayList;
+
+
 public class LogicExplorer {
 
     private final World world;
     private final KnowledgeBase kb;
     private int arrowCount;
     private int t = 0;
-    private int curPosX;
-    private int curPosY;
+    private Position currentPos;
+    private int currentDirection;
+    private ArrayList<Position> frontier = new ArrayList<>();
+    boolean[][] searchedPositions;
+    int worldSize;
+    
 
     private final byte BREEZE = 0b00000001;
     private final byte STENCH = 0b0000010;
@@ -21,6 +28,8 @@ public class LogicExplorer {
         kb = new KnowledgeBase();
         kb.initializeRules();
         this.arrowCount = world.arrowCount;
+        this.searchedPositions = new boolean[world.size][world.size];
+        this.worldSize = world.size;
     }
 
     private void move(int action) {
@@ -47,10 +56,11 @@ public class LogicExplorer {
         return sentence;
     }
 
-    public void decideAction(byte percepts) {
+    public int decideAction(byte percepts) {
+        processPosition(percepts);
         updateKB(percepts);
         if ((percepts & GLITTER) != 0) {//maybe just kb.ask("Holding(Gold,Result(Grab,CurrentPosition))"): is better, no percept based logic within agent.
-            move(1);    //grab gold and end game
+            return World.GRAB;    //grab gold and end game
         } else if (kb.ask("Safe(Result(Move,CurrentPosition))&&!Explored(Result(Move,CurrentPosition))")) {
             move(2);    //move forward
         } else if (kb.ask("Safe(Result(Move,Result(TurnLeft,CurrentPosition))&&!Explored(Result(Move,Result(TurnLeft,CurrentPosition))")) {
@@ -74,21 +84,30 @@ public class LogicExplorer {
                 }
             }
         }
+        
+        return -1;
+    }
+    
+    private void processPosition(byte percepts){
+        
     }
     
     private void updateKB(byte percepts){
         if((percepts & STENCH) != 0){
             Clause clause = new Clause();
-            kb.tell(new Clause(new Fact("Stench", curPosX,curPosY,t,true)));
+            kb.tell(new Clause(new Fact("Stench", currentPos.x,currentPos.y,t,true)));//Stench(x,y,t)
         }
         else{
-            kb.tell(new Clause(new Fact("Stench", curPosX, curPosY,t,false)));
+            kb.tell(new Clause(new Fact("Stench", currentPos.x, currentPos.y,t,false)));//!Stench(x,y,t)
         }
         if((percepts & BREEZE) != 0){
-            kb.tell(new Clause(new Fact("Breeze", curPosX,curPosY,t,true)));
+            kb.tell(new Clause(new Fact("Breeze", currentPos.x,currentPos.y,t,true)));
         }
         else{
-            kb.tell(new Clause(new Fact("Breeze", curPosX, curPosY,t,false)));
+            kb.tell(new Clause(new Fact("Breeze", currentPos.x, currentPos.y,t,false)));
+        }
+        if((percepts & SCREAM) != 0){
+            //need to deal with this
         }
     }
 
@@ -114,5 +133,10 @@ public class LogicExplorer {
             move(3);   //turn until facing stp condition
         }
         move(2);
+    }
+    
+    private class Position{
+        int x;
+        int y;
     }
 }
