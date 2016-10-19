@@ -4,13 +4,9 @@ import java.util.Random;
 public class ReactiveExplorer extends Agent {
 
     private World world;
-    private int arrowCount;
-    private int[] previousSpace;
-    private boolean previousSafe;
-    private int percepts;
-    private int[] currentSpace;
-    private boolean currentSafe;
-    private int direction;
+    private int[] currentLocation, previousLocation;
+    private boolean currentSafe, previousSafe;
+    private int percepts, direction, arrowCount;
 
     private final byte BREEZE = 0b00000001;
     private final byte STENTCH = 0b0000010;
@@ -23,8 +19,8 @@ public class ReactiveExplorer extends Agent {
     public ReactiveExplorer(World world, int[] location, int direction, int percepts, int arrowCount) {
         this.world = world;
         this.arrowCount = arrowCount;
-        this.previousSpace = location;
-        this.currentSpace = previousSpace;
+        this.previousLocation = location;
+        this.currentLocation = location;
         this.percepts = percepts;
         this.direction = direction;
         if (((percepts & STENTCH) != STENTCH) && ((percepts & BREEZE) != BREEZE)) {
@@ -33,20 +29,26 @@ public class ReactiveExplorer extends Agent {
         }
     }
 
+    private ReactiveExplorer() {
+
+    }
+
     private void move(int action) {
 
         if (action == 1) {
             percepts = world.action(action);
             if ((percepts & GLITTER) == GLITTER) {      //found gold
 
-            } else if ((percepts & DEATH_BY_PIT) == DEATH_BY_PIT || (percepts & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
-                //got dicked
+            } else if ((percepts & DEATH_BY_PIT) == DEATH_BY_PIT) {
+                death(DEATH_BY_PIT);
+            } else if ((percepts & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
+                death(DEATH_BY_WUMPUS);
             }
             if ((percepts & BUMP) != BUMP) {
                 previousSafe = currentSafe;
-                previousSpace = currentSpace;
+                previousLocation = currentLocation;
             }
-            currentSpace = world.getLocation();
+            currentLocation = world.getLocation();
             currentSafe = ((percepts & STENTCH) != STENTCH) && ((percepts & BREEZE) != BREEZE);
         } else {
             world.action(action);
@@ -98,5 +100,12 @@ public class ReactiveExplorer extends Agent {
                 }
             }
         }
+    }
+
+    private Agent death(byte killer) {
+
+        currentLocation = previousLocation;
+        currentSafe = previousSafe;
+        
     }
 }
