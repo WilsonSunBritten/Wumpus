@@ -5,7 +5,7 @@ import java.io.FileReader;
 public class World {
 
     protected int arrowCount;
-    public int size;
+    public static int size;
     private int x;
     private int y;
     protected int direction = 0;
