@@ -7,6 +7,7 @@ public class ReactiveExplorer extends Agent {
     private Position prevPos;
     private State curState, prevState;
     private int percepts, arrowCount;
+    private boolean gameOver = false;
 
     private final byte BREEZE = 0b00000001;
     private final byte STENTCH = 0b0000010;
@@ -37,7 +38,7 @@ public class ReactiveExplorer extends Agent {
 
     private void run() {
 
-        while (true) {
+        while (!gameOver) {
             decideNextAction((byte) percepts);
         }
     }
@@ -46,6 +47,7 @@ public class ReactiveExplorer extends Agent {
 
         if (action == 1) {                              //grab gold, game ends
             world.action(action);
+            gameOver = true;
         } else if (action == 2) {                       //move forward
             percepts = world.action(action);
             if ((percepts & BUMP) != BUMP) {            //did not bump into anything

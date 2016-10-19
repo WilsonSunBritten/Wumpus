@@ -14,6 +14,7 @@ public class LogicExplorer extends Agent {
     private boolean currentlyNavigatingToSafeSquare;
     private int worldSize;
     private Position goalPosition;
+    private boolean gameOver = false;
 
     private final byte BREEZE = 0b00000001;
     private final byte STENCH = 0b0000010;
@@ -35,7 +36,7 @@ public class LogicExplorer extends Agent {
 
     private void run() {
 
-        while (true) {
+        while (!gameOver) {
             decideNextAction((byte) world.getPercepts());
         }
     }
@@ -43,6 +44,9 @@ public class LogicExplorer extends Agent {
     private void move(int action) {
 
         switch (action) {
+            case 1:
+                world.action(action);
+                gameOver = true;
             case 2:
                 //kb.tell(encodePercepts(world.action(action)));
                 break;

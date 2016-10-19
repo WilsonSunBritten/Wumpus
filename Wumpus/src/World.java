@@ -11,6 +11,7 @@ public final class World {
     private int y;
     protected int direction = 0;
     private int[][] perceptMap;
+    protected int score = 0;
 
     public static final int NORTH = 1;
     public static final int EAST = 2;
@@ -84,8 +85,10 @@ public final class World {
                 if ((perceptMap[x][y] & GLITTER) != 0) {
                     perceptMap[x][y] -= GLITTER;
                 }
+                score += 1000;
                 break;
             case MOVE:
+                score--;
                 if (direction == NORTH) {
                     if (y + 1 < size) {
                         if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
