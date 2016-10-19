@@ -1,6 +1,10 @@
 
+import java.util.ArrayList;
+
+
 public class KnowledgeBase {
 
+    ArrayList<Clause> clauses;
     public void initializeRules() {
         //Special predicate: Evaluate
 

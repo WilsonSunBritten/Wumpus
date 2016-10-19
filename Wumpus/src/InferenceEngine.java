@@ -5,6 +5,47 @@ public class InferenceEngine {
 
     KnowledgeBase kb;
 
+    public boolean follows(Fact fact){
+        Clause clause = new Clause();
+        //Step 1: negate input fact
+        fact.not = !fact.not;
+        clause.facts.add(fact);
+        ArrayList<Clause> kbClausesClone = new ArrayList<>(kb.clauses);
+        boolean keepGoing = true;
+        //Step 2: Run negated facts against all known facts
+        while(!kbClausesClone.isEmpty()){
+            keepGoing = true;
+        for(Clause kbClause:kbClausesClone){
+            for(Fact kbFact:kbClause.facts){
+                
+                for(Fact followFact:clause.facts){
+                    if(kbFact.predicate.equals(followFact.predicate) && kbFact.not == !followFact.not){
+                        //extend clause with everything in kbClause, remove kbFact and followFact, start over
+                        kbClause.facts.remove(kbFact);
+                        clause.facts.remove(followFact);
+                        clause.facts.addAll(kbClause.facts);
+                        
+                        //before starting over check if clause is empty...
+                        if(clause.facts.isEmpty())
+                            return true;
+                        keepGoing = false;
+                    }
+                    if(!keepGoing)
+                        break;
+                }
+                if(!keepGoing)
+                    break;
+            }
+            if(!keepGoing)
+                break;
+        }
+        if(keepGoing)//if we didn't do any changes, keepGoing will be true, if we hit here, then we exhausted every clause comparison with no results, terminate
+            return false;
+        }
+        return false;
+        //Step 3: If all facts become empty, return true, else if all facts are exhausted, return false
+    }
+    
     public ArrayList<Rule> convertToCNF(Rule rule) {
         ArrayList<Rule> cnfRules = new ArrayList<>();
         ArrayList<Rule> toConvertRules = new ArrayList<>();
