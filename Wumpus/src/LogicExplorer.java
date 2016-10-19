@@ -2,7 +2,7 @@
 import java.util.ArrayList;
 
 
-public class LogicExplorer {
+public class LogicExplorer extends Agent{
 
     private final World world;
     private final KnowledgeBase kb;
