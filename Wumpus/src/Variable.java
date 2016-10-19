@@ -1,5 +1,8 @@
 
-public class Variable {
+import java.util.Iterator;
+
+
+public class Variable implements Iterable {
 
     boolean isVariable;
     int value;
@@ -17,5 +20,10 @@ public class Variable {
     
     public int getValue() {
         return value;
+    }
+
+    @Override
+    public Iterator iterator() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

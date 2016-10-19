@@ -4,12 +4,13 @@ import java.util.Stack;
 public class Unifier {
 
     private static Stack trail = new Stack();
+
     public Unifier() {
 
     }
 
-    public static SubstitutionString Unify(Variable x, Variable y, SubstitutionString theta) {
-        
+    public static SubstitutionString unify(Variable x, Variable y, SubstitutionString theta) {
+
         if (theta == null) {
             return null;
         } else if (x.equals(y)) {
@@ -18,43 +19,44 @@ public class Unifier {
             return unifyVariable(x, y, theta);
         } else if (y instanceof Variable) {
             return unifyVariable(y, x, theta);
-        } else if (x)
+        } else if (x) {
+            
+        }
     }
-    
-    
+
     private static SubstitutionString unifyVariable(Variable x, Variable y, SubstitutionString theta) {
+
+        if (theta.contains(x)) {
+            return unify(theta.get(x), y, theta);
+        } else if (occurCheck(x, y)) {
+            return null;
+        } else {
+            return extend(theta, x, y);
+        }
+    }
+
+    
+    private static boolean occurCheck(Variable x, Variable y) {
         
-        if
-        
+        if (x.equals(y)) {
+            return true;
+        } else if (x instanceof Sentence) {
+            return x.getOp() == y.getOp() || occurCheck(x, y.getArgs());
+        } else if (!(x instanceof Clause)) {
+            for ( x1 : x) {
+                
+            }
+        } else {
+            return false;
+        }
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    private static SubstitutionString extend(SubstitutionString theta, Variable x, Variable y) {
+        
+        SubstitutionString temp = theta;
+        temp.set(x, y);
+        return temp;
+    }
     public static String Unify(String p, String q) {
 
         String substitution = "";
@@ -87,14 +89,14 @@ public class Unifier {
         }
         return object;
     }
-    
+
     private static void setBinding(Variable var, Object val) {
         var.binding = val;
         trail.push(var);
     }
-    
+
     private static void undoBindings(Object token) {
-        
+
         Object var;
         while ((var = trail.pop()) != token) {
             if (var instanceof Variable) {
