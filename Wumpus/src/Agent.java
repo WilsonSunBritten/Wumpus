@@ -10,5 +10,8 @@ public abstract class Agent {
         
     }
     
-    
+    class Position{
+        int x;
+        int y;
+    }
 }

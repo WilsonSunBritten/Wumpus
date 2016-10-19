@@ -134,9 +134,4 @@ public class LogicExplorer extends Agent{
         }
         move(2);
     }
-    
-    private class Position{
-        int x;
-        int y;
-    }
 }
