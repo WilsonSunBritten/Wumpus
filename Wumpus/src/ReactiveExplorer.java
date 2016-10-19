@@ -1,16 +1,5 @@
-import java.util.Random;
-/*
-So im not certain what he wants for this, the project description says
-"You should also create a simple reactive explorer that does not use the
-reasoning system. Instead, it makes a decision which cell to enter at
-random based on whether or not it believes the neighboring cell is safe.
-So it selects first from safe neighboring cells, next from unsafe
-neighboring cells. Record the same statistics for this reactive explorer"
-If he doesn't have access to any sort of kb or state information, how does he
-differentiate between safe and unsafe spaces.  He can only determine that all the
-spaces around him are safe, or all are unsafe.
- */
 
+import java.util.Random;
 
 public class ReactiveExplorer {
 
@@ -49,7 +38,7 @@ public class ReactiveExplorer {
         if (action == 1) {
             percepts = world.action(action);
             if ((percepts & GLITTER) == GLITTER) {      //found gold
-                
+
             } else if ((percepts & DEATH_BY_PIT) == DEATH_BY_PIT || (percepts & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
                 //got dicked
             }
