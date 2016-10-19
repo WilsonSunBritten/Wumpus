@@ -12,5 +12,9 @@ import java.util.ArrayList;
  * @author Wilson
  */
 public class Clause {
+    public Clause(){}
+    public Clause(Fact fact){
+        facts.add(fact);
+    }
     ArrayList<Fact> facts = new ArrayList<>();
 }

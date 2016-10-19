@@ -38,6 +38,6 @@ public class KnowledgeBase {
         return true;
     }
 
-    public void tell(String placeholder) {
+    public void tell(Clause clause) {
     }
 }
