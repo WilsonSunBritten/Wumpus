@@ -1,4 +1,7 @@
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 public class World {
 
     protected int arrowCount;
@@ -30,7 +33,39 @@ public class World {
     public World(String fileName) {
         x = 0;
         y = 0;
+        importMap(fileName);
         //read in file
+    }
+
+    public void importMap(String fileName) {
+        try {
+            FileReader in = new FileReader(fileName);
+            BufferedReader reader = new BufferedReader(in);
+            String next;
+            int size = Integer.parseInt(reader.readLine());
+            perceptMap = new int[size][size];
+            int i = 0;
+            while ((next = reader.readLine()) != null) {//((Integer) reader.read()).toString()).equals("-1")) {
+                int j = 0;
+                while (next.contains(" ") && !next.equals(" ")) {
+                    perceptMap[i][j] = Integer.parseInt(next.substring(0, next.indexOf(" ")));
+                    
+                    next = next.substring(next.indexOf(" ") + 1, next.length());
+                    j++;
+                }
+                i++;
+            }
+            System.out.println("");
+            for (int k = 0; k < perceptMap.length; k++) {
+                for (int j = 0; j < perceptMap[k].length; j++) {
+                    System.out.print(perceptMap[k][j] + " ");
+                }
+                System.out.println("");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public int[] getLocation() {
@@ -45,30 +80,39 @@ public class World {
     public int action(int action) {
         switch (action) {
             case GRAB:
-                if ((perceptMap[x][y] & GLITTER) != 0)
+                if ((perceptMap[x][y] & GLITTER) != 0) {
                     perceptMap[x][y] -= GLITTER;
+                }
                 break;
             case MOVE:
                 if (direction == NORTH) {
                     if (y + 1 < size) {
                         y = y + 1;
                         return perceptMap[x][y];
-                    } else return BUMP;
+                    } else {
+                        return BUMP;
+                    }
                 } else if (direction == EAST) {
                     if (x + 1 < size) {
                         x = x + 1;
                         return perceptMap[x][y];
-                    } else return BUMP;
+                    } else {
+                        return BUMP;
+                    }
                 } else if (direction == SOUTH) {
                     if (y - 1 > 0) {
                         y -= 1;
                         return perceptMap[x][y];
-                    } else return BUMP;
+                    } else {
+                        return BUMP;
+                    }
                 } else if (direction == WEST) {
                     if (x - 1 > 0) {
                         x -= 1;
                         return perceptMap[x][y];
-                    } else return BUMP;
+                    } else {
+                        return BUMP;
+                    }
                 }
                 break;
             case TURN_LEFT:
@@ -129,7 +173,7 @@ public class World {
                 }
 
             case END:
-                //needed?
+            //needed?
         }
 
         System.out.println("Error shouldn't ever get here");

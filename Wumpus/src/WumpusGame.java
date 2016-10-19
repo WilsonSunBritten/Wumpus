@@ -1,5 +1,6 @@
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -36,6 +37,7 @@ public class WumpusGame {
         PrintStream out = new PrintStream(new FileOutputStream("world.txt"));
         System.setOut(out);
         printBoards();
+        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
     }
 
     public void setBoard() {

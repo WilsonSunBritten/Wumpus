@@ -27,6 +27,7 @@ public class Driver {
         System.out.println("");
 
         WumpusGame game = new WumpusGame(5, prob);
+        World world = new World("PerceptBoard.txt");
     }
 
 }
