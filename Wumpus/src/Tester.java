@@ -7,7 +7,12 @@ public class Tester {
         int[] initials = new int[3];
         if(ruleString.startsWith("V") || ruleString.startsWith("E")){
             //Has quantifiers
+            initials[0] = 1;
         }
+        else{
+            initials[0] = 0;
+        }
+        
         return initials;
     }
 
