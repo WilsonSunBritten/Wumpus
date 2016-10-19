@@ -33,8 +33,8 @@ public class Fact extends Variable implements Iterable {
     }
     
     @Override
-    public int getOp() {
-        return operator;
+    public String getOp() {
+        return "" + operator;
     }
     
     @Override

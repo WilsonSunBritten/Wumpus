@@ -30,8 +30,8 @@ public class Variable {
         return true;
     }
     
-    public int getOp() {
-        return modifier;
+    public String getOp() {
+        return "" + modifier;
     }
     
     public ArrayList getArgs() {
