@@ -4,9 +4,12 @@ public class LogicExplorer {
     private final World world;
     private final KnowledgeBase kb;
     private int arrowCount;
+    private int t = 0;
+    private int curPosX;
+    private int curPosY;
 
     private final byte BREEZE = 0b00000001;
-    private final byte STENTCH = 0b0000010;
+    private final byte STENCH = 0b0000010;
     private final byte BUMP = 0b00000100;
     private final byte GLITTER = 0b00001000;
     private final byte DEATH_BY_WUMPUS = 0b00010000;
@@ -24,7 +27,7 @@ public class LogicExplorer {
 
         switch (action) {
             case 2:
-                kb.tell(encodePercepts(world.action(action)));
+                //kb.tell(encodePercepts(world.action(action)));
                 break;
             case 5:
                 arrowCount--;
@@ -45,7 +48,7 @@ public class LogicExplorer {
     }
 
     public void decideAction(byte percepts) {
-        
+        updateKB(percepts);
         if ((percepts & GLITTER) != 0) {//maybe just kb.ask("Holding(Gold,Result(Grab,CurrentPosition))"): is better, no percept based logic within agent.
             move(1);    //grab gold and end game
         } else if (kb.ask("Safe(Result(Move,CurrentPosition))&&!Explored(Result(Move,CurrentPosition))")) {
@@ -70,6 +73,22 @@ public class LogicExplorer {
                     //we should never reach this step since were only shooting at a Wumpus who's location we know?
                 }
             }
+        }
+    }
+    
+    private void updateKB(byte percepts){
+        if((percepts & STENCH) != 0){
+            Clause clause = new Clause();
+            kb.tell(new Clause(new Fact("Stench", curPosX,curPosY,t,true)));
+        }
+        else{
+            kb.tell(new Clause(new Fact("Stench", curPosX, curPosY,t,false)));
+        }
+        if((percepts & BREEZE) != 0){
+            kb.tell(new Clause(new Fact("Breeze", curPosX,curPosY,t,true)));
+        }
+        else{
+            kb.tell(new Clause(new Fact("Breeze", curPosX, curPosY,t,false)));
         }
     }
 

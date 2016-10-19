@@ -5,12 +5,6 @@ public class InferenceEngine {
 
     KnowledgeBase kb;
 
-    public boolean follows(Clause clause){
-        return true;//follows(clause, )
-    }
-    
-    //So for follows we do a proof by contradiction. 
-    
     public ArrayList<Rule> convertToCNF(Rule rule) {
         ArrayList<Rule> cnfRules = new ArrayList<>();
         ArrayList<Rule> toConvertRules = new ArrayList<>();
