@@ -3,10 +3,10 @@ import java.util.Random;
 
 public class ReactiveExplorer extends Agent {
 
-    private World world;
-    private int[] currentLocation, previousLocation;
+    private final World world;
+    private Position currentPosition, previousPosition;
     private boolean currentSafe, previousSafe;
-    private int percepts, direction, arrowCount;
+    private int percepts, arrowCount;
 
     private final byte BREEZE = 0b00000001;
     private final byte STENTCH = 0b0000010;
@@ -16,42 +16,52 @@ public class ReactiveExplorer extends Agent {
     private final byte DEATH_BY_PIT = 0b00100000;
     private final byte SCREAM = 0b01000000;
 
-    public ReactiveExplorer(World world, int[] location, int direction, int percepts, int arrowCount) {
+    public ReactiveExplorer(World world, Position startPosition, int percepts, int arrowCount) {
         this.world = world;
         this.arrowCount = arrowCount;
-        this.previousLocation = location;
-        this.currentLocation = location;
+        this.previousPosition = startPosition;
+        this.currentPosition = startPosition;
         this.percepts = percepts;
-        this.direction = direction;
         if (((percepts & STENTCH) != STENTCH) && ((percepts & BREEZE) != BREEZE)) {
             previousSafe = true;
             currentSafe = true;
         }
     }
 
-    private ReactiveExplorer() {
-
-    }
-
     private void move(int action) {
 
-        if (action == 1) {
-            percepts = world.action(action);
-            if ((percepts & GLITTER) == GLITTER) {      //found gold
-
-            } else if ((percepts & DEATH_BY_PIT) == DEATH_BY_PIT) {
-                death(DEATH_BY_PIT);
-            } else if ((percepts & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
-                death(DEATH_BY_WUMPUS);
-            }
-            if ((percepts & BUMP) != BUMP) {
-                previousSafe = currentSafe;
-                previousLocation = currentLocation;
-            }
-            currentLocation = world.getLocation();
-            currentSafe = ((percepts & STENTCH) != STENTCH) && ((percepts & BREEZE) != BREEZE);
-        } else {
+        if (action == 1) {                              //grab gold, game ends
             world.action(action);
+        } else if (action == 2) {                       //move forward
+            percepts = world.action(action);
+            if ((percepts & BUMP) != BUMP) {            //did not bump into anything
+                previousPosition = currentPosition;
+                previousSafe = currentSafe;
+                //update location
+                int direction = currentPosition.direction;
+                if (direction == World.NORTH) {         //go north
+                    currentPosition.y++;
+                } else if (direction == World.EAST) {   //go east
+                    currentPosition.x++;
+                } else if (direction == World.SOUTH) {  //go south
+                    currentPosition.y--;
+                } else {                                //go west
+                    currentPosition.x--;
+                }
+            }
+        } else if (action == 3 || action == 4) {        //turn
+            world.action(action);
+            previousPosition = currentPosition;         //there might be a conflict with recording previous states here..
+            if (action == 3) {
+                currentPosition.direction = ++currentPosition.direction % 4;        //turn left
+            } else {
+                currentPosition.direction = --currentPosition.direction % 4;        //turn right
+            }
+        } else if (action == 5) {       //shoot arrow
+            world.action(action);
+            arrowCount--;
+        } else {                        //should never reach here
+            System.out.println("Invalid action: " + action);
         }
     }
 
@@ -102,10 +112,9 @@ public class ReactiveExplorer extends Agent {
         }
     }
 
-    private Agent death(byte killer) {
+    private void death(byte killer) {       //there needs to be some record of what killed the agent in this space so it doesnt go back again..
 
-        currentLocation = previousLocation;
-        currentSafe = previousSafe;
-        
+        currentPosition = previousPosition;
+
     }
 }
