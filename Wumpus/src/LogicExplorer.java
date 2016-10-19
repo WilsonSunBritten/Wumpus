@@ -48,11 +48,11 @@ public class LogicExplorer extends Agent {
                 world.action(action);
                 gameOver = true;
             case 2:
-                //kb.tell(encodePercepts(world.action(action)));
+                kb.tell(encodePercepts(world.action(action)));//kb.tell(encodePercepts(world.action(action)));
                 break;
             case 5:
                 arrowCount--;
-                world.action(action);
+                kb.tell(encodePercepts(world.action(action)));
                 break;
             default:
                 world.action(action);
@@ -60,33 +60,34 @@ public class LogicExplorer extends Agent {
         }
     }
 
-    private String encodePercepts(int percepts) {
+    private Clause encodePercepts(int percepts) {
 
-        String sentence = "";
+        Clause clause = new Clause();
 
         //conversion logic goes here
-        return sentence;
+        return clause;
     }
 
-    private int decideNextAction(byte percepts) {
-        
+    private void decideNextAction(byte percepts) {
+
         processPosition(percepts);
         updateKB(percepts);
         if ((percepts & GLITTER) != 0) {//maybe just kb.ask("Holding(Gold,Result(Grab,CurrentPosition))"): is better, no percept based logic within agent.
-            return World.GRAB;    //grab gold and end game
+            //return World.GRAB;    //grab gold and end game
+            move(1);
         } else if (currentlyNavigatingToSafeSquare) {       // im pretty sure this is all handled by RHW method, so thers no need to call decide next actions while its traversing
-            return continueNavigatingToSafeSquare();
+            //return continueNavigatingToSafeSquare();
         } else if (kb.ask("!Wumpus(forwardspot)AND!Pit(forwardSpot)&!Obstical(forwardSpot)")) {
-
+            move(2);
         } else if ("safeSpotInFrontier?" == "") {
-            return continueNavigatingToSafeSquare();
+            RHWTraversal("!Wumpus(adjacent)AND!Pit(adjacent)");
+            //return continueNavigatingToSafeSquare();
         } else if ("KnownWumpusSpotInFrontier" == "") {
             //kill wumpus
+            RHWTraversal("Wumpus(adjacent)");
         } else {
             //go to random spot in frontier that is not definite death
         }
-
-        return -1;
     }
 
     //i dont think we need this, RHW takes to the space and then turns to face already...its all done in a look so new percepts arent being processed
