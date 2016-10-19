@@ -5,6 +5,7 @@ public class Space {
     private boolean hasHole = false;
     private boolean hasObstacle = false;
     private boolean hasGold = false;
+    private boolean start;
     private boolean filled = false;
 
     public Space() {
@@ -60,4 +61,11 @@ public class Space {
         this.filled = filled;
     }
 
+    public boolean isStart() {
+        return start;
+    }
+
+    public void setStart(boolean start) {
+        this.start = start;
+    }
 }

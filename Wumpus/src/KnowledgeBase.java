@@ -26,7 +26,6 @@ public class KnowledgeBase {
         //Wumpus(x,y,t) => Wumpus(x,y,t+1) XOR WumpusDead(x,y,t+1)    p XOR q is (pVq)&&(!(p&&q))
         //WumpusDead(x,y,t)=>WumpusDead(x,y,t+1)
         //Stench(x,y)=>Wumpus(x-1,y)ORWumpus(x+1,y)ORWumpus(x,y-1)ORWumpus(x,y+1)
-        initializeStenchRule();
 
         //Breeze mimics this
         //Glitter(x,y,t)=>Gold(x,y,t)
@@ -48,12 +47,4 @@ public class KnowledgeBase {
         //resolve
         //add to database
     }
-
-    private void initializeStenchRule() {
-        //Stench(x,y)=>Wumpus(x-1,y)OR(Wumpus(x+1,y)OR(Wumpus(x,y-1) OR Wumpus(x,y+1)))
-        Quantifier x = new Quantifier();
-
-        //ClauseFormConvertion from here...
-    }
-
 }
