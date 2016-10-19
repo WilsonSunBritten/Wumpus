@@ -11,10 +11,10 @@ public class World {
     protected int direction = 0;
     private int[][] perceptMap;
 
-    final int NORTH = 1;
-    final int EAST = 2;
-    final int SOUTH = 3;
-    final int WEST = 4;
+    public static final int NORTH = 1;
+    public static final int EAST = 2;
+    public static final int SOUTH = 3;
+    public static final int WEST = 4;
     private final int BREEZE = 1;
     private final int STENTCH = 2;
     private final int BUMP = 4;

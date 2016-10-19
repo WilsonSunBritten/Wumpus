@@ -12,6 +12,7 @@ public class LogicExplorer extends Agent{
     private int currentDirection;
     private ArrayList<Position> frontier = new ArrayList<>();
     boolean[][] searchedPositions;
+    boolean currentlyNavigatingToSafeSquare;
     int worldSize;
     
 
@@ -61,7 +62,14 @@ public class LogicExplorer extends Agent{
         updateKB(percepts);
         if ((percepts & GLITTER) != 0) {//maybe just kb.ask("Holding(Gold,Result(Grab,CurrentPosition))"): is better, no percept based logic within agent.
             return World.GRAB;    //grab gold and end game
-        } else if (kb.ask("Safe(Result(Move,CurrentPosition))&&!Explored(Result(Move,CurrentPosition))")) {
+        } 
+        else if(currentlyNavigatingToSafeSquare){
+            //continueNavigation
+        } 
+       // else if(){
+            
+        //}
+        else if (kb.ask("Safe(Result(Move,CurrentPosition))&&!Explored(Result(Move,CurrentPosition))")) {
             move(2);    //move forward
         } else if (kb.ask("Safe(Result(Move,Result(TurnLeft,CurrentPosition))&&!Explored(Result(Move,Result(TurnLeft,CurrentPosition))")) {
             move(3);    //turn left
