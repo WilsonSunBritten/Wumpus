@@ -19,9 +19,10 @@ public class Unifier {
             return unifyVariable(x, y, theta);
         } else if (y instanceof Variable) {
             return unifyVariable(y, x, theta);
-        } else if (x) {
+        } //else if (x) {
             
-        }
+        //}
+        return null;
     }
 
     private static SubstitutionString unifyVariable(Variable x, Variable y, SubstitutionString theta) {
@@ -38,17 +39,18 @@ public class Unifier {
     
     private static boolean occurCheck(Variable x, Variable y) {
         
-        if (x.equals(y)) {
-            return true;
-        } else if (x instanceof Sentence) {
-            return x.getOp() == y.getOp() || occurCheck(x, y.getArgs());
-        } else if (!(x instanceof Clause)) {
-            for ( x1 : x) {
-                
-            }
-        } else {
-            return false;
-        }
+//        if (x.equals(y)) {
+//            return true;
+//        } else if (x instanceof Sentence) {
+//            return x.getOp() == y.getOp() || occurCheck(x, y.getArgs());
+////        } else if (!(x instanceof Clause)) {
+////            for ( x1 : x) {
+////                
+////            }
+//        } else {
+//            return false;
+//        }
+        return true;
     }
     
     private static SubstitutionString extend(SubstitutionString theta, Variable x, Variable y) {
@@ -84,25 +86,25 @@ public class Unifier {
 
     private static Object deref(Object object) {
 
-        while (object instanceof Variable && ((Variable) object).binding != null) {
-            object = ((Variable) object).binding;
-        }
+//        while (object instanceof Variable && ((Variable) object).binding != null) {
+//            object = ((Variable) object).binding;
+//        }
         return object;
     }
 
     private static void setBinding(Variable var, Object val) {
-        var.binding = val;
-        trail.push(var);
+//        var.binding = val;
+//        trail.push(var);
     }
 
     private static void undoBindings(Object token) {
 
-        Object var;
-        while ((var = trail.pop()) != token) {
-            if (var instanceof Variable) {
-                ((Variable) v).binding = null;
-            }
-        }
+//        Object var;
+//        while ((var = trail.pop()) != token) {
+//            if (var instanceof Variable) {
+//                ((Variable) v).binding = null;
+//            }
+//        }
     }
 
     public static SubstitutionString unify(Sentence x, Sentence y) {
@@ -128,7 +130,7 @@ public class Unifier {
     }
 
     private static SubstitutionString unifyVariables(Variable x, Variable y, SubstitutionString theta) {
-
+        return null;
     }
 
     private static SubstitutionString unifyOperators(String x, String y, SubstitutionString theta) {

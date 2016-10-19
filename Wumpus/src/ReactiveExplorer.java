@@ -106,6 +106,6 @@ public class ReactiveExplorer extends Agent {
 
         currentLocation = previousLocation;
         currentSafe = previousSafe;
-        
+        return null;
     }
 }
