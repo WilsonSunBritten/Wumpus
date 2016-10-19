@@ -29,7 +29,7 @@ public class Driver {
         WumpusGame game = new WumpusGame(5, prob);
         World world = new World("PerceptBoard.txt");
         
-        Agent explorer = new ReactiveExplorer(world, world.getLocation(), world.direction,world.getPercepts(), world.arrowCount);
+        Agent explorer = new ReactiveExplorer(world);
     }
 
 }
