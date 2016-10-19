@@ -8,6 +8,7 @@ public class LogicExplorer extends Agent{
     private final KnowledgeBase kb;
     private int arrowCount;
     private int t = 0;
+    private int previousAction;
     private Position currentPos;
     private int currentDirection;
     private ArrayList<Position> frontier = new ArrayList<>();
@@ -89,7 +90,11 @@ public class LogicExplorer extends Agent{
     }
     
     private void processPosition(byte percepts){
-        
+        if((percepts & BUMP) == 0){//did not bump
+            if(previousAction == World.MOVE){
+                currentPos.moveDidMove();
+            }
+        }
     }
     
     private void updateKB(byte percepts){

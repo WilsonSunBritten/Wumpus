@@ -2,24 +2,26 @@
 import java.util.ArrayList;
 
 public class Tester {
-    
-    public int[] initialParse(String ruleString){
+
+    public int[] initialParse(String ruleString) {
         int[] initials = new int[3];
-        if(ruleString.startsWith("V") || ruleString.startsWith("E")){
+        if (ruleString.startsWith("V") || ruleString.startsWith("E")) {
             //Has quantifiers
             initials[0] = 1;
-        }
-        else{
+        } else {
             initials[0] = 0;
         }
-        
+
         return initials;
     }
 
     public Rule addRule(String ruleString) {
-        ruleString = "Vx,y Commutative(x,y) IFF Commutative(y,x)";
+        ruleString = "Vx,y Commutative(x,y) IFF Commutative(y,x)  ";
         Rule rule = new Rule();
         ArrayList<Quantifier> quants = new ArrayList();
+        ArrayList<Fact> facts = new ArrayList();
+        ArrayList<Rule> rules = new ArrayList();
+        //Gets quantifier for main rule
         if (ruleString.contains("V")) {
             String quant = ruleString.substring(ruleString.indexOf("V") + 1, ruleString.indexOf(" "));
             int i = 0;
@@ -34,77 +36,58 @@ public class Tester {
                 }
             }
             ruleString = ruleString.substring(ruleString.indexOf(" ") + 1);
-            System.out.println(ruleString);
         }
-        
-        Rule leftRule = new Rule();
-        Fact leftFact = new Fact();
-        leftFact.predicate = ruleString.substring(0, ruleString.indexOf("("));
-        ruleString = ruleString.substring(ruleString.indexOf("("));
-        System.out.println(ruleString);
-        String vars = ruleString.substring(1, ruleString.indexOf(")"));
-        System.out.println(vars);
-        int i = 0;
-        for (char c : vars.toCharArray()) {
-            if (c > 64) {
-                Variable v = new Variable();
-                if (i + 1 < vars.length() && vars.toCharArray()[i + 1] == 44) {
-                    v.isVariable = true;
-                    v.variableId = checkQuantifiers(quants, c).variableId;
-                    leftFact.variables.add(v);
-                    System.out.println(v.variableId);
-                } else if (i + 1 == vars.length() && i - 1 > -1 && vars.toCharArray()[i - 1] == 44) {
-                    v.isVariable = true;
-                    v.variableId = checkQuantifiers(quants, c).variableId;
-                    leftFact.variables.add(v);
-                    System.out.println(v.variableId);
-                }
+
+        int numPredicates = 0;
+        String tempRule = ruleString;
+        while (!tempRule.equals("")) {
+            if (checkConnector(tempRule.substring(0, tempRule.indexOf(" "))) != 0) {
+                numPredicates++;
             }
-            i++;
+            tempRule = tempRule.substring(tempRule.indexOf(" ") + 1);
         }
-        leftRule.justFact = true;
-        leftRule.fact = leftFact;
-        ruleString = ruleString.substring(ruleString.indexOf(" ") + 1);
-        System.out.println(ruleString);
-        
-        rule.connector = checkConnector(ruleString.substring(0, ruleString.indexOf(" ")));
-        System.out.println(rule.connector);
-        
-        ruleString = ruleString.substring(ruleString.indexOf(" ") + 1);
-        System.out.println(ruleString);
-        
-        Rule rightRule = new Rule();
-        Fact rightFact = new Fact();
-        leftFact.predicate = ruleString.substring(0, ruleString.indexOf("("));
-        ruleString = ruleString.substring(ruleString.indexOf("("));
-        System.out.println(ruleString);
-        vars = ruleString.substring(1, ruleString.indexOf(")"));
-        System.out.println(vars);
-        i = 0;
-        for (char c : vars.toCharArray()) {
-            if (c > 64) {
-                Variable v = new Variable();
-                if (i + 1 < vars.length() && vars.toCharArray()[i + 1] == 44) {
-                    v.isVariable = true;
-                    v.variableId = checkQuantifiers(quants, c).variableId;
-                    rightFact.variables.add(v);
-                    System.out.println(v.variableId);
-                } else if (i + 1 == vars.length() && i - 1 > -1 && vars.toCharArray()[i - 1] == 44) {
-                    v.isVariable = true;
-                    v.variableId = checkQuantifiers(quants, c).variableId;
-                    rightFact.variables.add(v);
-                    System.out.println(v.variableId);
+        if (numPredicates != 0) {
+            numPredicates++;
+        }
+
+        if (numPredicates == 2) {
+            int connector = 0;
+            for (int j = 0; j < numPredicates; j++) {
+                Rule sideRule = new Rule();
+                Fact sideFact = new Fact();
+                sideFact.predicate = ruleString.substring(0, ruleString.indexOf("("));
+                ruleString = ruleString.substring(ruleString.indexOf("("));
+                String vars = ruleString.substring(1, ruleString.indexOf(")"));
+                int i = 0;
+                for (char c : vars.toCharArray()) {
+                    if (c > 64) {
+                        Variable v = new Variable();
+                        if (i + 1 < vars.length() && vars.toCharArray()[i + 1] == 44) {
+                            v.isVariable = true;
+                            v.variableId = checkQuantifiers(quants, c).variableId;
+                            sideFact.variables.add(v);
+                        } else if (i + 1 == vars.length() && i - 1 > -1 && vars.toCharArray()[i - 1] == 44) {
+                            v.isVariable = true;
+                            v.variableId = checkQuantifiers(quants, c).variableId;
+                            sideFact.variables.add(v);
+                        }
+                    }
+                    i++;
                 }
+                ruleString = ruleString.substring(ruleString.indexOf(" ") + 1);
+                if(checkConnector(ruleString.substring(0, ruleString.indexOf(" "))) != 0){
+                    connector = rule.connector = checkConnector(ruleString.substring(0, ruleString.indexOf(" ")));
+                    ruleString = ruleString.substring(ruleString.indexOf(" ") + 1);
+                }
+                sideRule.justFact = true;
+                sideRule.fact = sideFact;
+                rules.add(sideRule);
             }
-            i++;
+            rule.connector = connector;
+            rule.leftRule = rules.get(0);
+            rule.rightRule = rules.get(1);
         }
-        rightRule.justFact = true;
-        rightRule.fact = leftFact;
-        System.out.println(ruleString);
-        
-        rule.leftRule = leftRule;
-        rule.rightRule = rightRule;
-        
+
         return rule;
     }
 
@@ -116,8 +99,8 @@ public class Tester {
         }
         return null;
     }
-    
-    public int checkConnector(String connector){
+
+    public int checkConnector(String connector) {
         switch (connector) {
             case "AND":
                 return 1;
