@@ -8,6 +8,8 @@ public class KnowledgeBase {
         //Vx,y,a,b Adjacent(x,y,a,b) iff [a,b] in {(x-1,y),(x+1,y),(x,y-1),(x,y+1)}
         //Vd,t Facing(d,t) => Facing(d,t+1) OR Action(Turnleft,t) OR Action(TurnRight,t)
         //Vt,v Facing(d,t) AND Action(Turnleft,t)=>Facing((d-1)%4, t+1)
+        
+        
         //Vt,v Facing(d,t) AND Action(TurnRight,t)=>Facing((d+1)%4,t+1)
         //Vt,x Arrows(x,t) => Arrows(x,t+1) OR Action(SHOOT,t)
         //Vt,x HasArrow(t) iff Arrows(x,t) && x>0
