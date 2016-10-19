@@ -1,7 +1,7 @@
 
 import java.util.Random;
 
-public class ReactiveExplorer {
+public class ReactiveExplorer extends Agent {
 
     private World world;
     private int arrowCount;
@@ -20,13 +20,13 @@ public class ReactiveExplorer {
     private final byte DEATH_BY_PIT = 0b00100000;
     private final byte SCREAM = 0b01000000;
 
-    public ReactiveExplorer(World world) {
+    public ReactiveExplorer(World world, int[] location, int direction, int percepts, int arrowCount) {
         this.world = world;
-        this.arrowCount = world.arrowCount;
-        this.previousSpace = world.getLocation();
+        this.arrowCount = arrowCount;
+        this.previousSpace = location;
         this.currentSpace = previousSpace;
-        this.percepts = world.getPercepts();
-        this.direction = world.direction;
+        this.percepts = percepts;
+        this.direction = direction;
         if (((percepts & STENTCH) != STENTCH) && ((percepts & BREEZE) != BREEZE)) {
             previousSafe = true;
             currentSafe = true;
@@ -53,7 +53,7 @@ public class ReactiveExplorer {
         }
     }
 
-    public void decideAction() {
+    public void decideNextAction(byte percepts) {
 
         //select safe neighboring cell else select unsafe neighboring cell
         if (((percepts & STENTCH) != 0) && ((percepts & BREEZE) != 0)) {        //all adjacent spaces are safe

@@ -1,5 +1,5 @@
 
-public class LogicExplorer {
+public class LogicExplorer extends Agent {
 
     private final World world;
     private final KnowledgeBase kb;
@@ -47,7 +47,7 @@ public class LogicExplorer {
         return sentence;
     }
 
-    public void decideAction(byte percepts) {
+    public void decideNextAction(byte percepts) {
         updateKB(percepts);
         if ((percepts & GLITTER) != 0) {//maybe just kb.ask("Holding(Gold,Result(Grab,CurrentPosition))"): is better, no percept based logic within agent.
             move(1);    //grab gold and end game
