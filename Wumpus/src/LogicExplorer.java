@@ -67,31 +67,17 @@ public class LogicExplorer extends Agent{
         else if(currentlyNavigatingToSafeSquare){
             return continueNavigatingToSafeSquare();
         } 
-        else if(kb.ask("!Wumpus(forwardspot)AND!Pit(forwardSpot)&!Obsticle(forwardSpot)")){
+        else if(kb.ask("!Wumpus(forwardspot)AND!Pit(forwardSpot)&!Obstical(forwardSpot)")){
             
         }
-        else if (kb.ask("Safe(Result(Move,CurrentPosition))&&!Explored(Result(Move,CurrentPosition))")) {
-            move(2);    //move forward
-        } else if (kb.ask("Safe(Result(Move,Result(TurnLeft,CurrentPosition))&&!Explored(Result(Move,Result(TurnLeft,CurrentPosition))")) {
-            move(3);    //turn left
-            move(2);    //move forward
-        } else if (kb.ask("Safe(Result(Move,Result(TurnRight,CurrentPosition))&&!Explored(Result(Move,Result(TurnRight,CurrentPosition))")) {
-            move(4);    //turn right
-            move(2);    //move forward
-        } else if (kb.ask("EXIST(s), Safe(s) && !Explored(s)")) {
-            RHWTraversal("I am adjacent to a space that is unexplored and safe");
-            move(2);
-        } else {
-            if (arrowCount > 0) {
-                if (kb.ask("EXIST(s), WUMPUS(s)")) {
-                    RHWTraversal("Facing Wumpus");
-                    move(5);    //shoot arrow
-                    move(2);    //move forward
-                } else {
-                    //explore potentially unsafe space
-                    //we should never reach this step since were only shooting at a Wumpus who's location we know?
-                }
-            }
+        else if("safeSpotInFrontier?" == ""){
+            return continueNavigatingToSafeSquare();
+        }
+        else if("KnownWumpusSpotInFrontier" == ""){
+            //kill wumpus
+        }
+        else{
+            //go to random spot in frontier that is not definite death
         }
         
         return -1;
