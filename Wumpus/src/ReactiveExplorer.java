@@ -4,8 +4,8 @@ import java.util.Random;
 public class ReactiveExplorer extends Agent {
 
     private final World world;
-    private Position currentPosition, previousPosition;
-    private boolean currentSafe, previousSafe;
+    private Position prevPos;
+    private State curState, prevState;
     private int percepts, arrowCount;
 
     private final byte BREEZE = 0b00000001;
@@ -16,15 +16,30 @@ public class ReactiveExplorer extends Agent {
     private final byte DEATH_BY_PIT = 0b00100000;
     private final byte SCREAM = 0b01000000;
 
-    public ReactiveExplorer(World world, Position startPosition, int percepts, int arrowCount) {
+    enum State {
+
+        SAFE,
+        UNSAFE,
+        EXPLORED;
+    }
+
+    public ReactiveExplorer(World world) {
         this.world = world;
-        this.arrowCount = arrowCount;
-        this.previousPosition = startPosition;
-        this.currentPosition = startPosition;
-        this.percepts = percepts;
+        arrowCount = world.arrowCount;
+        curPos = new Position(world.getLocation()[0], world.getLocation()[1], world.direction);
+        prevPos = curPos;
+        percepts = world.getPercepts();
         if (((percepts & STENTCH) != STENTCH) && ((percepts & BREEZE) != BREEZE)) {
-            previousSafe = true;
-            currentSafe = true;
+            curState = State.SAFE;
+            prevState = State.SAFE;
+        }
+        run();
+    }
+
+    private void run() {
+
+        while (true) {
+            decideNextAction((byte) percepts);
         }
     }
 
@@ -35,27 +50,26 @@ public class ReactiveExplorer extends Agent {
         } else if (action == 2) {                       //move forward
             percepts = world.action(action);
             if ((percepts & BUMP) != BUMP) {            //did not bump into anything
-                previousPosition = currentPosition;
-                previousSafe = currentSafe;
-                //update location
-                int direction = currentPosition.direction;
-                if (direction == World.NORTH) {         //go north
-                    currentPosition.y++;
-                } else if (direction == World.EAST) {   //go east
-                    currentPosition.x++;
-                } else if (direction == World.SOUTH) {  //go south
-                    currentPosition.y--;
-                } else {                                //go west
-                    currentPosition.x--;
-                }
+                prevPos = this.curPos;
+                prevState = curState;
+                curPos.moveDidMove();
+            } else if ((percepts & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {       //killed by a wumpus, therefore use revive potion and take revenge
+                move(5);
+                move(2);
+            } else if ((percepts & DEATH_BY_PIT) == DEATH_BY_PIT) {             //killed by a pit
+                Position temp = curPos;
+                curPos = prevPos;
+                prevPos = temp;
+                prevState = State.UNSAFE;
+                curState = State.EXPLORED;
             }
         } else if (action == 3 || action == 4) {        //turn
             world.action(action);
-            previousPosition = currentPosition;         //there might be a conflict with recording previous states here..
+            prevPos = curPos;
             if (action == 3) {
-                currentPosition.direction = ++currentPosition.direction % 4;        //turn left
+                curPos.direction = ++curPos.direction % 4;        //turn left
             } else {
-                currentPosition.direction = --currentPosition.direction % 4;        //turn right
+                curPos.direction = --curPos.direction % 4;        //turn right
             }
         } else if (action == 5) {       //shoot arrow
             world.action(action);
@@ -65,43 +79,42 @@ public class ReactiveExplorer extends Agent {
         }
     }
 
-    public void decideNextAction(byte percepts) {
+    public void decideNextAction(byte percepts) {       //select safe neighboring cell else select unsafe neighboring cell
 
-        //select safe neighboring cell else select unsafe neighboring cell
         if (((percepts & STENTCH) != 0) && ((percepts & BREEZE) != 0)) {        //all adjacent spaces are safe
             Random random = new Random();
             switch (random.nextInt(3)) {
-                case 1:     //go forward
+                case 1:             //go forward
                     move(1);
                     break;
-                case 2:     //turn left and go forward
+                case 2:             //turn left and go forward
                     move(2);
                     move(1);
                     break;
-                case 3:     //turn right and go forward
+                case 3:             //turn right and go forward
                     move(3);
                     move(1);
                     break;
                 default:
                     System.out.println("Should not reach this line.");
             }
-        } else {    //neighboring cells may not be safe
+        } else {                                    //neighboring cells may not be safe
             //if previous cell was safe, return and pick new direction
-            if (previousSafe) {
+            if (prevState == State.SAFE) {                     //there might be a situation where the agent move back and forth between 3 safe safe spaces here we might need to account for
                 move(3);
                 move(3);
                 move(1);
-            } else {        //pick random move
+            } else {                                //pick random move
                 Random random = new Random();
                 switch (random.nextInt(3)) {
-                    case 1:     //go forward
+                    case 1:                         //go forward
                         move(1);
                         break;
-                    case 2:     //turn left and go forward
+                    case 2:                         //turn left and go forward
                         move(2);
                         move(1);
                         break;
-                    case 3:     //turn right and go forward
+                    case 3:                         //turn right and go forward
                         move(3);
                         move(1);
                         break;
@@ -114,8 +127,6 @@ public class ReactiveExplorer extends Agent {
 
     private void death(byte killer) {       //there needs to be some record of what killed the agent in this space so it doesnt go back again..
 
-        currentPosition = previousPosition;
 
-        currentSafe = previousSafe;
     }
 }

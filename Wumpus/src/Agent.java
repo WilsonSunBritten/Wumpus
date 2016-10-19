@@ -1,40 +1,47 @@
 
-import java.util.ArrayList;
-
-
 public abstract class Agent {
-    
-    
+
+    Position curPos;
+
     private void move(int action) {
-        
     }
-    
+
     public void decideNextAction() {
-        
     }
-    
-    class Position{
+
+    class Position {
+
         int x;
         int y;
         int direction;
-        
-        public void moveDidMove(){
-            switch(direction){
+
+        public Position(int x, int y, int direction) {
+            this.x = x;
+            this.y = y;
+            this.direction = direction;
+        }
+
+        public void moveDidMove() {
+            switch (direction) {
                 case World.NORTH:
-                    if(y < World.size-1)
-                    y+=1;
+                    if (y < World.size - 1) {
+                        y += 1;
+                    }
                     break;
                 case World.EAST:
-                    if(x > 0)
-                        x-=1;
+                    if (x > 0) {
+                        x -= 1;
+                    }
                     break;
                 case World.SOUTH:
-                    if(y > 0)
+                    if (y > 0) {
                         y--;
+                    }
                     break;
                 case World.WEST:
-                    if(x < World.size-1)
+                    if (x < World.size - 1) {
                         x++;
+                    }
             }
         }
     }
