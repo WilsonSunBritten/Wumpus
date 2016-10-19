@@ -26,8 +26,8 @@ public class Variable {
         return value;
     }
     
-    public boolean isUnary() {
-        return true;
+    public boolean contains(Variable var) {
+        return false;
     }
     
     public String getOp() {

@@ -15,7 +15,13 @@ public class Clause extends Fact implements Iterable {
     }
     
     @Override
-    public boolean isUnary() {
+    public boolean contains(Variable var) {
+        
+        for (Fact f : facts) {
+            if (f.contains(var) || f.equals(var)) {
+                return true;
+            }
+        }
         return false;
     }
     

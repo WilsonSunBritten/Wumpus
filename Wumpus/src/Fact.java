@@ -28,7 +28,12 @@ public class Fact extends Variable implements Iterable {
     }
     
     @Override
-    public boolean isUnary() {
+    public boolean contains(Variable var) {
+        for (Variable v : variables) {
+            if (v.equals(var)) {
+                return true;
+            }
+        }
         return false;
     }
     
