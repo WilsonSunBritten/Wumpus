@@ -1,22 +1,19 @@
 
 import java.util.ArrayList;
 
-
-public class LogicExplorer extends Agent{
+public class LogicExplorer extends Agent {
 
     private final World world;
     private final KnowledgeBase kb;
     private int arrowCount;
-    private int t = 0;
+    private int t = 0;              //time variable
     private int previousAction;
-    private Position currentPos;
-    private int currentDirection;
+    private Position curPos;
     private ArrayList<Position> frontier = new ArrayList<>();
-    boolean[][] searchedPositions;
-    boolean currentlyNavigatingToSafeSquare;
-    int worldSize;
+    private boolean[][] searchedPositions;
+    private boolean currentlyNavigatingToSafeSquare;
+    private int worldSize;
     private Position goalPosition;
-    
 
     private final byte BREEZE = 0b00000001;
     private final byte STENCH = 0b0000010;
@@ -33,6 +30,14 @@ public class LogicExplorer extends Agent{
         this.arrowCount = world.arrowCount;
         this.searchedPositions = new boolean[world.size][world.size];
         this.worldSize = world.size;
+        run();
+    }
+
+    private void run() {
+
+        while (true) {
+            decideNextAction((byte) world.getPercepts());
+        }
     }
 
     private void move(int action) {
@@ -59,59 +64,55 @@ public class LogicExplorer extends Agent{
         return sentence;
     }
 
-    public int decideAction(byte percepts) {
+    private int decideNextAction(byte percepts) {
+        
         processPosition(percepts);
         updateKB(percepts);
         if ((percepts & GLITTER) != 0) {//maybe just kb.ask("Holding(Gold,Result(Grab,CurrentPosition))"): is better, no percept based logic within agent.
             return World.GRAB;    //grab gold and end game
-        } 
-        else if(currentlyNavigatingToSafeSquare){
+        } else if (currentlyNavigatingToSafeSquare) {       // im pretty sure this is all handled by RHW method, so thers no need to call decide next actions while its traversing
             return continueNavigatingToSafeSquare();
-        } 
-        else if(kb.ask("!Wumpus(forwardspot)AND!Pit(forwardSpot)&!Obstical(forwardSpot)")){
-            
-        }
-        else if("safeSpotInFrontier?" == ""){
+        } else if (kb.ask("!Wumpus(forwardspot)AND!Pit(forwardSpot)&!Obstical(forwardSpot)")) {
+
+        } else if ("safeSpotInFrontier?" == "") {
             return continueNavigatingToSafeSquare();
-        }
-        else if("KnownWumpusSpotInFrontier" == ""){
+        } else if ("KnownWumpusSpotInFrontier" == "") {
             //kill wumpus
-        }
-        else{
+        } else {
             //go to random spot in frontier that is not definite death
         }
-        
+
         return -1;
     }
-    
-    private int continueNavigatingToSafeSquare(){
+
+    //i dont think we need this, RHW takes to the space and then turns to face already...its all done in a look so new percepts arent being processed
+    //since the agent has already been to all of the spaces in will be traveling through
+    private int continueNavigatingToSafeSquare() {
         //this should basically be RHW Traversal until adjacent to to goal state, then turn to face it
         return -1;
     }
-    
-    private void processPosition(byte percepts){
-        if((percepts & BUMP) == 0){//did not bump
-            if(previousAction == World.MOVE){
-                currentPos.moveDidMove();
+
+    private void processPosition(byte percepts) {
+        if ((percepts & BUMP) == 0) {//did not bump
+            if (previousAction == World.MOVE) {
+                curPos.moveDidMove();
             }
         }
     }
-    
-    private void updateKB(byte percepts){
-        if((percepts & STENCH) != 0){
+
+    private void updateKB(byte percepts) {
+        if ((percepts & STENCH) != 0) {
             Clause clause = new Clause();
-            kb.tell(new Clause(new Fact("Stench", currentPos.x,currentPos.y,t,true)));//Stench(x,y,t)
+            kb.tell(new Clause(new Fact("Stench", curPos.x, curPos.y, t, true)));//Stench(x,y,t)
+        } else {
+            kb.tell(new Clause(new Fact("Stench", curPos.x, curPos.y, t, false)));//!Stench(x,y,t)
         }
-        else{
-            kb.tell(new Clause(new Fact("Stench", currentPos.x, currentPos.y,t,false)));//!Stench(x,y,t)
+        if ((percepts & BREEZE) != 0) {
+            kb.tell(new Clause(new Fact("Breeze", curPos.x, curPos.y, t, true)));
+        } else {
+            kb.tell(new Clause(new Fact("Breeze", curPos.x, curPos.y, t, false)));
         }
-        if((percepts & BREEZE) != 0){
-            kb.tell(new Clause(new Fact("Breeze", currentPos.x,currentPos.y,t,true)));
-        }
-        else{
-            kb.tell(new Clause(new Fact("Breeze", currentPos.x, currentPos.y,t,false)));
-        }
-        if((percepts & SCREAM) != 0){
+        if ((percepts & SCREAM) != 0) {
             //need to deal with this
         }
     }
@@ -128,9 +129,6 @@ public class LogicExplorer extends Agent{
                     move(3);    //turn left
                 }
             }
-            //if space to the right is safe --> turn right
-            //if space to right is unsafe && forward is safe --> go forward
-            //if space to right is unsafe && forward is unsafe --> turn left
         } while (!kb.ask(stopCondition));
 
         //face stop condition

@@ -17,7 +17,6 @@ public class ReactiveExplorer extends Agent {
     private final byte SCREAM = 0b01000000;
 
     enum State {
-
         SAFE,
         UNSAFE,
         EXPLORED;
@@ -123,10 +122,5 @@ public class ReactiveExplorer extends Agent {
                 }
             }
         }
-    }
-
-    private void death(byte killer) {       //there needs to be some record of what killed the agent in this space so it doesnt go back again..
-
-
     }
 }

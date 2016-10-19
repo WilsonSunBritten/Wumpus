@@ -38,7 +38,11 @@ public class KnowledgeBase {
         //!Wumpus(x,size)&&!Wumpus(size,y)&&!PIT(z,size)&&!Pit(size,a)
     }
 
-    public boolean ask(String placeholder) {
+    public boolean ask(String question) {
+        
+        //if question follows from known facts ==> return true
+        //else return false
+        
         return true;
     }
 
