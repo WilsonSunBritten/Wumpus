@@ -21,16 +21,20 @@ public abstract class Agent {
         public void moveDidMove(){
             switch(direction){
                 case World.NORTH:
+                    if(y < World.size-1)
                     y+=1;
                     break;
                 case World.EAST:
-                    x-=1;
+                    if(x > 0)
+                        x-=1;
                     break;
                 case World.SOUTH:
-                    y--;
+                    if(y > 0)
+                        y--;
                     break;
                 case World.WEST:
-                    x++;
+                    if(x < World.size-1)
+                        x++;
             }
         }
     }

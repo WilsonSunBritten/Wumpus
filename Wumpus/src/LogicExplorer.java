@@ -14,6 +14,7 @@ public class LogicExplorer extends Agent{
     boolean[][] searchedPositions;
     boolean currentlyNavigatingToSafeSquare;
     int worldSize;
+    private Position goalPosition;
     
 
     private final byte BREEZE = 0b00000001;
@@ -66,9 +67,9 @@ public class LogicExplorer extends Agent{
         else if(currentlyNavigatingToSafeSquare){
             return continueNavigatingToSafeSquare();
         } 
-       // else if(){
+        else if(kb.ask("!Wumpus(forwardspot)AND!Pit(forwardSpot)&!Obsticle(forwardSpot)")){
             
-        //}
+        }
         else if (kb.ask("Safe(Result(Move,CurrentPosition))&&!Explored(Result(Move,CurrentPosition))")) {
             move(2);    //move forward
         } else if (kb.ask("Safe(Result(Move,Result(TurnLeft,CurrentPosition))&&!Explored(Result(Move,Result(TurnLeft,CurrentPosition))")) {
