@@ -1,7 +1,8 @@
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class Fact {
+public class Fact extends Variable implements Iterable {
 
     ArrayList<Variable> variables = new ArrayList<>();
     String predicate;
@@ -24,5 +25,20 @@ public class Fact {
             System.out.print(", ");
         }
         System.out.print(") ");
+    }
+    
+    @Override
+    public boolean isUnary() {
+        return false;
+    }
+    
+    @Override
+    public int getOp() {
+        return operator;
+    }
+
+    @Override
+    public Iterator iterator() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -1,8 +1,5 @@
 
-import java.util.Iterator;
-
-
-public class Variable implements Iterable {
+public class Variable {
 
     boolean isVariable;
     int value;
@@ -25,9 +22,12 @@ public class Variable implements Iterable {
     public int getValue() {
         return value;
     }
-
-    @Override
-    public Iterator iterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    public boolean isUnary() {
+        return true;
+    }
+    
+    public int getOp() {
+        return modifier;
     }
 }
