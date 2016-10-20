@@ -86,12 +86,12 @@ public class KnowledgeBase {
         rules.add(notWumpusOrNotPit);
     }
 
-    public boolean ask(String question) {
+    public boolean ask(Fact fact) {
         
         //if question follows from known facts ==> return true
         //else return false
         
-        return true;
+        return inferenceEngine.follows(fact);
     }
 
     public void tell(Clause clause) {

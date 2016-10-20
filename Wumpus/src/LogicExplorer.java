@@ -13,12 +13,20 @@ public class LogicExplorer extends Agent {
         kb = new KnowledgeBase();
         kb.initializeRules();
         this.searchedPositions = new boolean[World.size][World.size];
+        searchedPositions[location.x][location.y] = true;
         initializeFrontier();
         run();
     }
     
     public void initializeFrontier(){
-        
+        if(location.x>0)
+            frontier.add(new Location(location.x-1,location.y));
+        if(location.x < world.size)
+            frontier.add(new Location(location.x+1,location.y));
+        if(location.y>0)
+            frontier.add(new Location(location.x,location.y-1));
+        if(location.y<world.size)
+            frontier.add(new Location(location.x,location.y+1));
     }
 
     private void run() {

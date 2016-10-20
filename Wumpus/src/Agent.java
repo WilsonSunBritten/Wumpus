@@ -19,6 +19,17 @@ public class Agent {
         this.direction = startingDirection;
         this.percepts = world.getPercepts();
     }
+    
+    public Location getForward(){
+        if(direction == NORTH)
+            return new Location(location.x,location.y+1);
+        else if(direction == EAST)
+            return new Location(location.x+1,location.y);
+        else if(direction == SOUTH)
+            return new Location(location.x,location.y-1);
+        else
+            return new Location(location.x-1,location.y);
+    }
 
     public void turnRight() {
         direction = (direction + 1) % 4;
