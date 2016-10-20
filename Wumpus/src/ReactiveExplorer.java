@@ -1,27 +1,8 @@
 
-import java.util.Random;
-
 public class ReactiveExplorer extends Agent {
 
-    private final World world;
     private Location prevPos;
     private State curState, prevState;
-    private int percepts, arrowCount;
-    private boolean gameOver = false;
-
-    private final byte BREEZE = 0b00000001;
-    private final byte STENTCH = 0b0000010;
-    private final byte BUMP = 0b00000100;
-    private final byte GLITTER = 0b00001000;
-    private final byte DEATH_BY_WUMPUS = 0b00010000;
-    private final byte DEATH_BY_PIT = 0b00100000;
-    private final byte SCREAM = 0b01000000;
-
-    enum State {
-        SAFE,
-        UNSAFE,
-        EXPLORED;
-    }
 
     public ReactiveExplorer(World world) {
         this.world = world;
@@ -29,7 +10,7 @@ public class ReactiveExplorer extends Agent {
         curLoc = new Location(world.x, world.y);
         prevPos = curLoc;
         percepts = world.getPercepts();
-        if (((percepts & STENTCH) != STENTCH) && ((percepts & BREEZE) != BREEZE)) {
+        if (((percepts & STENCH) != STENCH) && ((percepts & BREEZE) != BREEZE)) {
             curState = State.SAFE;
             prevState = State.SAFE;
         }
@@ -45,45 +26,57 @@ public class ReactiveExplorer extends Agent {
 
     private void move(int action) {
 
-        if (action == World.GRAB) {                              //grab gold, game ends
-            world.action(action);
-            gameOver = true;
-        } else if (action == World.MOVE) {                       //move forward
-            percepts = world.action(action);
-            if ((percepts & BUMP) != BUMP) {            //did not bump into anything
-                prevPos = this.curLoc;
-                prevState = curState;
-                curLoc.moveDidMove();
-            } else if ((percepts & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {           //killed by a wumpus, therefore use revive potion and take revenge
-                move(World.SHOOT);
-                move(World.MOVE);
-            } else if ((percepts & DEATH_BY_PIT) == DEATH_BY_PIT) {                 //killed by a pit
-                Location temp = curLoc;
-                curLoc = prevPos;
-                prevPos = temp;
-                prevState = State.UNSAFE;
-                curState = State.EXPLORED;
-            }
-        } else if (action == World.TURN_LEFT || action == World.TURN_RIGHT) {        //turn
-            world.action(action);
-            prevPos = curLoc;
-            if (action == World.SOUTH) {
-                direction = direction.left();                          //turn left
-            } else {
-                direction = direction.right();                          //turn right
-            }
-        } else if (action == World.SHOOT) {                                         //shoot arrow
-            world.action(action);
-            arrowCount--;
-        } else if (action == World.QUIT) {                                          //should never reach here
-            System.out.println("Invalid action: " + action);
+        switch (action) {
+            case World.GRAB:
+                //grab gold, game ends
+                world.action(action);
+                break;
+            case World.MOVE:
+                //move forward
+                percepts = world.action(action);
+                if ((percepts & BUMP) != BUMP) {            //did not bump into anything
+                    prevPos = this.curLoc;
+                    prevState = curState;
+                    updateLocation();
+                } else if ((percepts & DEATH_WUMPUS) == DEATH_WUMPUS) {           //killed by a wumpus, therefore use revive potion and take revenge
+                    move(World.SHOOT);
+                    move(World.MOVE);
+                } else if ((percepts & DEATH) == DEATH) {                 //killed by a pit
+                    Location temp = curLoc;
+                    curLoc = prevPos;
+                    prevPos = temp;
+                    prevState = State.UNSAFE;
+                    curState = State.EXPLORED;
+                }
+                break;
+            case World.TURN_LEFT:
+            case World.TURN_RIGHT:
+                //turn
+                world.action(action);
+                prevPos = curLoc;
+                if (action == World.SOUTH) {
+                    direction = direction.left();                          //turn left
+                } else {
+                    direction = direction.right();                          //turn right
+                }
+                break;
+            case World.SHOOT:
+                //shoot arrow
+                world.action(action);
+                arrowCount--;
+                break;
+            case World.QUIT:
+                //should never reach here
+                System.out.println("Invalid action: " + action);
+                break;
+            default:
+                break;
         }
     }
 
-    public void decideNextAction(byte percepts) {       //select safe neighboring cell else select unsafe neighboring cell
+    public void decideNextAction() {       //select safe neighboring cell else select unsafe neighboring cell
 
-        if (((percepts & STENTCH) != 0) && ((percepts & BREEZE) != 0)) {        //all adjacent spaces are safe
-            Random random = new Random();
+        if (((percepts & STENCH) != 0) && ((percepts & BREEZE) != 0)) {        //all adjacent spaces are safe
             switch (random.nextInt(3)) {
                 case 1:             //go forward
                     move(World.MOVE);
@@ -106,7 +99,6 @@ public class ReactiveExplorer extends Agent {
                 move(World.TURN_LEFT);
                 move(World.MOVE);
             } else {                                //pick random move
-                Random random = new Random();
                 switch (random.nextInt(3)) {
                     case 1:                         //go forward
                         move(World.MOVE);
