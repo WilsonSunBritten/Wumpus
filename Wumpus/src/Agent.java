@@ -4,10 +4,11 @@ import java.util.Random;
 public class Agent {
 
     protected Location location;
-    protected Direction direction;
-    protected final int BREEZE = 1, STENCH = 2, BUMP = 4, GLITTER = 8, DEATH = 16, DEATH_WUMPUS = 32, SCREAM = 64;
+    protected int direction, arrowCount;
+    protected final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH = 0b00010000, DEATH_WUMPUS = 0b00100000, SCREAM = 0b01000000;
     protected static final int GRAB = 1, MOVE = 2, TURN_LEFT = 3, TURN_RIGHT = 4, SHOOT = 5, QUIT = 6;
-    protected int percepts, arrowCount;
+    protected static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
+    protected byte percepts;
     protected World world;
     protected Random random = new Random();
 
@@ -15,39 +16,33 @@ public class Agent {
         this.world = world;
         this.arrowCount = world.arrowCount;
         this.location = new Location(world.x, world.y);
-        this.direction = direction.getDirection(0);
+        this.direction = world.direction;
         this.percepts = world.getPercepts();
     }
 
-    public enum Direction {
-        
-        NORTH(0), EAST(1), SOUTH(2), WEST(3);
+    public void turnRight() {
+        direction = (direction + 1) % 4;
+        world.action(TURN_RIGHT);
+    }
 
-        private final int id;
-        
-        private Direction(int id) {
-            this.id = id;
-        }
-        
-        Direction[] terms = values();
-
-        public Direction left() {
-            return terms[(this.ordinal() + 1) % terms.length];
-        }
-
-        public Direction right() {
-            return terms[(this.ordinal() - 1) % terms.length];
-        }
-        
-        public Direction getDirection(int i) {
-            return terms[i];
-        }
+    public void turnLeft() {
+        direction = (direction - 1) % 4;
+        world.action(TURN_LEFT);
+    }
+    
+    public int getRight() {
+        return (direction + 1) % 4;
+    }
+    
+    public int getLeft() {
+        return (direction - 1) % 4;
     }
 
     public enum State {
         SAFE,
         UNSAFE,
-        EXPLORED;
+        EXPLORED,
+        UNEXPLORED;
     }
 
     public void updateLocation() {
