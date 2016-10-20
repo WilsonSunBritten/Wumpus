@@ -3,6 +3,9 @@ public class ReactiveExplorer extends Agent {
 
     private Location prevLocation;
     private State curState, prevState;
+    private boolean stench = false, breeze = false, bump = false, wumpus = false;
+    private boolean safeMap[][];
+    private static final int FORWARD = 0, LEFT = 1, BACK = 2, RIGHT = 3;
 
     public ReactiveExplorer(World world) {
         super(world);
@@ -12,6 +15,8 @@ public class ReactiveExplorer extends Agent {
             curState = State.SAFE;
             prevState = State.SAFE;
         }
+        safeMap = new boolean[world.size][world.size];
+        safeMap[location.x][location.y] = true;
         run();
     }
 
@@ -22,6 +27,36 @@ public class ReactiveExplorer extends Agent {
             decideNextAction();
             i++;
         }
+    }
+    
+    private void move() {
+        
+        //getpercepts
+        world.getPercepts();
+        
+        if (getSafe(FORWARD)) {
+            //go forward
+            move(MOVE);
+        } else if (getSafe(LEFT)) {
+            //go left
+            
+        } else if (getSafe(RIGHT)) {
+            //go right
+        } else if (getSafe(BACK)) { //back should always be safe?
+            //idk this bits weird
+        }
+    }
+    
+    private boolean getSafe(int direction) {
+        
+        switch (direction) {
+            case FORWARD:
+                
+            case LEFT:
+            case RIGHT:
+            case BACK:
+        }
+        return true;
     }
 
     private void move(int action) {

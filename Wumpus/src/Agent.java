@@ -22,10 +22,20 @@ public class Agent {
 
     public void turnRight() {
         direction = (direction + 1) % 4;
+        world.action(TURN_RIGHT);
     }
 
     public void turnLeft() {
         direction = (direction - 1) % 4;
+        world.action(TURN_LEFT);
+    }
+    
+    public int getRight() {
+        return (direction + 1) % 4;
+    }
+    
+    public int getLeft() {
+        return (direction - 1) % 4;
     }
 
     public enum State {
