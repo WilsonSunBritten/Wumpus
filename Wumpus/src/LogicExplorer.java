@@ -6,19 +6,12 @@ public class LogicExplorer extends Agent {
 
     private final World world;
     private final KnowledgeBase kb;
-    private int arrowCount;
-    private int previousAction;
-    private ArrayList<Position> frontier = new ArrayList<>();
+    private int arrowCount, previousAction;
+    private ArrayList<Location> frontier = new ArrayList<>();
     private boolean[][] searchedPositions;
-    private final int worldSize;
     private Random random = new Random();
 
-    private final byte BREEZE = 0b00000001;
-    private final byte STENCH = 0b0000010;
-    private final byte BUMP = 0b00000100;
-    private final byte GLITTER = 0b00001000;
-    private final byte DEATH = 0b00010000;
-    private final byte SCREAM = 0b01000000;
+    private final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH = 0b00010000, SCREAM = 0b01000000;
 
     public LogicExplorer(World world) {
         this.world = world;
@@ -26,7 +19,6 @@ public class LogicExplorer extends Agent {
         kb.initializeRules();
         this.arrowCount = world.arrowCount;
         this.searchedPositions = new boolean[World.size][World.size];
-        this.worldSize = World.size;
         run();
     }
 
@@ -95,7 +87,7 @@ public class LogicExplorer extends Agent {
             move(World.SHOOT);
         } else {
             //go to random spot in frontier that is not definite death
-            Position target = frontier.get(random.nextInt(frontier.size()));
+            Location target = frontier.get(random.nextInt(frontier.size()));
             RHWTraversal("At(target)");
         }
     }
@@ -103,7 +95,7 @@ public class LogicExplorer extends Agent {
     private void processPosition(byte percepts) {
         if ((percepts & BUMP) == 0) {//did not bump
             if (previousAction == World.MOVE) {
-                curPos.moveDidMove();
+                curLoc.moveDidMove();
             }
         }
     }
@@ -111,14 +103,14 @@ public class LogicExplorer extends Agent {
     private void updateKB(byte percepts) {
         if ((percepts & STENCH) != 0) {
             Clause clause = new Clause();
-            kb.tell(new Clause(new Fact("Stench", curPos.x, false, curPos.y,false,  true, null, null)));//Stench(x,y,t)
+            kb.tell(new Clause(new Fact("Stench", curLoc.x, false, curLoc.y,false,  true, null, null)));//Stench(x,y,t)
         } else {
-            kb.tell(new Clause(new Fact("Stench", curPos.x, false, curPos.y,false, false, null, null)));//!Stench(x,y,t)
+            kb.tell(new Clause(new Fact("Stench", curLoc.x, false, curLoc.y,false, false, null, null)));//!Stench(x,y,t)
         }
         if ((percepts & BREEZE) != 0) {
-            kb.tell(new Clause(new Fact("Breeze", curPos.x, false, curPos.y,false, true, null, null)));
+            kb.tell(new Clause(new Fact("Breeze", curLoc.x, false, curLoc.y,false, true, null, null)));
         } else {
-            kb.tell(new Clause(new Fact("Breeze", curPos.x, false, curPos.y,false, false, null, null)));
+            kb.tell(new Clause(new Fact("Breeze", curLoc.x, false, curLoc.y,false, false, null, null)));
         }
         if ((percepts & SCREAM) != 0) {
             //need to deal with this

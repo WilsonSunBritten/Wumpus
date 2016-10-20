@@ -1,7 +1,8 @@
 
 public abstract class Agent {
 
-    Position curPos;
+    Location curLoc;
+    Direction direction;
 
     enum Direction {
         NORTH,
@@ -9,8 +10,13 @@ public abstract class Agent {
         SOUTH,
         WEST;
         
-        void next() {
-            
+        private final Direction[] terms = values();
+        public Direction left() {
+            return terms[(this.ordinal()+1) % terms.length];
+        }
+        
+        public Direction right() {
+            return terms[(this.ordinal()-1) % terms.length];
         }
     };
 
@@ -19,38 +25,40 @@ public abstract class Agent {
 
     public void decideNextAction() {
     }
+    
+    public void moveDidMove() {
+            switch (direction) {
+                case NORTH:
+                    if (curLoc.y < World.size - 1) {
+                        curLoc.y += 1;
+                    }
+                    break;
+                case EAST:
+                    if (curLoc.x > 0) {
+                        curLoc.x -= 1;
+                    }
+                    break;
+                case SOUTH:
+                    if (curLoc.y > 0) {
+                        curLoc.y--;
+                    }
+                    break;
+                case WEST:
+                    if (curLoc.x < World.size - 1) {
+                        curLoc.x++;
+                    }
+            }
+        }
 
-    class Position {
+    class Location {
 
         int x;
         int y;
-        Direction direction;
 
-        public Position(int x, int y, Direction direction) {
+        public Location(int x, int y) {
             this.x = x;
             this.y = y;
-            this.direction = direction;
         }
-
-//        public int[] getLeft() {
-//            switch (direction) {
-//                
-//            }
-//            
-//        }
-//
-//        public int[] getRight() {
-//
-//        }
-//
-//        public int[] getForward() {
-//
-//        }
-//
-//        public int[] getBehind() {
-//
-//        }
-
         public void moveDidMove() {
             switch (direction) {
                 case NORTH:

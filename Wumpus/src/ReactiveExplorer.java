@@ -4,7 +4,7 @@ import java.util.Random;
 public class ReactiveExplorer extends Agent {
 
     private final World world;
-    private Position prevPos;
+    private Location prevPos;
     private State curState, prevState;
     private int percepts, arrowCount;
     private boolean gameOver = false;
@@ -26,8 +26,8 @@ public class ReactiveExplorer extends Agent {
     public ReactiveExplorer(World world) {
         this.world = world;
         arrowCount = world.arrowCount;
-        curPos = new Position(world.x, world.y, world.direction);
-        prevPos = curPos;
+        curLoc = new Location(world.x, world.y);
+        prevPos = curLoc;
         percepts = world.getPercepts();
         if (((percepts & STENTCH) != STENTCH) && ((percepts & BREEZE) != BREEZE)) {
             curState = State.SAFE;
@@ -51,26 +51,26 @@ public class ReactiveExplorer extends Agent {
         } else if (action == World.MOVE) {                       //move forward
             percepts = world.action(action);
             if ((percepts & BUMP) != BUMP) {            //did not bump into anything
-                prevPos = this.curPos;
+                prevPos = this.curLoc;
                 prevState = curState;
-                curPos.moveDidMove();
+                curLoc.moveDidMove();
             } else if ((percepts & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {           //killed by a wumpus, therefore use revive potion and take revenge
                 move(World.SHOOT);
                 move(World.MOVE);
             } else if ((percepts & DEATH_BY_PIT) == DEATH_BY_PIT) {                 //killed by a pit
-                Position temp = curPos;
-                curPos = prevPos;
+                Location temp = curLoc;
+                curLoc = prevPos;
                 prevPos = temp;
                 prevState = State.UNSAFE;
                 curState = State.EXPLORED;
             }
         } else if (action == World.TURN_LEFT || action == World.TURN_RIGHT) {        //turn
             world.action(action);
-            prevPos = curPos;
+            prevPos = curLoc;
             if (action == World.SOUTH) {
-                curPos.direction = ++curPos.direction;                          //turn left
+                direction = direction.left();                          //turn left
             } else {
-                curPos.direction = --curPos.direction % 4;                          //turn right
+                direction = direction.right();                          //turn right
             }
         } else if (action == World.SHOOT) {                                         //shoot arrow
             world.action(action);
