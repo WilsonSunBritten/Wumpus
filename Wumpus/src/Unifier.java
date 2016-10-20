@@ -69,6 +69,10 @@ public class Unifier {
     }
 
     public static ArrayList<Substitute> unify(Fact f1, Fact f2) {
+        if(!f1.predicate.equals(f2.predicate)){
+            return new ArrayList<>();
+        }
+        
         ArrayList<Fact> vars = new ArrayList<>();
         Fact temp = new Fact();
         temp.variables.add(f1.variables.get(0));
