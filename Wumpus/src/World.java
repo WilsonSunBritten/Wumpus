@@ -9,7 +9,7 @@ public final class World {
     public static final int GRAB = 1, MOVE = 2, TURN_LEFT = 3, TURN_RIGHT = 4, SHOOT = 5, QUIT = 6;
     protected final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH = 0b00010000, DEATH_WUMPUS = 0b00100000, SCREAM = 0b01000000;
 
-    protected int arrowCount, x, y, direction = 0, score = 0;
+    protected int arrowCount, x, y, direction = 0, score = 0, numMoves;
     public static int size;
     private byte[][] perceptMap;
 
@@ -52,81 +52,85 @@ public final class World {
     }
 
     public int action(int action) {
+        System.out.println("Action: " + action);
+        numMoves++;
         switch (action) {
             case GRAB:
                 if ((perceptMap[x][y] & GLITTER) != 0) {
                     perceptMap[x][y] -= GLITTER;
+                    score += 1000;
+                    System.out.println("Gold found!\nScore: " + score);
+                    System.exit(0);
+                } else {
+                    System.out.println("gold not found error");
                 }
-                score += 1000;
-                System.out.println("Gold found!\nScore: " + score);
-                System.exit(0);
                 break;
             case MOVE:
                 score--;
-        switch (direction) {
-            case NORTH:
-                if (y + 1 < size) {
-                    if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
-                        score -= 1000;
-                        return DEATH_WUMPUS;
-                    }
-                    if ((perceptMap[x][y] & DEATH) == DEATH) {
-                        score -= 1000;
-                        return DEATH;
-                    }
-                    y = y + 1;
-                    return perceptMap[x][y];
-                } else {
-                    return BUMP;
+                switch (direction) {
+                    case NORTH:
+                        if (y + 1 < size) {
+                            if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
+                                score -= 1000;
+                                return DEATH_WUMPUS;
+                            }
+                            if ((perceptMap[x][y] & DEATH) == DEATH) {
+                                score -= 1000;
+                                return DEATH;
+                            }
+                            y = y + 1;
+                            return perceptMap[x][y];
+                        } else {
+                            return BUMP;
+                        }
+                    case EAST:
+                        if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
+                            score -= 1000;
+                            return DEATH_WUMPUS;
+                        }
+                        if ((perceptMap[x][y] & DEATH) == DEATH) {
+                            score -= 1000;
+                            return DEATH;
+                        }
+                        if (x + 1 < size) {
+                            x = x + 1;
+                            return perceptMap[x][y];
+                        } else {
+                            return BUMP;
+                        }
+                    case SOUTH:
+                        if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
+                            score -= 1000;
+                            return DEATH_WUMPUS;
+                        }
+                        if ((perceptMap[x][y] & DEATH) == DEATH) {
+                            score -= 1000;
+                            return DEATH;
+                        }
+                        if (y - 1 > 0) {
+                            y -= 1;
+                            return perceptMap[x][y];
+                        } else {
+                            return BUMP;
+                        }
+                    case WEST:
+                        if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
+                            score -= 1000;
+                            return DEATH_WUMPUS;
+                        }
+                        if ((perceptMap[x][y] & DEATH) == DEATH) {
+                            score -= 1000;
+                            return DEATH;
+                        }
+                        if (x - 1 > 0) {
+                            x -= 1;
+                            return perceptMap[x][y];
+                        } else {
+                            return BUMP;
+                        }
+                    default:
+                        break;
                 }
-            case EAST:
-                if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
-                    score -= 1000;
-                    return DEATH_WUMPUS;
-                }
-                if ((perceptMap[x][y] & DEATH) == DEATH) {
-                    score -= 1000;
-                    return DEATH;
-                }
-                if (x + 1 < size) {
-                    x = x + 1;
-                    return perceptMap[x][y];
-                } else {
-                    return BUMP;
-                }
-            case SOUTH:
-                if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
-                    score -= 1000;
-                    return DEATH_WUMPUS;
-                }
-                if ((perceptMap[x][y] & DEATH) == DEATH) {
-                    score -= 1000;
-                    return DEATH;
-                }
-                if (y - 1 > 0) {
-                    y -= 1;
-                    return perceptMap[x][y];
-                } else {
-                    return BUMP;
-                }
-            case WEST:
-                if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
-                    score -= 1000;
-                    return DEATH_WUMPUS;
-                }
-                if ((perceptMap[x][y] & DEATH) == DEATH) {
-                    score -= 1000;
-                    return DEATH;
-                }
-                if (x - 1 > 0) {
-                    x -= 1;
-                    return perceptMap[x][y];
-                } else {
-                    return BUMP;
-                }
-            default:
-                break;
-        }
                 break;
             case TURN_LEFT:
                 direction = (direction + 3) % 4 + 1;
@@ -191,13 +195,16 @@ public final class World {
             case QUIT:
                 System.out.println("Agent elected to end game.");
                 System.exit(0);
+                break;
+            default:
+                System.out.println("Error with world movement, no case exists: " + action);
+                return -1;
         }
-        System.out.println("Error with world movement, no case exists: " + action);
         return -1;
     }
 
     private void removeWumpus(int x, int y) {
-        
+
         System.out.println("Wumpus slain at " + x + ", " + y + "!!!");
 
         //remove death_by_wumpus percepts from x, y
@@ -213,7 +220,7 @@ public final class World {
             }
         }
         if (y > 0) {
-                //remove stentch below
+            //remove stentch below
             perceptMap[x][y - 1] = (byte) (perceptMap[x][y - 1] & ~STENCH);
             if (y < size - 1) {
                 //remove stentch above

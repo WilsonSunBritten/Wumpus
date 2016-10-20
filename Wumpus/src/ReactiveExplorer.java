@@ -48,11 +48,11 @@ public class ReactiveExplorer extends Agent {
             case TURN_LEFT:
                 world.action(TURN_LEFT);
                 System.out.println("direction: " + direction);
-                direction = direction.left();
+                turnLeft();
                 break;
             case TURN_RIGHT:
                 world.action(TURN_RIGHT);
-                direction = direction.right();
+                turnRight();
                 break;
             case SHOOT:
                 world.action(SHOOT);
@@ -67,7 +67,8 @@ public class ReactiveExplorer extends Agent {
     public void decideNextAction() {    //select safe neighboring cell else select unsafe neighboring cell
 
         if (((percepts & STENCH) != 0) && ((percepts & BREEZE) != 0)) {        //all adjacent spaces are safe
-            switch (random.nextInt(3)) {
+            int rand = random.nextInt(3);
+            switch (rand) {
                 case 1:                 //go forward
                     move(MOVE);
                     break;
@@ -80,7 +81,7 @@ public class ReactiveExplorer extends Agent {
                     move(MOVE);
                     break;
                 default:
-                    System.out.println("Invalid case: random action, reactive explorer (safe)");
+                    System.out.println("Invalid case: random action, reactive explorer (safe) rand = " + rand);
             }
         } else {                                    //neighboring cells may not be safe
 
@@ -89,6 +90,7 @@ public class ReactiveExplorer extends Agent {
                 move(TURN_LEFT);
                 move(MOVE);
             } else {                                //pick random move
+                int rand = random.nextInt(3);
                 switch (random.nextInt(3)) {
                     case 1:                         //go forward
                         move(MOVE);
@@ -102,7 +104,7 @@ public class ReactiveExplorer extends Agent {
                         move(MOVE);
                         break;
                     default:
-                        System.out.println("Invalid case: random action, reactive explorer (unsafe)");
+                    System.out.println("Invalid case: random action, reactive explorer (unsafe) rand = " + rand);
                 }
             }
         }
