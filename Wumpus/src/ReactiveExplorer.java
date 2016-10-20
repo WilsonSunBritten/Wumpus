@@ -47,6 +47,7 @@ public class ReactiveExplorer extends Agent {
                 break;
             case TURN_LEFT:
                 world.action(TURN_LEFT);
+                System.out.println("direction: " + direction);
                 direction = direction.left();
                 break;
             case TURN_RIGHT:

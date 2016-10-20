@@ -1,7 +1,7 @@
 
 import java.util.Random;
 
-public abstract class Agent {
+public class Agent {
 
     protected Location location;
     protected Direction direction;
@@ -15,17 +15,21 @@ public abstract class Agent {
         this.world = world;
         this.arrowCount = world.arrowCount;
         this.location = new Location(world.x, world.y);
-     //   this.direction = NORTH;
+        this.direction = direction.getDirection(0);
         this.percepts = world.getPercepts();
     }
 
     public enum Direction {
-        NORTH,
-        EAST,
-        SOUTH,
-        WEST;
+        
+        NORTH(0), EAST(1), SOUTH(2), WEST(3);
 
-        private final Direction[] terms = values();
+        private final int id;
+        
+        private Direction(int id) {
+            this.id = id;
+        }
+        
+        Direction[] terms = values();
 
         public Direction left() {
             return terms[(this.ordinal() + 1) % terms.length];
@@ -33,6 +37,10 @@ public abstract class Agent {
 
         public Direction right() {
             return terms[(this.ordinal() - 1) % terms.length];
+        }
+        
+        public Direction getDirection(int i) {
+            return terms[i];
         }
     }
 

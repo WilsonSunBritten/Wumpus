@@ -192,7 +192,7 @@ public final class World {
                 System.out.println("Agent elected to end game.");
                 System.exit(0);
         }
-        System.out.println("Error shouldn't ever get here");
+        System.out.println("Error with world movement, no case exists: " + action);
         return -1;
     }
 
