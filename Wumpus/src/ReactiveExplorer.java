@@ -33,7 +33,29 @@ public class ReactiveExplorer extends Agent {
 
         if ((percepts & STENCH) != STENCH && (percepts & BREEZE) != BREEZE) {
             updateSafe();
-            //go in random direction, left
+            //go in random direction 
+            int rand = random.nextInt(3);
+            switch (rand) {
+                case 0:     //try to go forward
+                    percepts = world.action(MOVE);
+                    if ((percepts & BUMP) != BUMP) {
+                        return;
+                    }
+                case 1:     //try to go left
+                    turnLeft();
+                    percepts = world.action(MOVE);
+                    if ((percepts & BUMP) != BUMP) {
+                        return;
+                    }
+                case 2:     //try go right
+                    turnRight();
+                    percepts = world.action(MOVE);
+                    if ((percepts & BUMP) != BUMP) {
+                        return;
+                    }
+                default:
+                    System.out.println("Move error, invalid case: " + rand);
+            }
         }
         //getpercepts
 
