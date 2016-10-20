@@ -67,10 +67,44 @@ public class Unifier {
         }
         return null;
     }
-
+    public static ArrayList<Substitute> wilsonUnify(Fact f1, Fact f2){
+        ArrayList<Substitute> subs = new ArrayList<>();
+        if(!f1.predicate.equals(f2.predicate))
+            return subs;
+        
+        Fact fact1 = new Fact(f1);
+        Fact fact2 = new Fact(f2);
+        //check if fact1 has a variable
+        for (int i = 0; i < fact1.variables.size(); i++) {
+            Variable tempVar = fact1.variables.get(i);
+            if(tempVar.isVariable){
+                if(!fact2.variables.get(i).isVariable){
+                    Substitute sub = new Substitute();
+                    sub.varIdToSubstitute = tempVar.variableId;
+                    sub.valToSubstituteWith = fact2.variables.get(i).value;
+                    subs.add(sub);
+                }
+            }
+        }
+        for (int i = 0; i < fact2.variables.size(); i++) {
+            Variable tempVar = fact2.variables.get(i);
+            if(tempVar.isVariable){
+                if(!fact1.variables.get(i).isVariable){
+                    Substitute sub = new Substitute();
+                    sub.varIdToSubstitute = tempVar.variableId;
+                    sub.valToSubstituteWith = fact1.variables.get(i).value;
+                    subs.add(sub);
+                }
+            }
+        }
+        
+        return subs;
+    }
     public static ArrayList<Substitute> unify(Fact f1, Fact f2) {
+        
+        ArrayList<Substitute> subs = new ArrayList<>();
         if(!f1.predicate.equals(f2.predicate)){
-            return new ArrayList<>();
+            return subs;
         }
         
         ArrayList<Fact> vars = new ArrayList<>();
@@ -84,7 +118,6 @@ public class Unifier {
         temp.variables.add(f2.variables.get(1));
         vars.add(temp);
 
-        ArrayList<Substitute> subs = new ArrayList<>();
 
         while (!vars.isEmpty()) {
             Fact tempFact = vars.remove(0);
