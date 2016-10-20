@@ -9,6 +9,7 @@ public class LogicExplorer extends Agent {
     private boolean[][] searchedPositions;
 
     public LogicExplorer(World world) {
+        super(world);
         kb = new KnowledgeBase();
         kb.initializeRules();
         this.searchedPositions = new boolean[World.size][World.size];
@@ -18,37 +19,62 @@ public class LogicExplorer extends Agent {
     private void run() {
 
         while (true) {
-            decideNextAction((byte) world.getPercepts());
+            decideNextAction();
         }
     }
 
     private void move(int action) {
 
         switch (action) {
-            case 1:
-                world.action(action);
-            case 2:
-                kb.tell(encodePercepts(world.action(action)));
+            case GRAB:
+                world.action(GRAB);
+                System.out.println("Game failed to end after action(GRAB).");
                 break;
-            case 5:
+            case MOVE:
+                percepts = (byte) world.action(MOVE);
+                processPercepts();
+                break;
+            case TURN_LEFT:
+                world.action(TURN_LEFT);
+                break;
+            case TURN_RIGHT:
+                world.action(TURN_RIGHT);
+                break;
+            case SHOOT:
                 arrowCount--;
-                kb.tell(encodePercepts(world.action(action)));
+                percepts = (byte) world.action(SHOOT);
+                processPercepts();
+                break;
+            case QUIT:
+                world.action(QUIT);
+                System.out.println("Game failed to end after action(QUIT).");
                 break;
             default:
-                world.action(action);
-                break;
+                System.out.println("Error processing movement.");
         }
     }
 
-    private Clause encodePercepts(int percepts) {
+    private void processPercepts() {
 
-        Clause clause = new Clause();
-
-        //conversion logic goes here
-        return clause;
+        if (((percepts & BUMP) != BUMP) && (percepts & DEATH) != DEATH) {
+            updateLocation();
+        }
+        if ((percepts & STENCH) != 0) {
+            kb.tell(new Clause(new Fact("Stench", location.x, false, location.y, false, true, null, null)));
+        } else {
+            kb.tell(new Clause(new Fact("Stench", location.x, false, location.y, false, false, null, null)));
+        }
+        if ((percepts & BREEZE) != 0) {
+            kb.tell(new Clause(new Fact("Breeze", location.x, false, location.y, false, true, null, null)));
+        } else {
+            kb.tell(new Clause(new Fact("Breeze", location.x, false, location.y, false, false, null, null)));
+        }
+        if ((percepts & SCREAM) != 0) {
+            kb.tell(new Clause(new Fact("Screem", location.x, false, location.y, false, true, null, null)));
+        }
     }
 
-    private void decideNextAction(byte percepts) {
+    private void decideNextAction() {
 
         if (frontier.isEmpty()) {
             move(World.QUIT);
@@ -56,57 +82,27 @@ public class LogicExplorer extends Agent {
         if ((percepts & GLITTER) != 0) {
             move(World.GRAB);
         }
-        
-        processPosition(percepts);
-        updateKB(percepts);
-        
+
         //check if adjacent to any unexplored and safe spaces
-        
         //check forward
         //check left
         //check right
-        if (kb.ask("!Wumpus(forward)AND!Pit(forward)"))
-        
-        
-        if (kb.ask("Is ")) {
-                
-        } else if (kb.ask("!Wumpus(forwardspot)AND!Pit(forwardSpot)&!Obstical(forwardSpot)")) {
-            move(World.MOVE);
-        } else if ("safeSpotInFrontier?" == "") {
-            RHWTraversal("!Wumpus(adjacent)AND!Pit(adjacent)");
-        } else if ("KnownWumpusSpotInFrontier" == "") {
-            //kill wumpus
-            RHWTraversal("Wumpus(adjacent)");
-            move(World.SHOOT);
-        } else {
-            //go to random spot in frontier that is not definite death
-            Location target = frontier.get(random.nextInt(frontier.size()));
-            RHWTraversal("At(target)");
-        }
-    }
+        if (kb.ask("!Wumpus(forward)AND!Pit(forward)")) {
+            if (kb.ask("Is ")) {
 
-    private void processPosition(byte percepts) {
-        if ((percepts & BUMP) == 0) {//did not bump
-            if (previousAction == World.MOVE) {
-                updateLocation();
+            } else if (kb.ask("!Wumpus(forwardspot)AND!Pit(forwardSpot)&!Obstical(forwardSpot)")) {
+                move(World.MOVE);
+            } else if ("safeSpotInFrontier?" == "") {
+                RHWTraversal("!Wumpus(adjacent)AND!Pit(adjacent)");
+            } else if ("KnownWumpusSpotInFrontier" == "") {
+                //kill wumpus
+                RHWTraversal("Wumpus(adjacent)");
+                move(World.SHOOT);
+            } else {
+                //go to random spot in frontier that is not definite death
+                Location target = frontier.get(random.nextInt(frontier.size()));
+                RHWTraversal("At(target)");
             }
-        }
-    }
-
-    private void updateKB(byte percepts) {
-        if ((percepts & STENCH) != 0) {
-            Clause clause = new Clause();
-            kb.tell(new Clause(new Fact("Stench", curLoc.x, false, curLoc.y,false,  true, null, null)));//Stench(x,y,t)
-        } else {
-            kb.tell(new Clause(new Fact("Stench", curLoc.x, false, curLoc.y,false, false, null, null)));//!Stench(x,y,t)
-        }
-        if ((percepts & BREEZE) != 0) {
-            kb.tell(new Clause(new Fact("Breeze", curLoc.x, false, curLoc.y,false, true, null, null)));
-        } else {
-            kb.tell(new Clause(new Fact("Breeze", curLoc.x, false, curLoc.y,false, false, null, null)));
-        }
-        if ((percepts & SCREAM) != 0) {
-            //need to deal with this
         }
     }
 
