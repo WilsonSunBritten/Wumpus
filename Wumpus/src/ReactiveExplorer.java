@@ -1,12 +1,12 @@
 
 public class ReactiveExplorer extends Agent {
 
-    private Location prevPos;
+    private Location prevLocation;
     private State curState, prevState;
 
     public ReactiveExplorer(World world) {
         super(world);
-        prevPos = location;
+        prevLocation = location;
         percepts = world.getPercepts();
         if (((percepts & STENCH) != STENCH) && ((percepts & BREEZE) != BREEZE)) {
             curState = State.SAFE;
@@ -17,8 +17,10 @@ public class ReactiveExplorer extends Agent {
 
     private void run() {
 
-        while (true) {
+        int i = 0;
+        while (i < 10) {
             decideNextAction();
+            i++;
         }
     }
 
@@ -31,16 +33,15 @@ public class ReactiveExplorer extends Agent {
             case MOVE:
                 percepts = world.action(MOVE);
                 if ((percepts & BUMP) != BUMP) {                            //did not bump into anything
-                    prevPos = location;
+                    prevLocation = location;
                     prevState = curState;
                     updateLocation();
                 } else if ((percepts & DEATH_WUMPUS) == DEATH_WUMPUS) {     //killed by a wumpus, therefore use revive potion and take revenge
-                    move(SHOOT);
-                    move(MOVE);
+                    killWumpus();
                 } else if ((percepts & DEATH) == DEATH) {                   //killed by a pit
                     Location temp = location;
-                    location = prevPos;
-                    prevPos = temp;
+                    location = prevLocation;
+                    prevLocation = temp;
                     prevState = State.UNSAFE;
                     curState = State.EXPLORED;
                 }
@@ -69,14 +70,14 @@ public class ReactiveExplorer extends Agent {
         if (((percepts & STENCH) != 0) && ((percepts & BREEZE) != 0)) {        //all adjacent spaces are safe
             int rand = random.nextInt(3);
             switch (rand) {
-                case 1:                 //go forward
+                case 0:                 //go forward
                     move(MOVE);
                     break;
-                case 2:                 //turn left and go forward
+                case 1:                 //turn left and go forward
                     move(TURN_LEFT);
                     move(MOVE);
                     break;
-                case 3:                 //turn right and go forward
+                case 2:                 //turn right and go forward
                     move(TURN_RIGHT);
                     move(MOVE);
                     break;
@@ -92,21 +93,29 @@ public class ReactiveExplorer extends Agent {
             } else {                                //pick random move
                 int rand = random.nextInt(3);
                 switch (random.nextInt(3)) {
-                    case 1:                         //go forward
+                    case 0:                         //go forward
                         move(MOVE);
                         break;
-                    case 2:                         //turn left and go forward
+                    case 1:                         //turn left and go forward
                         move(TURN_LEFT);
                         move(MOVE);
                         break;
-                    case 3:                         //turn right and go forward
+                    case 2:                         //turn right and go forward
                         move(TURN_RIGHT);
                         move(MOVE);
                         break;
                     default:
-                    System.out.println("Invalid case: random action, reactive explorer (unsafe) rand = " + rand);
+                        System.out.println("Invalid case: random action, reactive explorer (unsafe) rand = " + rand);
                 }
             }
         }
+    }
+    
+    private void killWumpus() {
+        System.out.println("kill wumpus");
+        location = prevLocation;
+        percepts = world.getPercepts();
+        move(SHOOT);
+        move(MOVE);
     }
 }

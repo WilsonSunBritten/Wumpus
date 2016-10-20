@@ -50,9 +50,25 @@ public final class World {
     public int getPercepts() {
         return perceptMap[x][y];
     }
+    
+    private void printWorld() {
+        
+        for (int i = 0; i < perceptMap.length; i++) {
+            for (int j = 0; j < perceptMap.length; j++) {
+                if (x == i && y == j) {
+                    System.out.print("A ");
+                } else {
+                    System.out.print(perceptMap[i][j] +" ");
+                }
+            }
+            System.out.println("");
+        } 
+        System.out.println("");
+    }
 
     public int action(int action) {
         System.out.println("Action: " + action);
+        printWorld();
         numMoves++;
         switch (action) {
             case GRAB:
