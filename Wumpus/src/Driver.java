@@ -7,9 +7,10 @@ public class Driver {
 
     public static void main(String[] args) throws IOException {
 //        Driver driver = new Driver();
-       // Tester tester = new Tester();
+        Tester tester = new Tester();
+        tester.testUnify();
        // tester.testInferenceEngine();
-        Driver.makeGame();
+        //Driver.makeGame();
     }
 
     public static void makeGame() throws IOException {

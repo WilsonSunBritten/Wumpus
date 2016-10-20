@@ -1,11 +1,42 @@
 
+import java.util.ArrayList;
+
 
 public class Tester {
-    
-    public void testUnify(){
+
+    public void testUnify() {
         Fact f1 = new Fact();
-        f1.isVariable = true;
         Variable v1 = new Variable();
+
+        v1.isVariable = true;
+        v1.variableId = 0;
+
+        f1.variables.add(v1);
+
+        v1 = new Variable();
+        v1.isVariable = true;
+        v1.variableId = 1;
+
+        f1.variables.add(v1);
+
+        Fact f2 = new Fact();
+        v1 = new Variable();
+        v1.isVariable = true;
+        v1.variableId = 2;
+        
+        f2.variables.add(v1);
+        
+        v1 = new Variable();
+        v1.isVariable = true;
+        v1.variableId = 3;
+        
+        f2.variables.add(v1);
+        
+        ArrayList<Substitute> subs = Unifier.unify(f1, f2);
+        System.out.println(subs.size());
+        for(Substitute sub: subs){
+            System.out.println(sub.varIdToSubstitute + "/" + sub.valToSubstituteWith);
+        }
     }
 
     public void testInferenceEngine() {

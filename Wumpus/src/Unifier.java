@@ -88,12 +88,12 @@ public class Unifier {
                 if (tempFact.variables.get(0).isVariable) {
                     Substitute s = new Substitute();
                     s.varIdToSubstitute = tempFact.variables.get(0).variableId;
-                    s.varIdToSubstitute = tempFact.variables.get(1).variableId;
+                    s.valToSubstituteWith = tempFact.variables.get(1).variableId;
                     subs.add(s);
                 } else if (tempFact.variables.get(1).isVariable) {
                     Substitute s = new Substitute();
                     s.varIdToSubstitute = tempFact.variables.get(1).variableId;
-                    s.varIdToSubstitute = tempFact.variables.get(0).variableId;
+                    s.valToSubstituteWith = tempFact.variables.get(0).variableId;
                     subs.add(s);
                 }
                 else{
