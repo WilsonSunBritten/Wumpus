@@ -20,8 +20,7 @@ public class LogicExplorer extends Agent {
     private final byte STENCH = 0b0000010;
     private final byte BUMP = 0b00000100;
     private final byte GLITTER = 0b00001000;
-    private final byte DEATH_BY_WUMPUS = 0b00010000;
-    private final byte DEATH_BY_PIT = 0b00100000;
+    private final byte DEATH = 0b00010000;
     private final byte SCREAM = 0b01000000;
 
     public LogicExplorer(World world) {
@@ -108,14 +107,14 @@ public class LogicExplorer extends Agent {
     private void updateKB(byte percepts) {
         if ((percepts & STENCH) != 0) {
             Clause clause = new Clause();
-            kb.tell(new Clause(new Fact("Stench", curPos.x, curPos.y, t, true)));//Stench(x,y,t)
+            kb.tell(new Clause(new Fact("Stench", curPos.x, curPos.y, true, null, null)));//Stench(x,y,t)
         } else {
-            kb.tell(new Clause(new Fact("Stench", curPos.x, curPos.y, t, false)));//!Stench(x,y,t)
+            kb.tell(new Clause(new Fact("Stench", curPos.x, curPos.y, false, null, null)));//!Stench(x,y,t)
         }
         if ((percepts & BREEZE) != 0) {
-            kb.tell(new Clause(new Fact("Breeze", curPos.x, curPos.y, t, true)));
+            kb.tell(new Clause(new Fact("Breeze", curPos.x, curPos.y, true, null, null)));
         } else {
-            kb.tell(new Clause(new Fact("Breeze", curPos.x, curPos.y, t, false)));
+            kb.tell(new Clause(new Fact("Breeze", curPos.x, curPos.y, false, null, null)));
         }
         if ((percepts & SCREAM) != 0) {
             //need to deal with this

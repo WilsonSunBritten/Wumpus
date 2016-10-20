@@ -11,10 +11,9 @@ public class Fact extends Variable implements Iterable {
     boolean not;
     
     public Fact(){}
-    public Fact(String predicate, int var1Val, int var2Val, int var3Val, boolean not){
-        Variable var1 = new Variable(var1Val);
-        Variable var2 = new Variable(var2Val);
-        Variable var3 = new Variable(var3Val);
+    public Fact(String predicate, int var1Val, int var2Val, boolean not, IFunction var1Function, IFunction var2Function){
+        Variable var1 = new Variable(var1Val, var1Function);
+        Variable var2 = new Variable(var2Val, var2Function);
         this.predicate = predicate;
         this.not = not;
     }

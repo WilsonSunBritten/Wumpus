@@ -11,8 +11,9 @@ public class Variable {
     int modifier;
 
     public Variable(){}
-    public Variable(int value){
+    public Variable(int value, IFunction function){
         this.value = value;
+        this.function = function;
     }
     public void printVariable() {
         
