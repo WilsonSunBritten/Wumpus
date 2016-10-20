@@ -7,9 +7,9 @@ public class Driver {
 
     public static void main(String[] args) throws IOException {
 //        Driver driver = new Driver();
-        Tester tester = new Tester();
-        tester.testInferenceEngine();
-//        Driver.makeGame();
+       // Tester tester = new Tester();
+       // tester.testInferenceEngine();
+        Driver.makeGame();
     }
 
     public static void makeGame() throws IOException {

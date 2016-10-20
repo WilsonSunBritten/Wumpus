@@ -15,7 +15,7 @@ public abstract class Agent {
         this.world = world;
         this.arrowCount = world.arrowCount;
         this.location = new Location(world.x, world.y);
-        this.direction = Direction.NORTH;
+     //   this.direction = NORTH;
         this.percepts = world.getPercepts();
     }
 
