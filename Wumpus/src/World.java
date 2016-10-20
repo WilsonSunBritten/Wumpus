@@ -5,36 +5,15 @@ import java.io.IOException;
 
 public final class World {
 
-    protected int arrowCount;
+    public static final int NORTH = 1, EAST = 2, SOUTH = 3, WEST = 4;
+    public static final int GRAB = 1, MOVE = 2, TURN_LEFT = 3, TURN_RIGHT = 4, SHOOT = 5;
+    public static final int BREEZE = 1, STENTCH = 2, BUMP = 4, GLITTER = 8, DEATH_BY_WUMPUS = 16, DEATH_BY_PIT = 32, SCREAM = 64;
+
+    protected int arrowCount, x, y, direction = 0, score = 0;
     public static int size;
-    private int x;
-    private int y;
-    protected int direction = 0;
     private int[][] perceptMap;
-    protected int score = 0;
-
-    public static final int NORTH = 1;
-    public static final int EAST = 2;
-    public static final int SOUTH = 3;
-    public static final int WEST = 4;
-    private final int BREEZE = 1;
-    private final int STENTCH = 2;
-    private final int BUMP = 4;
-    private final int GLITTER = 8;
-    private final int DEATH_BY_WUMPUS = 16;
-    private final int DEATH_BY_PIT = 32;
-    private final int SCREAM = 64;
-
-    static final int GRAB = 1;
-    static final int MOVE = 2;
-    static final int TURN_LEFT = 3;
-    static final int TURN_RIGHT = 4;
-    static final int SHOOT = 5;
-    final int END = 6;//needed?
 
     public World(String fileName) {
-        x = 0;
-        y = 0;
         importMap(fileName);
         //read in file
     }
@@ -44,7 +23,7 @@ public final class World {
             FileReader in = new FileReader(fileName);
             BufferedReader reader = new BufferedReader(in);
             String next;
-            int size = Integer.parseInt(reader.readLine());
+            size = Integer.parseInt(reader.readLine());
             perceptMap = new int[size][size];
             int i = 0;
             while ((next = reader.readLine()) != null) {//((Integer) reader.read()).toString()).equals("-1")) {
@@ -64,15 +43,9 @@ public final class World {
                 }
                 System.out.println("");
             }
-
         } catch (IOException | NumberFormatException e) {
             System.out.println("Exception caught: " + e);
         }
-    }
-
-    public int[] getLocation() {
-        int[] location = {x, y};
-        return location;
     }
 
     public int getPercepts() {
@@ -92,11 +65,11 @@ public final class World {
                 if (direction == NORTH) {
                     if (y + 1 < size) {
                         if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
-                            //subtract 1000 from score
+                            score -= 1000;
                             return DEATH_BY_WUMPUS;
                         }
                         if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
-                            //subtract 1000 from score
+                            score -= 1000;
                             return DEATH_BY_PIT;
                         }
                         y = y + 1;
@@ -106,11 +79,11 @@ public final class World {
                     }
                 } else if (direction == EAST) {
                     if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
-                        //subtract 1000 from score
+                        score -= 1000;
                         return DEATH_BY_WUMPUS;
                     }
                     if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
-                        //subtract 1000 from score
+                        score -= 1000;
                         return DEATH_BY_PIT;
                     }
                     if (x + 1 < size) {
@@ -121,11 +94,11 @@ public final class World {
                     }
                 } else if (direction == SOUTH) {
                     if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
-                        //subtract 1000 from score
+                        score -= 1000;
                         return DEATH_BY_WUMPUS;
                     }
                     if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
-                        //subtract 1000 from score
+                        score -= 1000;
                         return DEATH_BY_PIT;
                     }
                     if (y - 1 > 0) {
@@ -136,11 +109,11 @@ public final class World {
                     }
                 } else if (direction == WEST) {
                     if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
-                        //subtract 1000 from score
+                        score -= 1000;
                         return DEATH_BY_WUMPUS;
                     }
                     if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
-                        //subtract 1000 from score
+                        score -= 1000;
                         return DEATH_BY_PIT;
                     }
                     if (x - 1 > 0) {
@@ -211,16 +184,13 @@ public final class World {
                     default:
                         System.out.println("Error in shooting logic.");
                 }
-
-            case END:
-            //needed?
         }
-
         System.out.println("Error shouldn't ever get here");
         return -1;
     }
 
     private static void removeWumpus(int x, int y) {
         //remove stench percepts form spaces adjacent to wumpus
+        
     }
 }

@@ -26,7 +26,7 @@ public class ReactiveExplorer extends Agent {
     public ReactiveExplorer(World world) {
         this.world = world;
         arrowCount = world.arrowCount;
-        curPos = new Position(world.getLocation()[0], world.getLocation()[1], world.direction);
+        curPos = new Position(world.x, world.y, world.direction);
         prevPos = curPos;
         percepts = world.getPercepts();
         if (((percepts & STENTCH) != STENTCH) && ((percepts & BREEZE) != BREEZE)) {
