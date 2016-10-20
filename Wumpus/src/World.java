@@ -189,8 +189,27 @@ public final class World {
         return -1;
     }
 
-    private static void removeWumpus(int x, int y) {
+    private void removeWumpus(int x, int y) {
+
+        //remove death_by_wumpus percepts from x, y
+        perceptMap[x][y] = perceptMap[x][y] & ~DEATH_BY_WUMPUS;
+
         //remove stench percepts form spaces adjacent to wumpus
-        
+        if (x > 0) {
+            //remove stentch to left
+            perceptMap[x - 1][y] = perceptMap[x - 1][y] & ~STENTCH;
+            if (x < size - 1) {
+                //remove stentch to right
+                perceptMap[x + 1][y] = perceptMap[x + 1][y] & ~STENTCH;
+            }
+        }
+        if (y > 0) {
+                //remove stentch below
+            perceptMap[x][y - 1] = perceptMap[x][y - 1] & ~STENTCH;
+            if (y < size - 1) {
+                //remove stentch above
+                perceptMap[x][y + 1] = perceptMap[x][y + 1] & ~STENTCH;
+            }
+        }
     }
 }

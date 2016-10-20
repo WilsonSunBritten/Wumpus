@@ -9,7 +9,6 @@ public class Variable {
     IFunction function;
     int variableId;
     int modifier;
-    boolean isSkolemConstant;//Skolem function would just be the function, a skolem constant will have this and it's varId making a unique identifier
 
     public Variable(){}
     public Variable(int value){
