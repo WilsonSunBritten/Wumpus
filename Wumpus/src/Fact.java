@@ -9,7 +9,10 @@ public class Fact extends Variable {
 
     public Fact(Fact fact) {
         not = fact.not;
-        variables = fact.variables;
+        
+        for(Variable var : fact.variables){
+            variables.add(new Variable(var));
+        }
         predicate = fact.predicate;
 
     }

@@ -9,7 +9,13 @@ public class Variable {
     IFunction function;
     int variableId;
     int modifier;
-
+    public Variable(Variable var){
+        isVariable = var.isVariable;
+        value = var.value;
+        function = var.function;
+        variableId = var.variableId;
+        modifier = var.modifier;
+    }
     public Variable(){}
     public Variable(int value, boolean isVariable, IFunction function){
         this.isVariable = isVariable;
