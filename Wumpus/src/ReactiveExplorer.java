@@ -82,7 +82,7 @@ public class ReactiveExplorer extends Agent {
                     System.out.println("Invalid case: random action, reactive explorer (safe)");
             }
         } else {                                    //neighboring cells may not be safe
-            
+
             if (prevState == State.SAFE) {          //there might be a situation where the agent move back and forth between 3 safe safe spaces here we might need to account for
                 move(TURN_LEFT);
                 move(TURN_LEFT);

@@ -10,7 +10,7 @@ public abstract class Agent {
     protected int percepts, arrowCount;
     protected World world;
     protected Random random = new Random();
-    
+
     public Agent(World world) {
         this.world = world;
         this.arrowCount = world.arrowCount;

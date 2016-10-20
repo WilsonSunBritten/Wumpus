@@ -27,11 +27,11 @@ public class Driver {
         System.out.println("");
 
         WumpusGame game = new WumpusGame(5, prob);
-        
+
         //Agent explorer = new ReactiveExplorer(world, world.getLocation(), world.direction,world.getPercepts(), world.arrowCount);
         World world = new World("PerceptBoard.txt");
         Agent explorer = new ReactiveExplorer(world);
-        
+
         world = new World("PerceptBoard.txt");
         explorer = new LogicExplorer(world);
     }
