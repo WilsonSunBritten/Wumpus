@@ -5,7 +5,7 @@ public abstract class Agent {
 
     protected Location location;
     protected Direction direction;
-    protected final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH = 0b00010000, DEATH_WUMPUS = 0b00100000, SCREAM = 0b01000000;
+    protected final int BREEZE = 1, STENCH = 2, BUMP = 4, GLITTER = 8, DEATH = 16, DEATH_WUMPUS = 32, SCREAM = 64;
     protected static final int GRAB = 1, MOVE = 2, TURN_LEFT = 3, TURN_RIGHT = 4, SHOOT = 5, QUIT = 6;
     protected int percepts, arrowCount;
     protected World world;
@@ -15,7 +15,7 @@ public abstract class Agent {
         this.world = world;
         this.arrowCount = world.arrowCount;
         this.location = new Location(world.x, world.y);
-        this.direction = Direction.NORTH;
+     //   this.direction = NORTH;
         this.percepts = world.getPercepts();
     }
 

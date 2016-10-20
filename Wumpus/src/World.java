@@ -7,11 +7,11 @@ public final class World {
 
     public static final int NORTH = 1, EAST = 2, SOUTH = 3, WEST = 4;
     public static final int GRAB = 1, MOVE = 2, TURN_LEFT = 3, TURN_RIGHT = 4, SHOOT = 5, QUIT = 6;
-    public static final int BREEZE = 1, STENTCH = 2, BUMP = 4, GLITTER = 8, DEATH_BY_WUMPUS = 16, DEATH_BY_PIT = 32, SCREAM = 64;
+    protected final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH = 0b00010000, DEATH_WUMPUS = 0b00100000, SCREAM = 0b01000000;
 
     protected int arrowCount, x, y, direction = 0, score = 0;
     public static int size;
-    private int[][] perceptMap;
+    private byte[][] perceptMap;
 
     public World(String fileName) {
         importMap(fileName);
@@ -23,12 +23,12 @@ public final class World {
             BufferedReader reader = new BufferedReader(in);
             String next;
             size = Integer.parseInt(reader.readLine());
-            perceptMap = new int[size][size];
+            perceptMap = new byte[size][size];
             int i = 0;
             while ((next = reader.readLine()) != null) {//((Integer) reader.read()).toString()).equals("-1")) {
                 int j = 0;
                 while (next.contains(" ") && !next.equals(" ")) {
-                    perceptMap[i][j] = Integer.parseInt(next.substring(0, next.indexOf(" ")));
+                    perceptMap[i][j] = (byte) Integer.parseInt(next.substring(0, next.indexOf(" ")));
 
                     next = next.substring(next.indexOf(" ") + 1, next.length());
                     j++;
@@ -36,7 +36,7 @@ public final class World {
                 i++;
             }
             System.out.println("");
-            for (int[] row : perceptMap) {
+            for (byte[] row : perceptMap) {
                 for (int j = 0; j < row.length; j++) {
                     System.out.print(row[j] + " ");
                 }
@@ -66,13 +66,13 @@ public final class World {
         switch (direction) {
             case NORTH:
                 if (y + 1 < size) {
-                    if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
+                    if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                         score -= 1000;
-                        return DEATH_BY_WUMPUS;
+                        return DEATH_WUMPUS;
                     }
-                    if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
+                    if ((perceptMap[x][y] & DEATH) == DEATH) {
                         score -= 1000;
-                        return DEATH_BY_PIT;
+                        return DEATH;
                     }
                     y = y + 1;
                     return perceptMap[x][y];
@@ -80,13 +80,13 @@ public final class World {
                     return BUMP;
                 }
             case EAST:
-                if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
+                if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                     score -= 1000;
-                    return DEATH_BY_WUMPUS;
+                    return DEATH_WUMPUS;
                 }
-                if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
+                if ((perceptMap[x][y] & DEATH) == DEATH) {
                     score -= 1000;
-                    return DEATH_BY_PIT;
+                    return DEATH;
                 }
                 if (x + 1 < size) {
                     x = x + 1;
@@ -95,13 +95,13 @@ public final class World {
                     return BUMP;
                 }
             case SOUTH:
-                if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
+                if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                     score -= 1000;
-                    return DEATH_BY_WUMPUS;
+                    return DEATH_WUMPUS;
                 }
-                if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
+                if ((perceptMap[x][y] & DEATH) == DEATH) {
                     score -= 1000;
-                    return DEATH_BY_PIT;
+                    return DEATH;
                 }
                 if (y - 1 > 0) {
                     y -= 1;
@@ -110,13 +110,13 @@ public final class World {
                     return BUMP;
                 }
             case WEST:
-                if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
+                if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                     score -= 1000;
-                    return DEATH_BY_WUMPUS;
+                    return DEATH_WUMPUS;
                 }
-                if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
+                if ((perceptMap[x][y] & DEATH) == DEATH) {
                     score -= 1000;
-                    return DEATH_BY_PIT;
+                    return DEATH;
                 }
                 if (x - 1 > 0) {
                     x -= 1;
@@ -201,23 +201,23 @@ public final class World {
         System.out.println("Wumpus slain at " + x + ", " + y + "!!!");
 
         //remove death_by_wumpus percepts from x, y
-        perceptMap[x][y] = perceptMap[x][y] & ~DEATH_BY_WUMPUS;
+        perceptMap[x][y] = (byte) (perceptMap[x][y] & ~DEATH_WUMPUS);
 
         //remove stench percepts form spaces adjacent to wumpus
         if (x > 0) {
             //remove stentch to left
-            perceptMap[x - 1][y] = perceptMap[x - 1][y] & ~STENTCH;
+            perceptMap[x - 1][y] = (byte) (perceptMap[x - 1][y] & ~STENCH);
             if (x < size - 1) {
                 //remove stentch to right
-                perceptMap[x + 1][y] = perceptMap[x + 1][y] & ~STENTCH;
+                perceptMap[x + 1][y] = (byte) (perceptMap[x + 1][y] & ~STENCH);
             }
         }
         if (y > 0) {
                 //remove stentch below
-            perceptMap[x][y - 1] = perceptMap[x][y - 1] & ~STENTCH;
+            perceptMap[x][y - 1] = (byte) (perceptMap[x][y - 1] & ~STENCH);
             if (y < size - 1) {
                 //remove stentch above
-                perceptMap[x][y + 1] = perceptMap[x][y + 1] & ~STENTCH;
+                perceptMap[x][y + 1] = (byte) (perceptMap[x][y + 1] & ~STENCH);
             }
         }
     }
