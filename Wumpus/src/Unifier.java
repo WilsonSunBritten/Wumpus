@@ -25,19 +25,35 @@ public class Unifier {
         https://baylor-ir.tdl.org/baylor-ir/bitstream/handle/2104/2887/AshishArteThesis.pdf?sequence=4 this is dense af, but has some good information and explaination of pseduo code
         
     
-    */
-    public static ArrayList<Substitute> unify(Fact fact1, Fact fact2){
+     */
+    public static ArrayList<Substitute> unify1(Fact fact1, Fact fact2) {
+        if (!canUnify(fact1, fact2)) {
+            return new ArrayList<Substitute>();
+        }
+
         return new ArrayList<Substitute>();
     }
+
+    public static boolean canUnify(Fact fact1, Fact fact2) {
+        //Predicates don't match
+        if (!fact1.predicate.equals(fact2.predicate)) {
+            return false;
+        }
+        return true;
+    }
+
     //this is the general outline of how to go about unification...
-    public static Substitute unify(Variable p, Variable q, Substitute theta) {
-        
+    public static Substitute unify1(Variable p, Variable q, Substitute theta) {
+
         if (p.equals(q)) {      //success
+            theta.varIdToSubstitute = p.variableId;
+            theta.valToSubstituteWith = q.variableId;
             return theta;
-        } else if (!p.contains(q)) {
+        } else if (p.variableId != q.variableId) {
             //bind p to q and insert (p/q) into theta
+
             return theta;
-        } else if (!q.contains(p)) {
+        } else if (q.variableId != q.variableId) {
             //bind q to p and insert (q/p) into theta
             return theta;
         } else if (true) {  //if r is a variable? Occurs checks need to be done here i think
@@ -51,15 +67,49 @@ public class Unifier {
         }
         return null;
     }
-    
+
+    public static ArrayList<Substitute> unify(Fact f1, Fact f2) {
+        ArrayList<Fact> vars = new ArrayList<>();
+        Fact temp = new Fact();
+        temp.variables.add(f1.variables.get(0));
+        temp.variables.add(f2.variables.get(0));
+        vars.add(temp);
+
+        temp = new Fact();
+        temp.variables.add(f1.variables.get(1));
+        temp.variables.add(f2.variables.get(1));
+        vars.add(temp);
+
+        ArrayList<Substitute> subs = new ArrayList<>();
+
+        while (!vars.isEmpty()) {
+            Fact tempFact = vars.remove(0);
+            if (!tempFact.variables.get(0).equals(tempFact.variables.get(1))) {
+                if (tempFact.variables.get(0).isVariable) {
+                    Substitute s = new Substitute();
+                    s.varIdToSubstitute = tempFact.variables.get(0).variableId;
+                    s.varIdToSubstitute = tempFact.variables.get(1).variableId;
+                    subs.add(s);
+                } else if (tempFact.variables.get(1).isVariable) {
+                    Substitute s = new Substitute();
+                    s.varIdToSubstitute = tempFact.variables.get(1).variableId;
+                    s.varIdToSubstitute = tempFact.variables.get(0).variableId;
+                    subs.add(s);
+                }
+                else{
+                    return new ArrayList<Substitute>();
+                }
+            }
+        }
+        return subs;
+    }
+
     private static boolean occursCheck(Variable var, Variable term) {
         //determins if term is in var
         return true;
     }
 }
 
-
-    
 //    public SubstitutionString unify(Variable x, Variable y) {
 //        return (SubstitutionString) unify(x, y, (SubstitutionString) new LinkedHashMap<>());
 //    }

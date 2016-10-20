@@ -1,6 +1,12 @@
 
 
 public class Tester {
+    
+    public void testUnify(){
+        Fact f1 = new Fact();
+        f1.isVariable = true;
+        Variable v1 = new Variable();
+    }
 
     public void testInferenceEngine() {
         InferenceEngine engine = new InferenceEngine(new KnowledgeBase());
