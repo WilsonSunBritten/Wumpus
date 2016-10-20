@@ -10,6 +10,11 @@ public class Clause extends Fact implements Iterable {
     ArrayList<Fact> facts = new ArrayList<>();
     
     public Clause(){}
+    public Clause(Clause clause){
+        for(Fact tempFact : clause.facts){
+            facts.add(new Fact(tempFact));
+        }
+    }
     public Clause(Fact fact){
         facts.add(fact);
     }

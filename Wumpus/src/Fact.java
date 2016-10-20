@@ -6,10 +6,13 @@ public class Fact extends Variable implements Iterable {
 
     ArrayList<Variable> variables = new ArrayList<>();
     String predicate;
-    boolean isEvaluation;
-    int operator;
     boolean not;
-    
+    public Fact(Fact fact){
+        not = fact.not;
+        variables = fact.variables;
+        predicate = fact.predicate;
+        
+    }
     public Fact(){}
     public Fact(String predicate, int var1Val, boolean var1Var, int var2Val, boolean var2Var, boolean not, IFunction var1Function, IFunction var2Function){
         Variable var1 = new Variable(var1Val, var1Var, var1Function);
@@ -36,10 +39,6 @@ public class Fact extends Variable implements Iterable {
         return false;
     }
     
-    @Override
-    public String getOp() {
-        return "" + operator;
-    }
     
     @Override
     public ArrayList getArgs() {
