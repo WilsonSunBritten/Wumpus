@@ -1,4 +1,6 @@
 
+import java.util.ArrayList;
+
 public class ReactiveExplorer extends Agent {
 
     private Location prevLocation;
@@ -8,7 +10,7 @@ public class ReactiveExplorer extends Agent {
     private static final int FORWARD = 0, LEFT = 1, BACK = 2, RIGHT = 3;
 
     public ReactiveExplorer(World world, int arrows, int x, int y, int direction) {
-        super(world, arrows,x,y,direction);
+        super(world, arrows, x, y, direction);
         prevLocation = location;
         percepts = world.getPercepts();
         if (((percepts & STENCH) != STENCH) && ((percepts & BREEZE) != BREEZE)) {
@@ -47,12 +49,14 @@ public class ReactiveExplorer extends Agent {
                     if ((percepts & BUMP) != BUMP) {
                         return;
                     }
+                    turnRight();
                 case 2:     //try go right
                     turnRight();
                     percepts = world.action(MOVE);
                     if ((percepts & BUMP) != BUMP) {
                         return;
                     }
+                    turnLeft();
                 default:    //turn around
                     turnRight();
                     turnRight();
@@ -60,13 +64,47 @@ public class ReactiveExplorer extends Agent {
             }
         } else {
             //if forward is safe, go forward
-            
-            
-            //if left is safe, go left
-            
-            //if right is safe, go right
-            
-            
+            ArrayList<Integer> safeMoves = new ArrayList();
+            if (getSafe(FORWARD)) {
+                safeMoves.add(FORWARD);
+            }
+            if (getSafe(LEFT)) {
+                safeMoves.add(LEFT);
+            }
+            if (getSafe(RIGHT)) {
+                safeMoves.add(RIGHT);
+            }
+            if (safeMoves.size() > 0) {
+                int rand = random.nextInt(safeMoves.size());
+                percepts = world.action(safeMoves.get(rand));
+            } else {
+                int rand = random.nextInt(3);
+                switch (rand) {
+                    case 0:
+                        percepts = world.action(MOVE);
+                        if ((percepts & BUMP) != BUMP) {
+                            return;
+                        }
+                    case 1:
+                        turnLeft();
+                        percepts = world.action(MOVE);
+                        if ((percepts & BUMP) != BUMP) {
+                            return;
+                        }
+                        turnRight();
+                    case 2:
+                        turnRight();
+                        percepts = world.action(MOVE);
+                        if ((percepts & BUMP) != BUMP) {
+                            return;
+                        }
+                        turnLeft();
+                    default:
+                        turnRight();
+                        turnRight();
+                        percepts = world.action(MOVE);
+                }
+            }
         }
     }
 
