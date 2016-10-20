@@ -3,6 +3,17 @@ public abstract class Agent {
 
     Position curPos;
 
+    enum Direction {
+        NORTH,
+        EAST,
+        SOUTH,
+        WEST;
+        
+        void next() {
+            
+        }
+    };
+
     private void move(int action) {
     }
 
@@ -13,32 +24,51 @@ public abstract class Agent {
 
         int x;
         int y;
-        int direction;
+        Direction direction;
 
-        public Position(int x, int y, int direction) {
+        public Position(int x, int y, Direction direction) {
             this.x = x;
             this.y = y;
             this.direction = direction;
         }
 
+//        public int[] getLeft() {
+//            switch (direction) {
+//                
+//            }
+//            
+//        }
+//
+//        public int[] getRight() {
+//
+//        }
+//
+//        public int[] getForward() {
+//
+//        }
+//
+//        public int[] getBehind() {
+//
+//        }
+
         public void moveDidMove() {
             switch (direction) {
-                case World.NORTH:
+                case NORTH:
                     if (y < World.size - 1) {
                         y += 1;
                     }
                     break;
-                case World.EAST:
+                case EAST:
                     if (x > 0) {
                         x -= 1;
                     }
                     break;
-                case World.SOUTH:
+                case SOUTH:
                     if (y > 0) {
                         y--;
                     }
                     break;
-                case World.WEST:
+                case WEST:
                     if (x < World.size - 1) {
                         x++;
                     }

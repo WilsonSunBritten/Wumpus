@@ -68,7 +68,7 @@ public class ReactiveExplorer extends Agent {
             world.action(action);
             prevPos = curPos;
             if (action == World.SOUTH) {
-                curPos.direction = ++curPos.direction % 4;                          //turn left
+                curPos.direction = ++curPos.direction;                          //turn left
             } else {
                 curPos.direction = --curPos.direction % 4;                          //turn right
             }

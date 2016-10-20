@@ -1,20 +1,17 @@
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class LogicExplorer extends Agent {
 
     private final World world;
     private final KnowledgeBase kb;
     private int arrowCount;
-    private int t = 0;              //time variable
     private int previousAction;
-    private Position curPos;
     private ArrayList<Position> frontier = new ArrayList<>();
     private boolean[][] searchedPositions;
-    private boolean currentlyNavigatingToSafeSquare;
     private final int worldSize;
-    private Position goalPosition;
-    private boolean gameOver = false;
+    private Random random = new Random();
 
     private final byte BREEZE = 0b00000001;
     private final byte STENCH = 0b0000010;
@@ -35,7 +32,7 @@ public class LogicExplorer extends Agent {
 
     private void run() {
 
-        while (!gameOver) {
+        while (true) {
             decideNextAction((byte) world.getPercepts());
         }
     }
@@ -45,7 +42,6 @@ public class LogicExplorer extends Agent {
         switch (action) {
             case 1:
                 world.action(action);
-                gameOver = true;
             case 2:
                 kb.tell(encodePercepts(world.action(action)));
                 break;
@@ -72,31 +68,36 @@ public class LogicExplorer extends Agent {
         if (frontier.isEmpty()) {
             move(World.QUIT);
         }
+        if ((percepts & GLITTER) != 0) {
+            move(World.GRAB);
+        }
+        
         processPosition(percepts);
         updateKB(percepts);
-        if ((percepts & GLITTER) != 0) {//maybe just kb.ask("Holding(Gold,Result(Grab,CurrentPosition))"): is better, no percept based logic within agent.
-            //return World.GRAB;    //grab gold and end game
-            move(1);
-        } else if (currentlyNavigatingToSafeSquare) {       // im pretty sure this is all handled by RHW method, so thers no need to call decide next actions while its traversing
-            //return continueNavigatingToSafeSquare();
+        
+        //check if adjacent to any unexplored and safe spaces
+        
+        //check forward
+        //check left
+        //check right
+        if (kb.ask("!Wumpus(forward)AND!Pit(forward)"))
+        
+        
+        if (kb.ask("Is ")) {
+                
         } else if (kb.ask("!Wumpus(forwardspot)AND!Pit(forwardSpot)&!Obstical(forwardSpot)")) {
             move(World.MOVE);
         } else if ("safeSpotInFrontier?" == "") {
             RHWTraversal("!Wumpus(adjacent)AND!Pit(adjacent)");
-            //return continueNavigatingToSafeSquare();
         } else if ("KnownWumpusSpotInFrontier" == "") {
             //kill wumpus
             RHWTraversal("Wumpus(adjacent)");
+            move(World.SHOOT);
         } else {
             //go to random spot in frontier that is not definite death
+            Position target = frontier.get(random.nextInt(frontier.size()));
+            RHWTraversal("At(target)");
         }
-    }
-
-    //i dont think we need this, RHW takes to the space and then turns to face already...its all done in a look so new percepts arent being processed
-    //since the agent has already been to all of the spaces in will be traveling through
-    private int continueNavigatingToSafeSquare() {
-        //this should basically be RHW Traversal until adjacent to to goal state, then turn to face it
-        return -1;
     }
 
     private void processPosition(byte percepts) {
