@@ -6,7 +6,7 @@ import java.io.IOException;
 public final class World {
 
     public static final int NORTH = 1, EAST = 2, SOUTH = 3, WEST = 4;
-    public static final int GRAB = 1, MOVE = 2, TURN_LEFT = 3, TURN_RIGHT = 4, SHOOT = 5;
+    public static final int GRAB = 1, MOVE = 2, TURN_LEFT = 3, TURN_RIGHT = 4, SHOOT = 5, QUIT = 6;
     public static final int BREEZE = 1, STENTCH = 2, BUMP = 4, GLITTER = 8, DEATH_BY_WUMPUS = 16, DEATH_BY_PIT = 32, SCREAM = 64;
 
     protected int arrowCount, x, y, direction = 0, score = 0;
@@ -15,7 +15,6 @@ public final class World {
 
     public World(String fileName) {
         importMap(fileName);
-        //read in file
     }
 
     public void importMap(String fileName) {
@@ -59,6 +58,8 @@ public final class World {
                     perceptMap[x][y] -= GLITTER;
                 }
                 score += 1000;
+                System.out.println("Gold found!\nScore: " + score);
+                System.exit(0);
                 break;
             case MOVE:
                 score--;
@@ -184,12 +185,17 @@ public final class World {
                     default:
                         System.out.println("Error in shooting logic.");
                 }
+            case QUIT:
+                System.out.println("Agent elected to end game.");
+                System.exit(0);
         }
         System.out.println("Error shouldn't ever get here");
         return -1;
     }
 
     private void removeWumpus(int x, int y) {
+        
+        System.out.println("Wumpus slain at " + x + ", " + y + "!!!");
 
         //remove death_by_wumpus percepts from x, y
         perceptMap[x][y] = perceptMap[x][y] & ~DEATH_BY_WUMPUS;

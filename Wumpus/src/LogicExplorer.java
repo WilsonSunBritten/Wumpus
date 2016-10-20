@@ -12,7 +12,7 @@ public class LogicExplorer extends Agent {
     private ArrayList<Position> frontier = new ArrayList<>();
     private boolean[][] searchedPositions;
     private boolean currentlyNavigatingToSafeSquare;
-    private int worldSize;
+    private final int worldSize;
     private Position goalPosition;
     private boolean gameOver = false;
 
@@ -28,8 +28,8 @@ public class LogicExplorer extends Agent {
         kb = new KnowledgeBase();
         kb.initializeRules();
         this.arrowCount = world.arrowCount;
-        this.searchedPositions = new boolean[world.size][world.size];
-        this.worldSize = world.size;
+        this.searchedPositions = new boolean[World.size][World.size];
+        this.worldSize = World.size;
         run();
     }
 
@@ -47,7 +47,7 @@ public class LogicExplorer extends Agent {
                 world.action(action);
                 gameOver = true;
             case 2:
-                kb.tell(encodePercepts(world.action(action)));//kb.tell(encodePercepts(world.action(action)));
+                kb.tell(encodePercepts(world.action(action)));
                 break;
             case 5:
                 arrowCount--;
@@ -69,6 +69,9 @@ public class LogicExplorer extends Agent {
 
     private void decideNextAction(byte percepts) {
 
+        if (frontier.isEmpty()) {
+            move(World.QUIT);
+        }
         processPosition(percepts);
         updateKB(percepts);
         if ((percepts & GLITTER) != 0) {//maybe just kb.ask("Holding(Gold,Result(Grab,CurrentPosition))"): is better, no percept based logic within agent.
@@ -77,7 +80,7 @@ public class LogicExplorer extends Agent {
         } else if (currentlyNavigatingToSafeSquare) {       // im pretty sure this is all handled by RHW method, so thers no need to call decide next actions while its traversing
             //return continueNavigatingToSafeSquare();
         } else if (kb.ask("!Wumpus(forwardspot)AND!Pit(forwardSpot)&!Obstical(forwardSpot)")) {
-            move(2);
+            move(World.MOVE);
         } else if ("safeSpotInFrontier?" == "") {
             RHWTraversal("!Wumpus(adjacent)AND!Pit(adjacent)");
             //return continueNavigatingToSafeSquare();

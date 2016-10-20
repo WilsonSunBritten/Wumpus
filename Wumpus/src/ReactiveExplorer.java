@@ -38,44 +38,44 @@ public class ReactiveExplorer extends Agent {
 
     private void run() {
 
-        while (!gameOver) {
-            decideNextAction((byte) percepts);
+        while (true) {
+            decideNextAction();
         }
     }
 
     private void move(int action) {
 
-        if (action == 1) {                              //grab gold, game ends
+        if (action == World.GRAB) {                              //grab gold, game ends
             world.action(action);
             gameOver = true;
-        } else if (action == 2) {                       //move forward
+        } else if (action == World.MOVE) {                       //move forward
             percepts = world.action(action);
             if ((percepts & BUMP) != BUMP) {            //did not bump into anything
                 prevPos = this.curPos;
                 prevState = curState;
                 curPos.moveDidMove();
-            } else if ((percepts & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {       //killed by a wumpus, therefore use revive potion and take revenge
-                move(5);
-                move(2);
-            } else if ((percepts & DEATH_BY_PIT) == DEATH_BY_PIT) {             //killed by a pit
+            } else if ((percepts & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {           //killed by a wumpus, therefore use revive potion and take revenge
+                move(World.SHOOT);
+                move(World.MOVE);
+            } else if ((percepts & DEATH_BY_PIT) == DEATH_BY_PIT) {                 //killed by a pit
                 Position temp = curPos;
                 curPos = prevPos;
                 prevPos = temp;
                 prevState = State.UNSAFE;
                 curState = State.EXPLORED;
             }
-        } else if (action == 3 || action == 4) {        //turn
+        } else if (action == World.TURN_LEFT || action == World.TURN_RIGHT) {        //turn
             world.action(action);
             prevPos = curPos;
-            if (action == 3) {
-                curPos.direction = ++curPos.direction % 4;        //turn left
+            if (action == World.SOUTH) {
+                curPos.direction = ++curPos.direction % 4;                          //turn left
             } else {
-                curPos.direction = --curPos.direction % 4;        //turn right
+                curPos.direction = --curPos.direction % 4;                          //turn right
             }
-        } else if (action == 5) {       //shoot arrow
+        } else if (action == World.SHOOT) {                                         //shoot arrow
             world.action(action);
             arrowCount--;
-        } else {                        //should never reach here
+        } else if (action == World.QUIT) {                                          //should never reach here
             System.out.println("Invalid action: " + action);
         }
     }
@@ -86,38 +86,38 @@ public class ReactiveExplorer extends Agent {
             Random random = new Random();
             switch (random.nextInt(3)) {
                 case 1:             //go forward
-                    move(1);
+                    move(World.MOVE);
                     break;
                 case 2:             //turn left and go forward
-                    move(2);
-                    move(1);
+                    move(World.TURN_LEFT);
+                    move(World.MOVE);
                     break;
                 case 3:             //turn right and go forward
-                    move(3);
-                    move(1);
+                    move(World.TURN_RIGHT);
+                    move(World.MOVE);
                     break;
                 default:
                     System.out.println("Should not reach this line.");
             }
         } else {                                    //neighboring cells may not be safe
             //if previous cell was safe, return and pick new direction
-            if (prevState == State.SAFE) {                     //there might be a situation where the agent move back and forth between 3 safe safe spaces here we might need to account for
-                move(3);
-                move(3);
-                move(1);
+            if (prevState == State.SAFE) {          //there might be a situation where the agent move back and forth between 3 safe safe spaces here we might need to account for
+                move(World.TURN_LEFT);
+                move(World.TURN_LEFT);
+                move(World.MOVE);
             } else {                                //pick random move
                 Random random = new Random();
                 switch (random.nextInt(3)) {
                     case 1:                         //go forward
-                        move(1);
+                        move(World.MOVE);
                         break;
                     case 2:                         //turn left and go forward
-                        move(2);
-                        move(1);
+                        move(World.TURN_LEFT);
+                        move(World.MOVE);
                         break;
                     case 3:                         //turn right and go forward
-                        move(3);
-                        move(1);
+                        move(World.TURN_RIGHT);
+                        move(World.MOVE);
                         break;
                     default:
                         System.out.println("Should not reach this line.");
