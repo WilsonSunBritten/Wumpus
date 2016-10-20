@@ -12,11 +12,11 @@ public class Agent {
     protected World world;
     protected Random random = new Random();
 
-    public Agent(World world) {
+    public Agent(World world, int startingArrowCount, int startingX, int startingY, int startingDirection) {
         this.world = world;
-        this.arrowCount = world.arrowCount;
-        this.location = new Location(world.x, world.y);
-        this.direction = world.direction;
+        this.arrowCount = startingArrowCount;
+        this.location = new Location(startingX, startingY);
+        this.direction = startingDirection;
         this.percepts = world.getPercepts();
     }
 

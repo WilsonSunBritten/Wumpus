@@ -8,12 +8,17 @@ public class LogicExplorer extends Agent {
     private ArrayList<Location> frontier = new ArrayList<>();
     private boolean[][] searchedPositions;
 
-    public LogicExplorer(World world) {
-        super(world);
+    public LogicExplorer(World world, int startingArrows, int startingX, int startingY, int direction) {
+        super(world,startingArrows,startingX,startingY,direction);
         kb = new KnowledgeBase();
         kb.initializeRules();
         this.searchedPositions = new boolean[World.size][World.size];
+        initializeFrontier();
         run();
+    }
+    
+    public void initializeFrontier(){
+        
     }
 
     private void run() {

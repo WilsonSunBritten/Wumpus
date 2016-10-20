@@ -26,10 +26,85 @@ public class Unifier {
         
     
      */
+    public static ArrayList<Substitute> unify1(Fact fact1, Fact fact2) {
+        if (!canUnify(fact1, fact2)) {
+            return new ArrayList<Substitute>();
+        }
 
+        return new ArrayList<Substitute>();
+    }
+
+    public static boolean canUnify(Fact fact1, Fact fact2) {
+        //Predicates don't match
+        if (!fact1.predicate.equals(fact2.predicate)) {
+            return false;
+        }
+        return true;
+    }
+
+    //this is the general outline of how to go about unification...
+    public static Substitute unify1(Variable p, Variable q, Substitute theta) {
+
+        if (p.equals(q)) {      //success
+            theta.varIdToSubstitute = p.variableId;
+            theta.valToSubstituteWith = q.variableId;
+            return theta;
+        } else if (p.variableId != q.variableId) {
+            //bind p to q and insert (p/q) into theta
+
+            return theta;
+        } else if (q.variableId != q.variableId) {
+            //bind q to p and insert (q/p) into theta
+            return theta;
+        } else if (true) {  //if r is a variable? Occurs checks need to be done here i think
+            //theta = the union of (theta, {r/s})
+            //unify(substitutionOf(theta, p), substitutionOf(theta, q), theta)
+        } else if (true) {  //if s is a variable? Occurs checks need to be done here i think
+            //theta = the union of (theta, {s/r})
+            //unify(substitutionOf(theta, p), substitutionOf(theta, q), theta)
+        } else {
+            //failure
+        }
+        return null;
+    }
+    public static ArrayList<Substitute> wilsonUnify(Fact f1, Fact f2){
+        ArrayList<Substitute> subs = new ArrayList<>();
+        if(!f1.predicate.equals(f2.predicate))
+            return subs;
+        
+        Fact fact1 = new Fact(f1);
+        Fact fact2 = new Fact(f2);
+        //check if fact1 has a variable
+        for (int i = 0; i < fact1.variables.size(); i++) {
+            Variable tempVar = fact1.variables.get(i);
+            if(tempVar.isVariable){
+                if(!fact2.variables.get(i).isVariable){
+                    Substitute sub = new Substitute();
+                    sub.varIdToSubstitute = tempVar.variableId;
+                    sub.valToSubstituteWith = fact2.variables.get(i).value;
+                    subs.add(sub);
+                }
+            }
+        }
+        for (int i = 0; i < fact2.variables.size(); i++) {
+            Variable tempVar = fact2.variables.get(i);
+            if(tempVar.isVariable){
+                if(!fact1.variables.get(i).isVariable){
+                    Substitute sub = new Substitute();
+                    sub.varIdToSubstitute = tempVar.variableId;
+                    sub.valToSubstituteWith = fact1.variables.get(i).value;
+                    subs.add(sub);
+                }
+            }
+        }
+        
+        return subs;
+    }
     public static ArrayList<Substitute> unify(Fact f1, Fact f2) {
+        
+        ArrayList<Substitute> subs = new ArrayList<>();
         if(!f1.predicate.equals(f2.predicate)){
-            return new ArrayList<>();
+            return subs;
         }
         
         ArrayList<Fact> vars = new ArrayList<>();
@@ -43,7 +118,6 @@ public class Unifier {
         temp.variables.add(f2.variables.get(1));
         vars.add(temp);
 
-        ArrayList<Substitute> subs = new ArrayList<>();
 
         while (!vars.isEmpty()) {
             Fact tempFact = vars.remove(0);

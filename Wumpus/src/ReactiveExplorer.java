@@ -7,8 +7,8 @@ public class ReactiveExplorer extends Agent {
     private boolean safeMap[][];
     private static final int FORWARD = 0, LEFT = 1, BACK = 2, RIGHT = 3;
 
-    public ReactiveExplorer(World world) {
-        super(world);
+    public ReactiveExplorer(World world, int arrows, int x, int y, int direction) {
+        super(world, arrows,x,y,direction);
         prevLocation = location;
         percepts = world.getPercepts();
         if (((percepts & STENCH) != STENCH) && ((percepts & BREEZE) != BREEZE)) {
