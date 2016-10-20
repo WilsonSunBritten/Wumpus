@@ -31,9 +31,9 @@ public class ReactiveExplorer extends Agent {
 
     private void move() {
 
-        if ((percepts & STENCH) != STENCH && (percepts & BREEZE) != BREEZE) {
+        if ((percepts & STENCH) != STENCH && (percepts & BREEZE) != BREEZE) {       //all adjacent spaces are safe
             updateSafe();
-            //go in random direction 
+            //go in random direction
             int rand = random.nextInt(3);
             switch (rand) {
                 case 0:     //try to go forward
@@ -53,23 +53,20 @@ public class ReactiveExplorer extends Agent {
                     if ((percepts & BUMP) != BUMP) {
                         return;
                     }
-                default:
-                    System.out.println("Move error, invalid case: " + rand);
+                default:    //turn around
+                    turnRight();
+                    turnRight();
+                    percepts = world.action(MOVE);
             }
-        }
-        //getpercepts
-
-        //need check boundries
-        if (getSafe(FORWARD)) {
-            //go forward
-            move(MOVE);
-        } else if (getSafe(LEFT)) {
-            //go left
-
-        } else if (getSafe(RIGHT)) {
-            //go right
-        } else if (getSafe(BACK)) { //back should always be safe?
-            //idk this bits weird
+        } else {
+            //if forward is safe, go forward
+            
+            
+            //if left is safe, go left
+            
+            //if right is safe, go right
+            
+            
         }
     }
 
