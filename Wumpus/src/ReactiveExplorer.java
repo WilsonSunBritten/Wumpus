@@ -28,43 +28,59 @@ public class ReactiveExplorer extends Agent {
             i++;
         }
     }
-    
+
     private void move() {
-        
+
+        if ((percepts & STENCH) != STENCH && (percepts & BREEZE) != BREEZE) {
+            updateSafe();
+            //go in random direction, left
+        }
         //getpercepts
-        world.getPercepts();
-        
+
+        //need check boundries
         if (getSafe(FORWARD)) {
             //go forward
             move(MOVE);
         } else if (getSafe(LEFT)) {
             //go left
-            
+
         } else if (getSafe(RIGHT)) {
             //go right
         } else if (getSafe(BACK)) { //back should always be safe?
             //idk this bits weird
         }
     }
-    
+
     private boolean getSafe(int direction) {
-        
-        switch (direction) {
-            case FORWARD:
-                
-            case LEFT:
-            case RIGHT:
-            case BACK:
+
+        int trueDirection = (this.direction - direction) % 4;
+        switch (trueDirection) {
+            case NORTH:
+                return safeMap[location.x][location.y + 1];
+            case SOUTH:
+                return safeMap[location.x][location.y - 1];
+            case EAST:
+                return safeMap[location.x + 1][location.y];
+            case WEST:
+                return safeMap[location.x - 1][location.y];
         }
+        System.out.println("Invalid direction mapping, getSafe()");
         return true;
     }
 
-    private void move(int action) {
+    private void updateSafe() {
+
+        safeMap[location.x + 1][location.y] = true;
+        safeMap[location.x - 1][location.y] = true;
+        safeMap[location.x][location.y + 1] = true;
+        safeMap[location.x][location.y - 1] = true;
+    }
+
+    private byte move(int action) {
 
         switch (action) {
             case GRAB:
-                world.action(GRAB);
-                break;
+                return world.action(GRAB);
             case MOVE:
                 percepts = world.action(MOVE);
                 if ((percepts & BUMP) != BUMP) {                            //did not bump into anything
@@ -80,24 +96,20 @@ public class ReactiveExplorer extends Agent {
                     prevState = State.UNSAFE;
                     curState = State.EXPLORED;
                 }
-                break;
+                return percepts;
             case TURN_LEFT:
-                world.action(TURN_LEFT);
-                System.out.println("direction: " + direction);
                 turnLeft();
-                break;
+                return world.action(TURN_LEFT);
             case TURN_RIGHT:
-                world.action(TURN_RIGHT);
                 turnRight();
-                break;
+                return world.action(TURN_RIGHT);
             case SHOOT:
-                world.action(SHOOT);
                 arrowCount--;
-                break;
+                return world.action(SHOOT);
             case QUIT:
-                world.action(QUIT);
-                break;
+                return world.action(QUIT);
         }
+        return 0b00000000;
     }
 
     public void decideNextAction() {    //select safe neighboring cell else select unsafe neighboring cell
@@ -145,7 +157,7 @@ public class ReactiveExplorer extends Agent {
             }
         }
     }
-    
+
     private void killWumpus() {
         System.out.println("kill wumpus");
         location = prevLocation;

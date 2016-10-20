@@ -47,7 +47,7 @@ public final class World {
         }
     }
 
-    public int getPercepts() {
+    public byte getPercepts() {
         return perceptMap[x][y];
     }
     
@@ -66,7 +66,7 @@ public final class World {
         System.out.println("");
     }
 
-    public int action(int action) {
+    public byte action(int action) {
         System.out.println("Action: " + action);
         printWorld();
         numMoves++;
