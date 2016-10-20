@@ -19,16 +19,17 @@ public class Agent {
         this.direction = startingDirection;
         this.percepts = world.getPercepts();
     }
-    
-    public Location getForward(){
-        if(direction == NORTH)
-            return new Location(location.x,location.y+1);
-        else if(direction == EAST)
-            return new Location(location.x+1,location.y);
-        else if(direction == SOUTH)
-            return new Location(location.x,location.y-1);
-        else
-            return new Location(location.x-1,location.y);
+
+    public Location getForward() {
+        if (direction == NORTH) {
+            return new Location(location.x, location.y + 1);
+        } else if (direction == EAST) {
+            return new Location(location.x + 1, location.y);
+        } else if (direction == SOUTH) {
+            return new Location(location.x, location.y - 1);
+        } else {
+            return new Location(location.x - 1, location.y);
+        }
     }
 
     public void turnRight() {
@@ -40,16 +41,17 @@ public class Agent {
         direction = (direction - 1) % 4;
         world.action(TURN_LEFT);
     }
-    
+
     public int getRight() {
         return (direction + 1) % 4;
     }
-    
+
     public int getLeft() {
         return (direction - 1) % 4;
     }
 
-    public enum State {
+    public enum State { //im not sure were going to need this
+
         SAFE,
         UNSAFE,
         EXPLORED,

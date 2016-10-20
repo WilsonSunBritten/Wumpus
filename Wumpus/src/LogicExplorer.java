@@ -9,7 +9,7 @@ public class LogicExplorer extends Agent {
     private boolean[][] searchedPositions;
 
     public LogicExplorer(World world, int startingArrows, int startingX, int startingY, int direction) {
-        super(world,startingArrows,startingX,startingY,direction);
+        super(world, startingArrows, startingX, startingY, direction);
         kb = new KnowledgeBase();
         kb.initializeRules();
         this.searchedPositions = new boolean[World.size][World.size];
@@ -17,22 +17,28 @@ public class LogicExplorer extends Agent {
         initializeFrontier();
         run();
     }
-    
-    public void initializeFrontier(){
-        if(location.x>0)
-            frontier.add(new Location(location.x-1,location.y));
-        if(location.x < world.size)
-            frontier.add(new Location(location.x+1,location.y));
-        if(location.y>0)
-            frontier.add(new Location(location.x,location.y-1));
-        if(location.y<world.size)
-            frontier.add(new Location(location.x,location.y+1));
+
+    public void initializeFrontier() {
+        if (location.x > 0) {
+            frontier.add(new Location(location.x - 1, location.y));
+        }
+        if (location.x < world.size) {
+            frontier.add(new Location(location.x + 1, location.y));
+        }
+        if (location.y > 0) {
+            frontier.add(new Location(location.x, location.y - 1));
+        }
+        if (location.y < world.size) {
+            frontier.add(new Location(location.x, location.y + 1));
+        }
     }
 
     private void run() {
 
-        while (true) {
+        int i = 0;
+        while (i < 10) {
             decideNextAction();
+            i++;
         }
     }
 
@@ -88,55 +94,55 @@ public class LogicExplorer extends Agent {
     }
 
     private void decideNextAction() {
-
-        if (frontier.isEmpty()) {
-            move(World.QUIT);
-        }
-        if ((percepts & GLITTER) != 0) {
-            move(World.GRAB);
-        }
-
-        //check if adjacent to any unexplored and safe spaces
-        //check forward
-        //check left
-        //check right
-        if (kb.ask("!Wumpus(forward)AND!Pit(forward)")) {
-            if (kb.ask("Is ")) {
-
-            } else if (kb.ask("!Wumpus(forwardspot)AND!Pit(forwardSpot)&!Obstical(forwardSpot)")) {
-                move(World.MOVE);
-            } else if ("safeSpotInFrontier?" == "") {
-                RHWTraversal("!Wumpus(adjacent)AND!Pit(adjacent)");
-            } else if ("KnownWumpusSpotInFrontier" == "") {
-                //kill wumpus
-                RHWTraversal("Wumpus(adjacent)");
-                move(World.SHOOT);
-            } else {
-                //go to random spot in frontier that is not definite death
-                Location target = frontier.get(random.nextInt(frontier.size()));
-                RHWTraversal("At(target)");
-            }
-        }
-    }
-
-    private void RHWTraversal(String stopCondition) {
-
-        do {
-            if (kb.ask("right is safe")) {
-                move(4);        //turn right
-            } else {
-                if (kb.ask("forward is safe")) {
-                    move(2);   //go forward
-                } else {
-                    move(3);    //turn left
-                }
-            }
-        } while (!kb.ask(stopCondition));
-
-        //face stop condition
-        while (!kb.ask("am i facing the stop condition?")) {
-            move(3);   //turn until facing stp condition
-        }
-        move(2);
+//
+//        if (frontier.isEmpty()) {
+//            move(World.QUIT);
+//        }
+//        if ((percepts & GLITTER) != 0) {
+//            move(World.GRAB);
+//        }
+//
+//        //check if adjacent to any unexplored and safe spaces
+//        //check forward
+//        //check left
+//        //check right
+//        if (kb.ask("!Wumpus(forward)AND!Pit(forward)")) {
+//            if (kb.ask("Is ")) {
+//
+//            } else if (kb.ask("!Wumpus(forwardspot)AND!Pit(forwardSpot)&!Obstical(forwardSpot)")) {
+//                move(World.MOVE);
+//            } else if ("safeSpotInFrontier?" == "") {
+//                RHWTraversal("!Wumpus(adjacent)AND!Pit(adjacent)");
+//            } else if ("KnownWumpusSpotInFrontier" == "") {
+//                //kill wumpus
+//                RHWTraversal("Wumpus(adjacent)");
+//                move(World.SHOOT);
+//            } else {
+//                //go to random spot in frontier that is not definite death
+//                Location target = frontier.get(random.nextInt(frontier.size()));
+//                RHWTraversal("At(target)");
+//            }
+//        }
+//    }
+//
+//    private void RHWTraversal(String stopCondition) {
+//
+//        do {
+//            if (kb.ask("right is safe")) {
+//                move(4);        //turn right
+//            } else {
+//                if (kb.ask("forward is safe")) {
+//                    move(2);   //go forward
+//                } else {
+//                    move(3);    //turn left
+//                }
+//            }
+//        } while (!kb.ask(stopCondition));
+//
+//        //face stop condition
+//        while (!kb.ask("am i facing the stop condition?")) {
+//            move(3);   //turn until facing stp condition
+//        }
+//        move(2);
     }
 }

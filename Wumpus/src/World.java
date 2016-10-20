@@ -9,22 +9,22 @@ public final class World {
     public static final int GRAB = 1, MOVE = 2, TURN_LEFT = 3, TURN_RIGHT = 4, SHOOT = 5, QUIT = 6;
     protected final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH = 0b00010000, DEATH_WUMPUS = 0b00100000, SCREAM = 0b01000000;
 
-    private int arrowCount, x, y, direction = 0, score = 0, numMoves;
+    private int arrowCount, x, y, direction = 0, score = 0, numMoves = 0, pitDeaths = 0, wumpusDeaths = 0;
     public static int size;
     private byte[][] perceptMap;
 
     public World(String fileName) {
         importMap(fileName);
     }
-    
-    public void startGame(String id){
+
+    public void startGame(String id) {
         Agent explorer;
-        if(id.equals("LogicExplorer"))
-            explorer = new LogicExplorer(this,arrowCount,x,y,direction);
-        else if(id.equals("ReactiveExplorer")){
-            explorer = new ReactiveExplorer(this,arrowCount,x,y,direction);
+        if (id.equals("LogicExplorer")) {
+            explorer = new LogicExplorer(this, arrowCount, x, y, direction);
+        } else if (id.equals("ReactiveExplorer")) {
+            explorer = new ReactiveExplorer(this, arrowCount, x, y, direction);
         }
-        
+
     }
 
     public void importMap(String fileName) {
@@ -45,13 +45,13 @@ public final class World {
                 }
                 i++;
             }
-            System.out.println("");
-            for (byte[] row : perceptMap) {
-                for (int j = 0; j < row.length; j++) {
-                    System.out.print(row[j] + " ");
-                }
-                System.out.println("");
-            }
+//            System.out.println("");
+//            for (byte[] row : perceptMap) {
+//                for (int j = 0; j < row.length; j++) {
+//                    System.out.print(row[j] + " ");
+//                }
+//                System.out.println("");
+//            }
         } catch (IOException | NumberFormatException e) {
             System.out.println("Exception caught: " + e);
         }
@@ -60,25 +60,30 @@ public final class World {
     public byte getPercepts() {
         return perceptMap[x][y];
     }
-    
+
     private void printWorld() {
-        
+
         for (int i = 0; i < perceptMap.length; i++) {
             for (int j = 0; j < perceptMap.length; j++) {
                 if (x == i && y == j) {
                     System.out.print("A ");
                 } else {
-                    System.out.print(perceptMap[i][j] +" ");
+                    if ((perceptMap[i][j] & DEATH_WUMPUS) != 0) {
+                        System.out.print("W ");
+                    } else {
+                        System.out.print(perceptMap[i][j] + " ");
+                    }
                 }
             }
             System.out.println("");
-        } 
+        }
         System.out.println("");
     }
 
     public byte action(int action) {
-        System.out.println("Action: " + action);
         printWorld();
+        System.out.println("Action: " + action);
+        System.out.println("");
         numMoves++;
         switch (action) {
             case GRAB:
@@ -98,10 +103,14 @@ public final class World {
                         if (y + 1 < size) {
                             if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                                 score -= 1000;
+                                wumpusDeaths++;
+                                System.out.println("Death to wumpus.");
                                 return DEATH_WUMPUS;
                             }
                             if ((perceptMap[x][y] & DEATH) == DEATH) {
                                 score -= 1000;
+                                pitDeaths++;
+                                System.out.println("Death to pit.");
                                 return DEATH;
                             }
                             y = y + 1;
@@ -112,10 +121,13 @@ public final class World {
                     case EAST:
                         if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
+                            wumpusDeaths++;
+                            System.out.println("Death to wumpus.");
                             return DEATH_WUMPUS;
                         }
                         if ((perceptMap[x][y] & DEATH) == DEATH) {
                             score -= 1000;
+                            pitDeaths++;
                             return DEATH;
                         }
                         if (x + 1 < size) {
@@ -127,10 +139,14 @@ public final class World {
                     case SOUTH:
                         if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
+                            wumpusDeaths++;
+                            System.out.println("Death to wumpus.");
                             return DEATH_WUMPUS;
                         }
                         if ((perceptMap[x][y] & DEATH) == DEATH) {
                             score -= 1000;
+                            pitDeaths++;
+                            System.out.println("Death to pit.");
                             return DEATH;
                         }
                         if (y - 1 > 0) {
@@ -142,10 +158,14 @@ public final class World {
                     case WEST:
                         if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
+                            wumpusDeaths++;
+                            System.out.println("Death to wumpus.");
                             return DEATH_WUMPUS;
                         }
                         if ((perceptMap[x][y] & DEATH) == DEATH) {
                             score -= 1000;
+                            pitDeaths++;
+                            System.out.println("Death to pit.");
                             return DEATH;
                         }
                         if (x - 1 > 0) {
