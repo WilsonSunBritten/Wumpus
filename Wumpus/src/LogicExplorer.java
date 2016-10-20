@@ -76,9 +76,18 @@ public class LogicExplorer extends Agent {
                 System.out.println("Error processing movement.");
         }
     }
+    
+    public void removeFromFrontier(Location locToRemove){
+        for(Location loc : frontier){
+            if(loc.x == locToRemove.x && loc.y == locToRemove.y)
+                frontier.remove(loc);
+        }
+    }
 
     private void processPercepts() {
-
+        if((percepts & DEATH) != 0){
+            removeFromFrontier(getForward());
+        }
         if (((percepts & BUMP) != BUMP) && (percepts & DEATH) != DEATH) {
             updateLocation();
             searchedPositions[location.x][location.y] = true;
@@ -103,7 +112,6 @@ public class LogicExplorer extends Agent {
     }
 
     private void decideNextAction() {
-
         if (frontier.isEmpty()) {
             move(World.QUIT);
         }
@@ -123,27 +131,14 @@ public class LogicExplorer extends Agent {
             }
         }
         else if(safeSpaceInFrontier()){
-            //TODO: rhw traversal to safeSpace;
+            rhwTraversal(safeSpace);
         }
-        
-        
-        if (kb.ask("!Wumpus(forward)AND!Pit(forward)")) {
-            if (kb.ask("Is ")) {
-
-            } else if (kb.ask("!Wumpus(forwardspot)AND!Pit(forwardSpot)&!Obstical(forwardSpot)")) {
-                move(World.MOVE);
-            } else if ("safeSpotInFrontier?" == "") {
-                RHWTraversal("!Wumpus(adjacent)AND!Pit(adjacent)");
-            } else if ("KnownWumpusSpotInFrontier" == "") {
-                //kill wumpus
-                RHWTraversal("Wumpus(adjacent)");
-                move(World.SHOOT);
-            } else {
-                //go to random spot in frontier that is not definite death
-                Location target = frontier.get(random.nextInt(frontier.size()));
-                RHWTraversal("At(target)");
-            }
-        }
+        else
+            rhwTraversal(frontier.get(0));
+    }
+    
+    private void rhwTraversal(Location location){
+        //go to location zach
     }
     
     private boolean safeSpaceInFrontier(){
@@ -164,24 +159,24 @@ public class LogicExplorer extends Agent {
         return false;
     }
 
-    private void RHWTraversal(String stopCondition) {
-
-        do {
-            if (kb.ask("right is safe")) {
-                move(4);        //turn right
-            } else {
-                if (kb.ask("forward is safe")) {
-                    move(2);   //go forward
-                } else {
-                    move(3);    //turn left
-                }
-            }
-        } while (!kb.ask(stopCondition));
-
-        //face stop condition
-        while (!kb.ask("am i facing the stop condition?")) {
-            move(3);   //turn until facing stp condition
-        }
-        move(2);
-    }
+//    private void RHWTraversal(String stopCondition) {
+//
+//        do {
+//            if (kb.ask("right is safe")) {
+//                move(4);        //turn right
+//            } else {
+//                if (kb.ask("forward is safe")) {
+//                    move(2);   //go forward
+//                } else {
+//                    move(3);    //turn left
+//                }
+//            }
+//        } while (!kb.ask(stopCondition));
+//
+//        //face stop condition
+//        while (!kb.ask("am i facing the stop condition?")) {
+//            move(3);   //turn until facing stp condition
+//        }
+//        move(2);
+//    }
 }
