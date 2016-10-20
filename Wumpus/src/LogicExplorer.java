@@ -9,10 +9,8 @@ public class LogicExplorer extends Agent {
     private boolean[][] searchedPositions;
 
     public LogicExplorer(World world) {
-        this.world = world;
         kb = new KnowledgeBase();
         kb.initializeRules();
-        this.arrowCount = world.arrowCount;
         this.searchedPositions = new boolean[World.size][World.size];
         run();
     }

@@ -3,14 +3,23 @@ import java.util.Random;
 
 public abstract class Agent {
 
-    Location curLoc;
-    Direction direction;
+    protected Location location;
+    protected Direction direction;
     protected final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH = 0b00010000, DEATH_WUMPUS = 0b00100000, SCREAM = 0b01000000;
+    protected static final int GRAB = 1, MOVE = 2, TURN_LEFT = 3, TURN_RIGHT = 4, SHOOT = 5, QUIT = 6;
     protected int percepts, arrowCount;
     protected World world;
     protected Random random = new Random();
+    
+    public Agent(World world) {
+        this.world = world;
+        this.arrowCount = world.arrowCount;
+        this.location = new Location(world.x, world.y);
+        this.direction = Direction.NORTH;
+        this.percepts = world.getPercepts();
+    }
 
-    enum Direction {
+    public enum Direction {
         NORTH,
         EAST,
         SOUTH,
@@ -27,7 +36,7 @@ public abstract class Agent {
         }
     }
 
-    enum State {
+    public enum State {
         SAFE,
         UNSAFE,
         EXPLORED;
@@ -36,28 +45,28 @@ public abstract class Agent {
     public void updateLocation() {
         switch (direction) {
             case NORTH:
-                if (curLoc.y < World.size - 1) {
-                    curLoc.y += 1;
+                if (location.y < World.size - 1) {
+                    location.y += 1;
                 }
                 break;
             case EAST:
-                if (curLoc.x > 0) {
-                    curLoc.x -= 1;
+                if (location.x > 0) {
+                    location.x -= 1;
                 }
                 break;
             case SOUTH:
-                if (curLoc.y > 0) {
-                    curLoc.y--;
+                if (location.y > 0) {
+                    location.y--;
                 }
                 break;
             case WEST:
-                if (curLoc.x < World.size - 1) {
-                    curLoc.x++;
+                if (location.x < World.size - 1) {
+                    location.x++;
                 }
         }
     }
 
-    class Location {
+    protected class Location {
 
         int x;
         int y;
