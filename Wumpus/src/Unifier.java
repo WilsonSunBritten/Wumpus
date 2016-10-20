@@ -26,7 +26,9 @@ public class Unifier {
         
     
     */
-    
+    public static ArrayList<Substitute> unify(Fact fact1, Fact fact2){
+        return new ArrayList<Substitute>();
+    }
     //this is the general outline of how to go about unification...
     public static SubstitutionString unify(Variable p, Variable q, SubstitutionString theta) {
         

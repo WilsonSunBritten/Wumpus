@@ -55,16 +55,80 @@ public class InferenceEngine {
     
     public void infer(Fact fact){
         //look at each fact in each clause in kb.rules, if predicates match, and negations are opposite
+        ArrayList<Clause> tempClone = new ArrayList<>(kb.rules);
+        ArrayList<Clause> kbClausesClone = new ArrayList<>();
+        for (Clause tempClause : tempClone) {
+            kbClausesClone.add(new Clause(tempClause));
+        }
+        for(Clause clause : kbClausesClone){
+            for(Fact ruleFact:clause.facts){
+                if(ruleFact.predicate.equals(fact.predicate) && ruleFact.not == !fact.not){
+                    ArrayList<Substitute> substitutions = Unifier.unify(fact, ruleFact);
+                    if(substitutions.isEmpty())
+                        continue;
+                    for(Substitute sub:substitutions){
+                        for(Variable var : fact.variables){
+                            if(var.isVariable && var.variableId == sub.varIdToSubstitute){
+                                var.isVariable = false;
+                                var.value = sub.valToSubstituteWith;
+                            }
+                        }
+                        for(Fact tempFact:clause.facts){
+                            
+                            for(Variable var : tempFact.variables){
+                                if(var.isVariable && var.variableId == sub.varIdToSubstitute){
+                                    var.isVariable = false;
+                                    var.value = sub.valToSubstituteWith;
+                                }
+                            }
+                        }
+                    }
+                    
+                    clause.facts.remove(ruleFact);
+                    kb.addToClauses(clause);
+                    break;
+                }
+            }
+        }
         //unify the two rules
         //apply the unification substitution on a copy of the kb.rules fact thing
         //remove the matching fact from that rule
         //add the rule copy with the substitution to kb.clauses
     }
-    public void infer(Clause clause){
+    public void infer(Clause addedClause){
         //look in kb.rules, only use rules with a single fact
         //for each such fact, go through the clause and look for a matching predicate
         //if negations are opposite, apply unification, if unification exists..
         //with the substitution, apply to copies of both
-        //strip fact from input clause, make sure it's not a copy
+        //strip fact from input clause 
+        for(Clause ruleClause : kb.rules){
+            if(ruleClause.facts.size()==1){
+                Fact ruleFact = new Fact(ruleClause.facts.get(0));//we use a copy
+                Clause clause = new Clause(addedClause);//copy the added clause, redo each time
+                for(Fact fact : clause.facts){
+                    if(fact.predicate.equals(ruleFact.predicate) && fact.not != ruleFact.not){
+                        ArrayList<Substitute> substitutions = Unifier.unify(fact,ruleFact);
+                        for(Substitute sub : substitutions){
+                            for(Variable var : ruleFact.variables){
+                                if(var.isVariable && var.variableId==sub.varIdToSubstitute){
+                                    var.isVariable = false;
+                                    var.value = sub.valToSubstituteWith;
+                                }
+                            }
+                            for(Fact changeFact : clause.facts){
+                                for(Variable var : changeFact.variables){
+                                    if(var.isVariable && var.variableId==sub.varIdToSubstitute){
+                                        var.isVariable = false;
+                                        var.value = sub.valToSubstituteWith;
+                                    }
+                                }
+                            }
+                        }
+                        clause.facts.remove(fact);
+                        kb.addToClauses(clause);
+                    }
+                }
+            }
+        }
     }
 }

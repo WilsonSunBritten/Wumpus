@@ -13,11 +13,18 @@ public class KnowledgeBase {
     public void addToClauses(Clause clause){
         if(clause.facts.size() == 0)
             return;
-        else if(clause.facts.size() == 1)
+        else if(clause.facts.size() == 1){
             inferenceEngine.infer(clause.facts.get(0));
-        else
+            clauses.add(clause);
+        }
+        else{
+            int beforeSize = clauses.size();
             inferenceEngine.infer(clause);
-        clauses.add(clause);
+            if(clauses.size() == beforeSize)
+                clauses.add(clause);//We only need add the clause itself if we didn't infer anything, otherwise the inferred shortened clause which is more valuable got added
+            
+        }
+        //clauses.add(clause);
             
                  
     }
