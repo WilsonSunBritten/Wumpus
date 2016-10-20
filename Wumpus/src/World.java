@@ -63,22 +63,9 @@ public final class World {
                 break;
             case MOVE:
                 score--;
-                if (direction == NORTH) {
-                    if (y + 1 < size) {
-                        if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
-                            score -= 1000;
-                            return DEATH_BY_WUMPUS;
-                        }
-                        if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
-                            score -= 1000;
-                            return DEATH_BY_PIT;
-                        }
-                        y = y + 1;
-                        return perceptMap[x][y];
-                    } else {
-                        return BUMP;
-                    }
-                } else if (direction == EAST) {
+        switch (direction) {
+            case NORTH:
+                if (y + 1 < size) {
                     if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
                         score -= 1000;
                         return DEATH_BY_WUMPUS;
@@ -87,43 +74,59 @@ public final class World {
                         score -= 1000;
                         return DEATH_BY_PIT;
                     }
-                    if (x + 1 < size) {
-                        x = x + 1;
-                        return perceptMap[x][y];
-                    } else {
-                        return BUMP;
-                    }
-                } else if (direction == SOUTH) {
-                    if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
-                        score -= 1000;
-                        return DEATH_BY_WUMPUS;
-                    }
-                    if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
-                        score -= 1000;
-                        return DEATH_BY_PIT;
-                    }
-                    if (y - 1 > 0) {
-                        y -= 1;
-                        return perceptMap[x][y];
-                    } else {
-                        return BUMP;
-                    }
-                } else if (direction == WEST) {
-                    if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
-                        score -= 1000;
-                        return DEATH_BY_WUMPUS;
-                    }
-                    if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
-                        score -= 1000;
-                        return DEATH_BY_PIT;
-                    }
-                    if (x - 1 > 0) {
-                        x -= 1;
-                        return perceptMap[x][y];
-                    } else {
-                        return BUMP;
-                    }
+                    y = y + 1;
+                    return perceptMap[x][y];
+                } else {
+                    return BUMP;
                 }
+            case EAST:
+                if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
+                    score -= 1000;
+                    return DEATH_BY_WUMPUS;
+                }
+                if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
+                    score -= 1000;
+                    return DEATH_BY_PIT;
+                }
+                if (x + 1 < size) {
+                    x = x + 1;
+                    return perceptMap[x][y];
+                } else {
+                    return BUMP;
+                }
+            case SOUTH:
+                if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
+                    score -= 1000;
+                    return DEATH_BY_WUMPUS;
+                }
+                if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
+                    score -= 1000;
+                    return DEATH_BY_PIT;
+                }
+                if (y - 1 > 0) {
+                    y -= 1;
+                    return perceptMap[x][y];
+                } else {
+                    return BUMP;
+                }
+            case WEST:
+                if ((perceptMap[x][y] & DEATH_BY_WUMPUS) == DEATH_BY_WUMPUS) {
+                    score -= 1000;
+                    return DEATH_BY_WUMPUS;
+                }
+                if ((perceptMap[x][y] & DEATH_BY_PIT) == DEATH_BY_PIT) {
+                    score -= 1000;
+                    return DEATH_BY_PIT;
+                }
+                if (x - 1 > 0) {
+                    x -= 1;
+                    return perceptMap[x][y];
+                } else {
+                    return BUMP;
+                }
+            default:
+                break;
+        }
                 break;
             case TURN_LEFT:
                 direction = (direction + 3) % 4 + 1;

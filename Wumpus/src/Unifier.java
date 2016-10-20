@@ -30,7 +30,7 @@ public class Unifier {
         return new ArrayList<Substitute>();
     }
     //this is the general outline of how to go about unification...
-    public static SubstitutionString unify(Variable p, Variable q, SubstitutionString theta) {
+    public static Substitute unify(Variable p, Variable q, Substitute theta) {
         
         if (p.equals(q)) {      //success
             return theta;

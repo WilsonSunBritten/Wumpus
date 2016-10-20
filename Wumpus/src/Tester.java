@@ -3,7 +3,7 @@
 public class Tester {
 
     public void testInferenceEngine() {
-        InferenceEngine engine = new InferenceEngine();
+        InferenceEngine engine = new InferenceEngine(new KnowledgeBase());
 
         //FORALL x, y, Commutative(x,y) IFF Commutative(y,x)
         Rule rule = new Rule();
