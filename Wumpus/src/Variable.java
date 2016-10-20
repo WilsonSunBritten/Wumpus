@@ -11,8 +11,12 @@ public class Variable {
     int modifier;
 
     public Variable(){}
-    public Variable(int value, IFunction function){
-        this.value = value;
+    public Variable(int value, boolean isVariable, IFunction function){
+        this.isVariable = isVariable;
+        if(!isVariable)
+            this.value = value;
+        else
+            this.variableId = value;
         this.function = function;
     }
     public void printVariable() {

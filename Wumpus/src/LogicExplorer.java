@@ -107,14 +107,14 @@ public class LogicExplorer extends Agent {
     private void updateKB(byte percepts) {
         if ((percepts & STENCH) != 0) {
             Clause clause = new Clause();
-            kb.tell(new Clause(new Fact("Stench", curPos.x, curPos.y, true, null, null)));//Stench(x,y,t)
+            kb.tell(new Clause(new Fact("Stench", curPos.x, false, curPos.y,false,  true, null, null)));//Stench(x,y,t)
         } else {
-            kb.tell(new Clause(new Fact("Stench", curPos.x, curPos.y, false, null, null)));//!Stench(x,y,t)
+            kb.tell(new Clause(new Fact("Stench", curPos.x, false, curPos.y,false, false, null, null)));//!Stench(x,y,t)
         }
         if ((percepts & BREEZE) != 0) {
-            kb.tell(new Clause(new Fact("Breeze", curPos.x, curPos.y, true, null, null)));
+            kb.tell(new Clause(new Fact("Breeze", curPos.x, false, curPos.y,false, true, null, null)));
         } else {
-            kb.tell(new Clause(new Fact("Breeze", curPos.x, curPos.y, false, null, null)));
+            kb.tell(new Clause(new Fact("Breeze", curPos.x, false, curPos.y,false, false, null, null)));
         }
         if ((percepts & SCREAM) != 0) {
             //need to deal with this
