@@ -7,6 +7,8 @@ public class LogicExplorer extends Agent {
     private int previousAction;
     private ArrayList<Location> frontier = new ArrayList<>();
     private boolean[][] searchedPositions;
+    private boolean navigatingToSafePosition;
+    private Location safeSpace;
 
     public LogicExplorer(World world, int startingArrows, int startingX, int startingY, int direction) {
         super(world,startingArrows,startingX,startingY,direction);
@@ -29,6 +31,14 @@ public class LogicExplorer extends Agent {
             frontier.add(new Location(location.x,location.y+1));
     }
 
+    public void updateLocation(){
+        super.updateLocation();
+        expandFrontier();
+    }
+    
+    public void expandFrontier(){
+        //TODO: write
+    }
     private void run() {
 
         while (true) {
@@ -71,7 +81,12 @@ public class LogicExplorer extends Agent {
 
         if (((percepts & BUMP) != BUMP) && (percepts & DEATH) != DEATH) {
             updateLocation();
+            searchedPositions[location.x][location.y] = true;
         }
+        if((percepts&BUMP)!=0)
+            kb.tell(new Clause(new Fact("Obsticle",getForward().x,false,getForward().y,false,false,null,null)));
+        else
+            kb.tell(new Clause(new Fact("Obsticle",getForward().x,false,getForward().y,false,true,null,null)));
         if ((percepts & STENCH) != 0) {
             kb.tell(new Clause(new Fact("Stench", location.x, false, location.y, false, true, null, null)));
         } else {
@@ -83,7 +98,7 @@ public class LogicExplorer extends Agent {
             kb.tell(new Clause(new Fact("Breeze", location.x, false, location.y, false, false, null, null)));
         }
         if ((percepts & SCREAM) != 0) {
-            kb.tell(new Clause(new Fact("Screem", location.x, false, location.y, false, true, null, null)));
+            kb.tell(new Clause(new Fact("Scream", location.x, false, location.y, false, true, null, null)));
         }
     }
 
@@ -100,6 +115,18 @@ public class LogicExplorer extends Agent {
         //check forward
         //check left
         //check right
+        if(getForward().x >= 0 && getForward().x < world.size && getForward().y >= 0 && getForward().y < world.size){
+            if(kb.ask(new Fact("Wumpus",getForward().x,false,getForward().y,false,true,null,null))){
+                if(kb.ask(new Fact("Pit",getForward().x,false,getForward().y,false,true,null,null)))
+                    if(kb.ask(new Fact("Obsticle",getForward().x,false,getForward().y,false,true,null,null)))
+                        move(World.MOVE);
+            }
+        }
+        else if(safeSpaceInFrontier()){
+            //TODO: rhw traversal to safeSpace;
+        }
+        
+        
         if (kb.ask("!Wumpus(forward)AND!Pit(forward)")) {
             if (kb.ask("Is ")) {
 
@@ -117,6 +144,24 @@ public class LogicExplorer extends Agent {
                 RHWTraversal("At(target)");
             }
         }
+    }
+    
+    private boolean safeSpaceInFrontier(){
+        for(int i = frontier.size() - 1; i >= 0; i--){
+            Location loc = frontier.get(i);
+            if(kb.ask(new Fact("Wumpus",loc.x,false,loc.y,false,true,null,null))){
+                if(kb.ask(new Fact("Pit",loc.x,false,loc.y,false,true,null,null)))
+                    if(kb.ask(new Fact("Obsticle",loc.x,false,loc.y,false,true,null,null))){
+                        safeSpace = new Location(loc.x,loc.y);
+                        return true;
+                    }
+            }
+            if(kb.ask(new Fact("Wumpus",loc.x,false,loc.y,false,false,null,null)) || kb.ask(new Fact("Pit",loc.x,false,loc.y,false,false,null,null))||  kb.ask(new Fact("Obsticle",loc.x,false,loc.y,false,false,null,null))){
+                //there is specifically a wumpus, pit, or obsticle at this position, don't navigate to it.
+                frontier.remove(i);
+            }
+        }
+        return false;
     }
 
     private void RHWTraversal(String stopCondition) {
