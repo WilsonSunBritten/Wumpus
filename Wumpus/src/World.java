@@ -104,6 +104,7 @@ public final class World {
                 score--;
                 switch (direction) {
                     case NORTH:
+                        System.out.println("Moved north");
                         if (y + 1 < size) {
                             if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                                 score -= 1000;
@@ -123,6 +124,7 @@ public final class World {
                             return BUMP;
                         }
                     case EAST:
+                        System.out.println("Moved east");
                         if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
                             wumpusDeaths++;
@@ -141,6 +143,7 @@ public final class World {
                             return BUMP;
                         }
                     case SOUTH:
+                        System.out.println("Moved south");
                         if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
                             wumpusDeaths++;
@@ -160,6 +163,7 @@ public final class World {
                             return BUMP;
                         }
                     case WEST:
+                        System.out.println("Moved west");
                         if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
                             wumpusDeaths++;
@@ -179,14 +183,16 @@ public final class World {
                             return BUMP;
                         }
                     default:
+                        System.out.println("Defaulted");
+                        System.out.println(direction);
                         break;
                 }
                 break;
             case TURN_LEFT:
-                direction = (direction + 3) % 4 + 1;
+                direction = (direction + 3);
                 return perceptMap[x][y];
             case TURN_RIGHT:
-                direction = (direction + 1) % 4 + 1;
+                direction = (direction + 1);
                 return perceptMap[x][y];
             case SHOOT:
                 //shoot logic
