@@ -69,14 +69,14 @@ public final class World {
 
         for (int i = perceptMap.length-1; i >= 0; i--) {
             for (int j = 0; j < perceptMap.length; j++) {
-                if (x == i && y == j) {
+                if (x == j && y == i) {
                     System.out.print("A ");
                 } else {
-                    if ((perceptMap[i][j] & DEATH_WUMPUS) != 0) {
+                    if ((perceptMap[j][i] & DEATH_WUMPUS) != 0) {
                         System.out.print("W ");
                     } 
                     else {
-                        System.out.print(perceptMap[i][j] + " ");
+                        System.out.print(perceptMap[j][i] + " ");
                     }
                 }
             }

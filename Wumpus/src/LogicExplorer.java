@@ -124,7 +124,7 @@ public class LogicExplorer extends Agent {
     }
 
     private void processPercepts() {        //there might still be an issue with wumpus death since its a seperate percept
-        if ((percepts & DEATH_PIT) == DEATH_PIT) {
+        if ((percepts & DEATH_PIT) == DEATH_PIT || (percepts & DEATH_WUMPUS)!= 0) {
             System.out.println("Explorer died after moving");
             removeFromFrontier(getForward());
             moveHistory.remove(moveHistory.size() - 1);//why die again?
@@ -140,7 +140,7 @@ public class LogicExplorer extends Agent {
             removeFromFrontier(getForward());
             kb.tell(new Fact("Obsticle", getForward().x, false, getForward().y, false, false, null, null));
         }
-        else{//you if you bump than the only inputted percept should've been bump
+        else if((percepts & DEATH_PIT) == 0 && (percepts & DEATH_WUMPUS)==0){//you if you bump than the only inputted percept should've been bump
         if ((percepts & STENCH) != 0) {
             kb.tell(new Fact("Stench", location.x, false, location.y, false, false, null, null));
         } else {
@@ -203,6 +203,10 @@ public class LogicExplorer extends Agent {
                 case SOUTH:
                     move(TURN_RIGHT);
                     break;
+                case WEST:
+                    move(TURN_RIGHT);
+                    move(TURN_RIGHT);
+                    break;
                 default:
                     break;
             }
@@ -216,6 +220,10 @@ public class LogicExplorer extends Agent {
                 case SOUTH:
                     move(TURN_LEFT);
                     break;
+                case EAST:
+                    move(TURN_RIGHT);
+                    move(TURN_RIGHT);
+                    break;
                 default:
                     break;
             }
@@ -227,6 +235,10 @@ public class LogicExplorer extends Agent {
                     move(TURN_LEFT);
                     break;
                 case EAST:
+                    move(TURN_RIGHT);
+                    break;
+                case NORTH:
+                    move(TURN_RIGHT);
                     move(TURN_RIGHT);
                     break;
                 default:
@@ -242,6 +254,9 @@ public class LogicExplorer extends Agent {
                 case EAST:
                     move(TURN_LEFT);
                     break;
+                case SOUTH:
+                    move(TURN_RIGHT);
+                    move(TURN_RIGHT);
                 default:
                     break;
             }
