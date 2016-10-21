@@ -9,12 +9,19 @@ public final class World {
     public static final int GRAB = 1, MOVE = 2, TURN_LEFT = 3, TURN_RIGHT = 4, SHOOT = 5, QUIT = 6;
     protected final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH_PIT = 0b00010000, DEATH_WUMPUS = 0b00100000, SCREAM = 0b01000000;
 
-    private int arrowCount, x, y, direction = 0, score = 0, numMoves = 0, pitDeaths = 0, wumpusDeaths = 0;
+    private int arrowCount, x, y, direction = 0, score = 0, numMoves = 0, pitDeaths = 0, wumpusDeaths = 0, killedWumpus = 0;
     public static int size;
     private byte[][] perceptMap;
     
     public World(String fileName) {
         importMap(fileName);
+        for (int i = 0; i < perceptMap.length; i++) {
+            for (int j = 0; j < perceptMap.length; j++) {
+                if((perceptMap[i][j] & DEATH_WUMPUS) != 0)
+                    arrowCount++;
+            }
+            
+        }
     }
 
     public void startGame(String id) {
@@ -53,13 +60,6 @@ public final class World {
                 }
                 i++;
             }
-//            System.out.println("");
-//            for (byte[] row : perceptMap) {
-//                for (int j = 0; j < row.length; j++) {
-//                    System.out.print(row[j] + " ");
-//                }
-//                System.out.println("");
-//            }
         } catch (IOException | NumberFormatException e) {
             System.out.println("Exception caught: " + e);
         }
@@ -74,6 +74,8 @@ public final class World {
         System.out.println("Final score: "+score);
         System.out.println("Wumpus Deaths: "+wumpusDeaths);
         System.out.println("Pit Deaths: "+ pitDeaths);
+        System.out.println("Killed Wumpus's: "+killedWumpus);
+        System.out.println("Leftover arrows: "+arrowCount);
     }
     
     public void printWorld() {
@@ -81,13 +83,18 @@ public final class World {
         for (int i = perceptMap.length-1; i >= 0; i--) {
             for (int j = 0; j < perceptMap.length; j++) {
                 if (x == j && y == i) {
-                    System.out.print("A ");
+                    System.out.print("A  ");
                 } else {
-                    if ((perceptMap[j][i] & DEATH_WUMPUS) != 0) {
-                        System.out.print("W ");
-                    } 
-                    else {
+                    if ((perceptMap[j][i] & DEATH_WUMPUS) == DEATH_WUMPUS) {
+                        System.out.print("W  ");
+                    } else if ((perceptMap[j][i] & DEATH_PIT) == DEATH_PIT) {
+                        System.out.print("P  ");
+                    } else if ((perceptMap[j][i] & GLITTER) == GLITTER) {
+                        System.out.print("G  ");
+                    } else if (perceptMap[j][i] > 9) {
                         System.out.print(perceptMap[j][i] + " ");
+                    } else {
+                        System.out.print(perceptMap[j][i] + "  ");
                     }
                 }
             }
@@ -206,10 +213,11 @@ public final class World {
                 }
                 break;
             case TURN_LEFT:
+                score--;
                 direction = (direction + 3) % 4;
                 return perceptMap[x][y];
             case TURN_RIGHT:
-                System.out.println("Turning right");
+                score--;
                 direction = (direction + 1) % 4;
                 return perceptMap[x][y];
             case SHOOT:
@@ -218,11 +226,14 @@ public final class World {
                     return -1;      //out of arrows, which shouldn't be possible
                 }
                 arrowCount--;
+                score-=10;
                 switch (direction) {
                     case 1: //shoot north
                         for (int i = y; i < perceptMap.length; i++) {
                             if ((perceptMap[x][i] & DEATH_WUMPUS)!= 0) {       //hits Wumpus
                                 removeWumpus(x, i);
+                                score+=10;
+                                killedWumpus++;
                                 return SCREAM;
                             } else if ((perceptMap[x][i] & BUMP)!= 0) { //hits Obstacle
                                 return perceptMap[x][y];
