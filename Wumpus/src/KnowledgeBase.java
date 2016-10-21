@@ -22,11 +22,11 @@ public class KnowledgeBase {
             }
         }
         if(clause.facts.size() == 1){
-            inferenceEngine.infer(clause.facts.get(0));
             System.out.println("Added to kb Clause: ");
             System.out.print("\t");
             Clause.printClause(clause);
             clauses.add(clause);
+            inferenceEngine.infer(clause.facts.get(0));
         }
         else{
             int beforeSize = clauses.size();
@@ -70,6 +70,7 @@ public class KnowledgeBase {
         //(Stench(x,y) v !Wumpus(x-1,y)), (Stench(x,y) v !Wumpus(x+1,y)), (Stench(x,y) v !Wumpus(x,y-1)), (Stench(x,y) v !Wumpus(x,y+1)
         Clause stench1 = new Clause();
         Fact stenchXY1 = new Fact(stenchXY);
+        stenchXY1.not = false;
         Fact wumpusxminy1 = new Fact(wumpusxminy);
         wumpusxminy1.not = true;
         stench1.facts.add(stenchXY1);
@@ -78,6 +79,7 @@ public class KnowledgeBase {
         
         Clause stench2 = new Clause();
         Fact stenchXY2 = new Fact(stenchXY);
+        stenchXY2.not = false;
         Fact wumpusxplusy1 = new Fact(wumpusxplusy);
         wumpusxplusy1.not = true;
         stench2.facts.add(stenchXY2);
@@ -86,6 +88,7 @@ public class KnowledgeBase {
         
         Clause stench3 = new Clause();
         Fact stenchXY3 = new Fact(stenchXY);
+        stenchXY3.not = false;
         Fact wumpusxymin1 = new Fact(wumpusxymin);
         wumpusxymin1.not = true;
         stench3.facts.add(stenchXY3);
@@ -94,6 +97,7 @@ public class KnowledgeBase {
         
         Clause stench4 = new Clause();
         Fact stenchXY4 = new Fact(stenchXY);
+        stenchXY4.not = false;
         Fact wumpusxyplus1 = new Fact(wumpusxyplus);
         wumpusxyplus1.not = true;
         stench4.facts.add(stenchXY4);
@@ -117,6 +121,7 @@ public class KnowledgeBase {
         
         Clause breeze1 = new Clause();
         Fact breezeXY1 = new Fact(breezeXY);
+        breezeXY1.not = false;
         Fact pitxminy1 = new Fact(pitxminy);
         pitxminy1.not = true;
         breeze1.facts.add(breezeXY1);
@@ -125,6 +130,8 @@ public class KnowledgeBase {
         
         Clause breeze2 = new Clause();
         Fact breezeXY2 = new Fact(breezeXY);
+        
+        breezeXY2.not = false;
         Fact pitxplusy1 = new Fact(pitxplusy);
         pitxplusy1.not = true;
         breeze2.facts.add(breezeXY2);
@@ -133,6 +140,8 @@ public class KnowledgeBase {
         
         Clause breeze3 = new Clause();
         Fact breezeXY3 = new Fact(breezeXY);
+        
+        breezeXY3.not = false;
         Fact pitxymin1 = new Fact(pitxymin);
         pitxymin1.not = true;
         breeze3.facts.add(breezeXY3);
@@ -141,6 +150,7 @@ public class KnowledgeBase {
         
         Clause breeze4 = new Clause();
         Fact breezeXY4 = new Fact(breezeXY);
+        breezeXY4.not = false;
         Fact pitxyplus1 = new Fact(pitxyplus);
         pitxyplus1.not = true;
         breeze4.facts.add(breezeXY4);
@@ -201,9 +211,13 @@ public class KnowledgeBase {
                 Fact clauseFact = clause.facts.get(0);
                 if(clauseFact.predicate.equals(fact.predicate)){
                     for(int i = 0; i < fact.variables.size(); i++){
-                        if(clauseFact.variables.get(i).value != fact.variables.get(i).value){
-                            return true;
+                        
+                        if(clauseFact.variables.get(i).value == fact.variables.get(i).value){
+                            if(i == fact.variables.size()-1)
+                                return true;
                         }
+                        else
+                            break;
                     }
                 }
             }
