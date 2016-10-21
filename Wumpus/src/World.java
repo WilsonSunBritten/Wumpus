@@ -93,6 +93,7 @@ public final class World {
         numMoves++;
         switch (action) {
             case GRAB:
+                score--;
                 if ((perceptMap[x][y] & GLITTER) != 0) {
                     perceptMap[x][y] -= GLITTER;
                     score += 1000;
