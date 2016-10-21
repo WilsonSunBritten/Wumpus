@@ -22,7 +22,6 @@ public class ReactiveExplorer extends Agent {
     }
 
     private void run() {
-
         int i = 0;
         while (i < 10) {
             move();
