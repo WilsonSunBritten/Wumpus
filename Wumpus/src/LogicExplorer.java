@@ -184,6 +184,7 @@ public class LogicExplorer extends Agent {
         else {
             rhwTraversal(neighborSafeSpace(frontier.get(0)));
             turnToSpace(frontier.get(0));
+            frontier.remove(0);
             move(MOVE);
         }
     }
