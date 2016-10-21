@@ -31,8 +31,8 @@ public class InferenceEngine {
                             //extend clause with everything in kbClause, remove kbFact and followFact, start over
                             boolean skipOut = false;
                             for(int i = 0; i < kbFact.variables.size(); i++){
-                                Variable var1 = kbFact.variables.get(0);
-                                Variable var2 = followFact.variables.get(0);
+                                Variable var1 = kbFact.variables.get(i);
+                                Variable var2 = followFact.variables.get(i);
                                 if(var1.value != var2.value){
                                     skipOut = true;
                                 }
