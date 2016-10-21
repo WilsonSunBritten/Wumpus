@@ -45,8 +45,8 @@ public class Tester {
                                             {true, true, false, false, true}, 
                                             {true, true, false, true, true},
                                             {true, true, false, true, true}};
-        new PathFinder(1, 3, 3, 1, test);
-        
+        //new PathFinder(1, 3, 3, 1, test);
+       
     }
 
     public void testInferenceEngine() {

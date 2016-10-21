@@ -152,7 +152,7 @@ public class LogicExplorer extends Agent {
     }
 
     private void rhwTraversal(Location location) {
-        //go to location zach
+        //go to location zach NOOOO!
     }
 
     private boolean safeSpaceInFrontier() {
