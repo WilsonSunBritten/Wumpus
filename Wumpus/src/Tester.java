@@ -38,6 +38,16 @@ public class Tester {
             System.out.println(sub.varIdToSubstitute + "/" + sub.valToSubstituteWith);
         }
     }
+    
+    public void testPathFinder() {
+        boolean[][] test =  new boolean[][]{{true, true, true, true, true},
+                                            {true, true, false, false, true}, 
+                                            {true, true, false, false, true}, 
+                                            {true, true, false, true, true},
+                                            {true, true, false, true, true}};
+        new PathFinder(1, 3, 3, 1, test);
+        
+    }
 
     public void testInferenceEngine() {
         InferenceEngine engine = new InferenceEngine(new KnowledgeBase());
