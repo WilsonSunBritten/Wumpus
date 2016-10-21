@@ -9,7 +9,7 @@ public final class World {
     public static final int GRAB = 1, MOVE = 2, TURN_LEFT = 3, TURN_RIGHT = 4, SHOOT = 5, QUIT = 6;
     protected final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH_PIT = 0b00010000, DEATH_WUMPUS = 0b00100000, SCREAM = 0b01000000;
 
-    private int arrowCount, x, y, direction = 0, score = 0, numMoves = 0, pitDeaths = 0, wumpusDeaths = 0;
+    private int arrowCount, x, y, direction = 0, score = 0, numMoves = 0, pitDeaths = 0, wumpusDeaths = 0, killedWumpus = 0;
     public static int size;
     private byte[][] perceptMap;
     
@@ -70,6 +70,8 @@ public final class World {
         System.out.println("Final score: "+score);
         System.out.println("Wumpus Deaths: "+wumpusDeaths);
         System.out.println("Pit Deaths: "+ pitDeaths);
+        System.out.println("Killed Wumpus's: "+killedWumpus);
+        System.out.println("Leftover arrows: "+arrowCount);
     }
     
     public void printWorld() {
@@ -202,9 +204,11 @@ public final class World {
                 }
                 break;
             case TURN_LEFT:
+                score--;
                 direction = (direction + 3) % 4;
                 return perceptMap[x][y];
             case TURN_RIGHT:
+                score--;
                 direction = (direction + 1) % 4;
                 return perceptMap[x][y];
             case SHOOT:
@@ -213,11 +217,14 @@ public final class World {
                     return -1;      //out of arrows, which shouldn't be possible
                 }
                 arrowCount--;
+                score-=10;
                 switch (direction) {
                     case 1: //shoot north
                         for (int i = y; i < perceptMap.length; i++) {
                             if ((perceptMap[x][i] & DEATH_WUMPUS)!= 0) {       //hits Wumpus
                                 removeWumpus(x, i);
+                                score+=10;
+                                killedWumpus++;
                                 return SCREAM;
                             } else if ((perceptMap[x][i] & BUMP)!= 0) { //hits Obstacle
                                 return perceptMap[x][y];
