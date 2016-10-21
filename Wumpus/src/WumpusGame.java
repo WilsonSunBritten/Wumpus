@@ -1,8 +1,11 @@
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -19,17 +22,34 @@ public class WumpusGame {
     protected final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH = 0b00010000, DEATH_WUMPUS = 0b00100000, SCREAM = 0b01000000;
     private PrintWriter out = new PrintWriter(new File("PerceptBoard.txt"));
 
-    public WumpusGame(int boardSize, int[] prob) throws FileNotFoundException {
+    public WumpusGame(String fileName) throws FileNotFoundException {
+        newStart(fileName);
+        System.setOut(new PrintStream(new FileOutputStream("world.txt")));
+        printBoards();
+        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+    }
+
+    public WumpusGame(int boardSize, int[] prob, boolean newOrNo) throws FileNotFoundException {
         this.boardSize = boardSize;
         this.prob = prob;
         perceptBoard = new byte[boardSize][boardSize];
         board = new Space[boardSize][boardSize];
         setBoard();
-        initializeBoard();
-        PrintStream out = new PrintStream(new FileOutputStream("world.txt"));
-        System.setOut(out);
-        printBoards();
-        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+        if (!newOrNo) {
+            initializeBoard();
+            PrintStream out = new PrintStream(new FileOutputStream("world.txt"));
+            System.setOut(out);
+            printBoards();
+            System.setOut(new PrintStream(new FileOutputStream("clean.txt")));
+            printBoards();
+            System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+        } else {
+            newStart("clean.txt");
+            System.setOut(new PrintStream(new FileOutputStream("world.txt")));
+            printBoards();
+            System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+        }
+
     }
 
     public void setBoard() {
@@ -40,12 +60,40 @@ public class WumpusGame {
         }
     }
 
-    public void initializeBoard() {
-        for (int i = board.length - 1; i >= 0; i--) {
-            for (int j = 0; j <board[i].length; j++) {
-                chooseState(i, j);
+    public void newStart(String fileName) {
+        try {
+            FileReader in = new FileReader(fileName);
+            BufferedReader reader = new BufferedReader(in);
+            String next = reader.readLine();
+            int size = Integer.parseInt(next);
+            this.boardSize = size;
+            board = new Space[boardSize][boardSize];
+            perceptBoard = new byte[boardSize][boardSize];
+            setBoard();
+            int i = 0;
+            while ((next = reader.readLine()) != null) {//((Integer) reader.read()).toString()).equals("-1")) {
+                int j = 0;
+                while (next.contains(" ") && !next.equals(" ")) {
+                    String temp = next.substring(0, next.indexOf(" "));
+                    if (temp.equals("W")) {
+                        placeWumpus(i, j);
+                    } else if (temp.equals("I")) {
+                        placeObstacle(i, j);
+                    } else if (temp.equals("H")) {
+                        placePit(i, j);
+                    } else {
+
+                    }
+
+                    next = next.substring(next.indexOf(" ") + 1, next.length());
+                    j++;
+                }
+                i++;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         int x = random.nextInt(boardSize);
         int y = random.nextInt(boardSize);
         while (board[x][y].isFilled()) {
@@ -61,6 +109,15 @@ public class WumpusGame {
         startX = x;
         startY = y;
         placeStart(x, y);
+
+    }
+
+    public void initializeBoard() {
+        for (int i = board.length - 1; i >= 0; i--) {
+            for (int j = 0; j < board[i].length; j++) {
+                chooseState(i, j);
+            }
+        }
     }
 
     public void chooseState(int x, int y) {
