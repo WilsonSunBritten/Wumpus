@@ -144,8 +144,10 @@ public class InferenceEngine {
                                 }
                             }
                         }
-                        clause.facts.remove(fact);
-                        kb.addToClauses(clause);
+                        if(!substitutions.isEmpty()){
+                            clause.facts.remove(fact);
+                            kb.addToClauses(clause);
+                        }
                         break;
                     }
                 }

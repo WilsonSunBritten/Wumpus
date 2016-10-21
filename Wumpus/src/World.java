@@ -74,7 +74,8 @@ public final class World {
                 } else {
                     if ((perceptMap[i][j] & DEATH_WUMPUS) != 0) {
                         System.out.print("W ");
-                    } else {
+                    } 
+                    else {
                         System.out.print(perceptMap[i][j] + " ");
                     }
                 }
