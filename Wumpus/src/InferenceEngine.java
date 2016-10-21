@@ -60,8 +60,9 @@ public class InferenceEngine {
         //Step 3: If all facts become empty, return true, else if all facts are exhausted, return false
     }
 
-    public void infer(Fact fact) {
+    public void infer(Fact factStart) {
         //look at each fact in each clause in kb.rules, if predicates match, and negations are opposite
+        Fact fact = new Fact(factStart);
         ArrayList<Clause> tempClone = new ArrayList<>(kb.rules);
         ArrayList<Clause> kbClausesClone = new ArrayList<>();
         for (Clause tempClause : tempClone) {
@@ -108,12 +109,13 @@ public class InferenceEngine {
         //add the rule copy with the substitution to kb.clauses
     }
 
-    public void infer(Clause addedClause) {
+    public void infer(Clause clauseToCheck) {
         //look in kb.rules, only use rules with a single fact
         //for each such fact, go through the clause and look for a matching predicate
         //if negations are opposite, apply unification, if unification exists..
         //with the substitution, apply to copies of both
         //strip fact from input clause 
+        Clause addedClause = new Clause(clauseToCheck);
         for (Clause ruleClause : kb.rules) {
             if (ruleClause.facts.size() == 1) {
                 Fact ruleFact = new Fact(ruleClause.facts.get(0));//we use a copy
