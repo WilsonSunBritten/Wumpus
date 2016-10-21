@@ -7,6 +7,8 @@ public class Driver {
 
     public static void main(String[] args) throws IOException {
 //        Driver driver = new Driver();
+//        Tester tester = new Tester();
+//        tester.testPathFinder();
         //Tester tester = new Tester();
         //tester.testPathFinder();
         //tester.testUnify();
@@ -32,7 +34,7 @@ public class Driver {
 
         //Agent explorer = new ReactiveExplorer(world, world.getLocation(), world.direction,world.getPercepts(), world.arrowCount);
         World world = new World("PerceptBoard.txt");
-        world.startGame("LogicExplorer");
+        world.startGame("ReactiveExplorer");
         //Agent explorer = new LogicExplorer(world);
 
         //world = new World("PerceptBoard.txt");

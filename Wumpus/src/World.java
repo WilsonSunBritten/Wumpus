@@ -37,8 +37,6 @@ public final class World {
             x = Integer.parseInt(next.substring(0,next.indexOf(" ")));
             next = next.substring(next.indexOf(" ") + 1);
             y = Integer.parseInt(next.substring(0, next.indexOf(" ")));
-            System.out.println(x);
-            System.out.println(y);
             perceptMap = new byte[size][size];
             int i = 0;
             while ((next = reader.readLine()) != null) {//((Integer) reader.read()).toString()).equals("-1")) {
@@ -67,7 +65,7 @@ public final class World {
         return perceptMap[x][y];
     }
 
-    private void printWorld() {
+    public void printWorld() {
 
         for (int i = 0; i < perceptMap.length; i++) {
             for (int j = 0; j < perceptMap.length; j++) {
@@ -76,7 +74,8 @@ public final class World {
                 } else {
                     if ((perceptMap[i][j] & DEATH_WUMPUS) != 0) {
                         System.out.print("W ");
-                    } else {
+                    } 
+                    else {
                         System.out.print(perceptMap[i][j] + " ");
                     }
                 }
@@ -107,6 +106,7 @@ public final class World {
                 score--;
                 switch (direction) {
                     case NORTH:
+                        System.out.println("Moved north");
                         if (y + 1 < size) {
                             if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                                 score -= 1000;
@@ -126,6 +126,7 @@ public final class World {
                             return BUMP;
                         }
                     case EAST:
+                        System.out.println("Moved east");
                         if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
                             wumpusDeaths++;
@@ -144,6 +145,7 @@ public final class World {
                             return BUMP;
                         }
                     case SOUTH:
+                        System.out.println("Moved south");
                         if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
                             wumpusDeaths++;
@@ -163,6 +165,7 @@ public final class World {
                             return BUMP;
                         }
                     case WEST:
+                        System.out.println("Moved west");
                         if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
                             wumpusDeaths++;
@@ -182,6 +185,8 @@ public final class World {
                             return BUMP;
                         }
                     default:
+                        System.out.println("Defaulted");
+                        System.out.println(direction);
                         break;
                 }
                 break;
