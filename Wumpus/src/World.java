@@ -12,7 +12,7 @@ public final class World {
     private int arrowCount, x, y, direction = 0, score = 0, numMoves = 0, pitDeaths = 0, wumpusDeaths = 0;
     public static int size;
     private byte[][] perceptMap;
-
+    
     public World(String fileName) {
         importMap(fileName);
     }
@@ -65,6 +65,13 @@ public final class World {
         return perceptMap[x][y];
     }
 
+    public void printStats(){
+        System.out.println("Number of Actions: "+numMoves);
+        System.out.println("Final score: "+score);
+        System.out.println("Wumpus Deaths: "+wumpusDeaths);
+        System.out.println("Pit Deaths: "+ pitDeaths);
+    }
+    
     public void printWorld() {
 
         for (int i = perceptMap.length-1; i >= 0; i--) {
@@ -84,9 +91,12 @@ public final class World {
         }
         System.out.println("");
     }
-
-    public byte action(int action) {
+    public byte action(int action){
+        byte percepts = action(action, true);
         printWorld();
+        return percepts;
+    }
+    public byte action(int action, boolean thing) {
         System.out.println("Action: " + action);
         System.out.println("");
         numMoves++;
@@ -96,7 +106,8 @@ public final class World {
                 if ((perceptMap[x][y] & GLITTER) != 0) {
                     perceptMap[x][y] -= GLITTER;
                     score += 1000;
-                    System.out.println("Gold found!\nScore: " + score);
+                    System.out.println("Gold found!\n");
+                    printStats();
                     System.exit(0);
                 } else {
                     System.out.println("gold not found error");

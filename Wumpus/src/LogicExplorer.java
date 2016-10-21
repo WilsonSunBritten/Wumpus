@@ -76,30 +76,30 @@ public class LogicExplorer extends Agent {
 
         switch (action) {
             case GRAB:
-                System.out.println("Grabbing");
+                System.out.println("Explorer Action:Grabbing");
                 world.action(GRAB);
                 System.out.println("Game failed to end after action(GRAB).");
                 break;
             case MOVE:
                 moveHistory.add(MOVE);
-                System.out.println("Moving");
+                System.out.println("Explorer Action: Moving");
                 percepts = (byte) world.action(MOVE);
                 processPercepts();
                 break;
             case TURN_LEFT:
                 moveHistory.add(TURN_LEFT);
-                System.out.println("Turning left");
+                System.out.println("Explorer Action: Turning left");
                 direction = (direction + 3) % 4;
                 world.action(TURN_LEFT);
                 break;
             case TURN_RIGHT:
                 moveHistory.add(TURN_RIGHT);
-                System.out.println("turning right");
+                System.out.println("Explorer Action: turning right");
                 direction = (direction + 1) % 4;
                 world.action(TURN_RIGHT);
                 break;
             case SHOOT:
-                System.out.println("shooting");
+                System.out.println("Explorer Action: shooting");
                 arrowCount--;
                 percepts = (byte) world.action(SHOOT);
                 processPercepts();
@@ -156,6 +156,13 @@ public class LogicExplorer extends Agent {
         }}
     }
 
+    private boolean inFrontier(Location loc){
+        for(Location location : frontier){
+            if(location.x == loc.x && location.y == loc.y)
+                return true;
+        }
+        return false;
+    }
     private void decideNextAction() {
         if (frontier.isEmpty()) {
             move(World.QUIT);
@@ -166,10 +173,11 @@ public class LogicExplorer extends Agent {
         if (getForward().x >= 0 && getForward().x < World.size && getForward().y >= 0 && getForward().y < World.size) {
             if (kb.ask(new Fact("Wumpus", getForward().x, false, getForward().y, false, true, null, null))) {
                 if (kb.ask(new Fact("Pit", getForward().x, false, getForward().y, false, true, null, null))) {
-                    if (kb.ask(new Fact("Obsticle", getForward().x, false, getForward().y, false, true, null, null))) {
+                    if(inFrontier(getForward())){
                         move(World.MOVE);
                         return;
                     }
+                    
                 }
             }
         }
