@@ -12,6 +12,8 @@ public class WumpusGame {
 
     private int boardSize;
     private int wumpus;
+    private int startX;
+    private int startY;
     private Space[][] board;
     private Random random = new Random();
     private HashMap probabilityGeneration;
@@ -65,6 +67,8 @@ public class WumpusGame {
             x = random.nextInt(boardSize);
             y = random.nextInt(boardSize);
         }
+        startX = x;
+        startY = y;
         placeStart(x, y);
     }
 
@@ -135,7 +139,10 @@ public class WumpusGame {
     }
 
     public void printPerceptBoard() {
-        out.println(boardSize);
+        out.print(boardSize + " ");
+        out.print(startX + " ");
+        out.print(startY + " ");
+        out.println();
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
                 out.print(perceptBoard[i][j] + " ");

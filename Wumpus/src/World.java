@@ -31,8 +31,14 @@ public final class World {
         try {
             FileReader in = new FileReader(fileName);
             BufferedReader reader = new BufferedReader(in);
-            String next;
-            size = Integer.parseInt(reader.readLine());
+            String next = reader.readLine();
+            size = Integer.parseInt(next.substring(0, next.indexOf(" ")));
+            next = next.substring(next.indexOf(" ") + 1);
+            x = Integer.parseInt(next.substring(0,next.indexOf(" ")));
+            next = next.substring(next.indexOf(" ") + 1);
+            y = Integer.parseInt(next.substring(0, next.indexOf(" ")));
+            System.out.println(x);
+            System.out.println(y);
             perceptMap = new byte[size][size];
             int i = 0;
             while ((next = reader.readLine()) != null) {//((Integer) reader.read()).toString()).equals("-1")) {
