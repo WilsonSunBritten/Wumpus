@@ -13,7 +13,7 @@ public class Driver {
         //tester.testPathFinder();
         //tester.testUnify();
        // tester.testInferenceEngine();
-        makeGame();
+        //makeGame();
         World world = new World("PerceptBoard.txt");
         world.startGame("LogicExplorer");
     }
@@ -22,6 +22,9 @@ public class Driver {
 
         BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in));
         int[] prob = new int[3];
+        System.out.println("Size of board: ");
+        
+        int size = Integer.parseInt(dataIn.readLine());
         System.out.print("% chance of generating pit: ");
         prob[0] = Integer.parseInt(dataIn.readLine());
         System.out.println();
@@ -32,7 +35,7 @@ public class Driver {
         prob[2] = Integer.parseInt(dataIn.readLine());
         System.out.println("");
 
-        WumpusGame game = new WumpusGame(5, prob);
+        WumpusGame game = new WumpusGame(size, prob);
 
         //Agent explorer = new ReactiveExplorer(world, world.getLocation(), world.direction,world.getPercepts(), world.arrowCount);
       //  World world = new World("PerceptBoard.txt");

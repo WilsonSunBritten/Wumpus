@@ -82,6 +82,10 @@ public class Unifier {
                     Substitute sub = new Substitute();
                     sub.varIdToSubstitute = tempVar.variableId;
                     sub.valToSubstituteWith = fact2.variables.get(i).value;
+                    if(tempVar.function != null){
+                        int val = tempVar.function.process(0);
+                        sub.valToSubstituteWith += -1*val;
+                    }
                     subs.add(sub);
                 }
             }
@@ -93,6 +97,10 @@ public class Unifier {
                     Substitute sub = new Substitute();
                     sub.varIdToSubstitute = tempVar.variableId;
                     sub.valToSubstituteWith = fact1.variables.get(i).value;
+                    if(tempVar.function != null){
+                        int val = tempVar.function.process(0);
+                        sub.valToSubstituteWith += -1*val;
+                    }
                     subs.add(sub);
                 }
             }
