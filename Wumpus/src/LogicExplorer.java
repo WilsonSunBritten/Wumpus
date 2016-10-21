@@ -164,11 +164,12 @@ public class LogicExplorer extends Agent {
         return false;
     }
     private void decideNextAction() {
-        if (frontier.isEmpty()) {
-            move(World.QUIT);
-        }
         if ((percepts & GLITTER) != 0) {
             move(World.GRAB);
+        }
+        
+        if (frontier.isEmpty()) {
+            move(World.QUIT);
         }
         if (getForward().x >= 0 && getForward().x < World.size && getForward().y >= 0 && getForward().y < World.size) {
             if (kb.ask(new Fact("Wumpus", getForward().x, false, getForward().y, false, true, null, null))) {

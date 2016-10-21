@@ -15,6 +15,13 @@ public final class World {
     
     public World(String fileName) {
         importMap(fileName);
+        for (int i = 0; i < perceptMap.length; i++) {
+            for (int j = 0; j < perceptMap.length; j++) {
+                if((perceptMap[i][j] & DEATH_WUMPUS) != 0)
+                    arrowCount++;
+            }
+            
+        }
     }
 
     public void startGame(String id) {
