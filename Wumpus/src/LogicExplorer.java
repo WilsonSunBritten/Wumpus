@@ -316,10 +316,10 @@ public class LogicExplorer extends Agent {
     }
 
     private void rhwTraversal(Location location) {
-         //moveHistoryTraversal(location);
-        if (!this.location.equals(location) && !adjacent(location)) {
-            goTo(location.x, location.y);
-        }
+         moveHistoryTraversal(location);
+        //if (!this.location.equals(location) && !adjacent(location)) {
+        //    goTo(location.x, location.y);
+        //}
         //go to location zach NOOOO!
     }
 
