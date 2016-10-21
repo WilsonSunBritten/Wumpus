@@ -75,25 +75,31 @@ public class LogicExplorer extends Agent {
 
         switch (action) {
             case GRAB:
+                System.out.println("Grabbing");
                 world.action(GRAB);
                 System.out.println("Game failed to end after action(GRAB).");
                 break;
             case MOVE:
+                System.out.println("Moving");
                 percepts = (byte) world.action(MOVE);
                 processPercepts();
                 break;
             case TURN_LEFT:
+                System.out.println("Turning left");
                 world.action(TURN_LEFT);
                 break;
             case TURN_RIGHT:
+                System.out.println("turning right");
                 world.action(TURN_RIGHT);
                 break;
             case SHOOT:
+                System.out.println("shooting");
                 arrowCount--;
                 percepts = (byte) world.action(SHOOT);
                 processPercepts();
                 break;
             case QUIT:
+                System.out.println("no possible solution");
                 world.action(QUIT);
                 System.out.println("Game failed to end after action(QUIT).");
                 break;
