@@ -91,5 +91,9 @@ public class Agent {
             this.x = x;
             this.y = y;
         }
+        
+        public boolean equals(Location location) {
+            return (this.x == location.x && this.y == location.y);
+        }
     }
 }

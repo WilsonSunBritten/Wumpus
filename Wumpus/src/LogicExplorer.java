@@ -125,7 +125,7 @@ public class LogicExplorer extends Agent {
         }
     }
 
-    private void processPercepts() {
+    private void processPercepts() {        //there might still be an issue with wumpus death since its a seperate percept
         if ((percepts & DEATH) != 0) {
             System.out.println("Explorer died after moving");
             removeFromFrontier(getForward());
@@ -284,11 +284,26 @@ public class LogicExplorer extends Agent {
 
     private void rhwTraversal(Location location) {
         //moveHistoryTraversal(location);
-        if (this.location != location) {
+        if (!this.location.equals(location) && !adjacent(location)) {
             goTo(location.x, location.y);
         }
 
         //go to location zach NOOOO!
+    }
+    
+    private boolean adjacent(Location location) {
+        
+        if (location.x == this.location.x) {
+            if (Math.abs(location.x - this.location.x) == 1) {
+                return true;
+            } 
+        }
+        if (location.y == this.location.y) {
+            if (Math.abs(location.y - this.location.y) == 1) {
+                return true;
+            } 
+        }
+        return false;
     }
 
     private boolean safeSpaceInFrontier() {
