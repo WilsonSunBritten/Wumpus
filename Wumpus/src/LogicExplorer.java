@@ -185,9 +185,9 @@ public class LogicExplorer extends Agent {
             removeFromFrontier(wumpusSpace);
         }
         else {
-            rhwTraversal(neighborSafeSpace(frontier.get(frontier.size()-1)));
-            turnToSpace(frontier.get(frontier.size()-1));
-            frontier.remove(frontier.size()-1);
+            rhwTraversal(neighborSafeSpace(frontier.get(0)));
+            turnToSpace(frontier.get(0));
+            frontier.remove(0);
             move(MOVE);
         }
     }
