@@ -185,10 +185,10 @@ public final class World {
                 }
                 break;
             case TURN_LEFT:
-                direction = (direction + 3) % 4 + 1;
+                direction = (direction + 3) % 4;
                 return perceptMap[x][y];
             case TURN_RIGHT:
-                direction = (direction + 1) % 4 + 1;
+                direction = (direction + 1) % 4;
                 return perceptMap[x][y];
             case SHOOT:
                 //shoot logic
