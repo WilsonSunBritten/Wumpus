@@ -343,10 +343,10 @@ public class LogicExplorer extends Agent {
             Location loc = frontier.get(i);
             if (kb.ask(new Fact("Wumpus", loc.x, false, loc.y, false, true, null, null))) {
                 if (kb.ask(new Fact("Pit", loc.x, false, loc.y, false, true, null, null))) {
-                    if (kb.ask(new Fact("Obsticle", loc.x, false, loc.y, false, true, null, null))) {
+                    //hopefully no obsticle is in frontier as it should be removed when found...
                         safeSpace = new Location(loc.x, loc.y);
                         return true;
-                    }
+                    
                 }
             }
             if (kb.ask(new Fact("Pit", loc.x, false, loc.y, false, false, null, null)) || kb.ask(new Fact("Obsticle", loc.x, false, loc.y, false, false, null, null))) {

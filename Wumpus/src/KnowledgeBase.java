@@ -49,6 +49,7 @@ public class KnowledgeBase {
         //Fact(String predicate, int var1Val, boolean var1Var, int var2Val, boolean var2Var, boolean not, IFunction var1Function, IFunction var2Function)
         //Special predicate: Evaluate
         
+        //Stench(x,y)<=>(Wumpus(x-1,y) v Wumpus(x+1,y) v Wumpus(x,y-1) v Wumpus(x,y+1)
         //Stench(x,y)=>(Wumpus(x-1,y) v Wumpus(x+1,y) v Wumpus(x,y-1) v Wumpus(x,y+1)
         //!Stench(x,y) v Wumpus(x-1,y) v Wumpus(x+1,y) v Wumpus(x,y-1) v Wumpus(x,y+1)
         Clause stench = new Clause();
@@ -63,9 +64,43 @@ public class KnowledgeBase {
         stench.facts.add(wumpusxymin);
         stench.facts.add(wumpusxyplus);
         rules.add(stench);
+        //(Wumpus(x-1,y) v Wumpus(x+1,y) v Wumpus(x,y-1) v Wumpus(x,y+1)) =>Stench(x,y)
+        //!(Wumpus(x-1,y) v Wumpus(x+1,y) v Wumpus(x,y-1) v Wumpus(x,y+1)) v Stench(x,y)
+        //(!Wumpus(x-1,y) ^ !Wumpus(x+1,y) ^ !Wumpus(x,y-1) ^ !Wumpus(x,y+1)) v Stench(x,y)
+        //(Stench(x,y) v !Wumpus(x-1,y)), (Stench(x,y) v !Wumpus(x+1,y)), (Stench(x,y) v !Wumpus(x,y-1)), (Stench(x,y) v !Wumpus(x,y+1)
+        Clause stench1 = new Clause();
+        Fact stenchXY1 = new Fact(stenchXY);
+        Fact wumpusxminy1 = new Fact(wumpusxminy);
+        wumpusxminy1.not = true;
+        stench1.facts.add(stenchXY1);
+        stench1.facts.add(wumpusxminy1);
+        rules.add(stench1);
         
+        Clause stench2 = new Clause();
+        Fact stenchXY2 = new Fact(stenchXY);
+        Fact wumpusxplusy1 = new Fact(wumpusxplusy);
+        wumpusxplusy1.not = true;
+        stench2.facts.add(stenchXY2);
+        stench2.facts.add(wumpusxplusy1);
+        rules.add(stench2);
         
-        //Breeze(x,y)=>(Pit(x-1,y) v Pit(x+1,y) v Pit(x,y-1) v Pit(x, y+1)
+        Clause stench3 = new Clause();
+        Fact stenchXY3 = new Fact(stenchXY);
+        Fact wumpusxymin1 = new Fact(wumpusxymin);
+        wumpusxymin1.not = true;
+        stench3.facts.add(stenchXY3);
+        stench3.facts.add(wumpusxymin1);
+        rules.add(stench3);
+        
+        Clause stench4 = new Clause();
+        Fact stenchXY4 = new Fact(stenchXY);
+        Fact wumpusxyplus1 = new Fact(wumpusxyplus);
+        wumpusxyplus1.not = true;
+        stench4.facts.add(stenchXY4);
+        stench4.facts.add(wumpusxyplus1);
+        rules.add(stench4);
+        
+        //Breeze(x,y)<=>(Pit(x-1,y) v Pit(x+1,y) v Pit(x,y-1) v Pit(x, y+1)
         //!Breeze(x,y) v Pit(x-1,y) v Pit(x+1,y) v Pit(x,y-1) v Pit(x, y+1)
         Clause breeze = new Clause();
         Fact breezeXY = new Fact("Breeze",0,true,1,true,true,null,null);
@@ -79,6 +114,38 @@ public class KnowledgeBase {
         breeze.facts.add(pitxymin);
         breeze.facts.add(pitxyplus);
         rules.add(breeze);
+        
+        Clause breeze1 = new Clause();
+        Fact breezeXY1 = new Fact(breezeXY);
+        Fact pitxminy1 = new Fact(pitxminy);
+        pitxminy1.not = true;
+        breeze1.facts.add(breezeXY1);
+        breeze1.facts.add(pitxminy1);
+        rules.add(breeze1);
+        
+        Clause breeze2 = new Clause();
+        Fact breezeXY2 = new Fact(breezeXY);
+        Fact pitxplusy1 = new Fact(pitxplusy);
+        pitxplusy1.not = true;
+        breeze2.facts.add(breezeXY2);
+        breeze2.facts.add(pitxplusy1);
+        rules.add(breeze2);
+        
+        Clause breeze3 = new Clause();
+        Fact breezeXY3 = new Fact(breezeXY);
+        Fact pitxymin1 = new Fact(pitxymin);
+        pitxymin1.not = true;
+        breeze3.facts.add(breezeXY3);
+        breeze3.facts.add(pitxymin1);
+        rules.add(breeze3);
+        
+        Clause breeze4 = new Clause();
+        Fact breezeXY4 = new Fact(breezeXY);
+        Fact pitxyplus1 = new Fact(pitxyplus);
+        pitxyplus1.not = true;
+        breeze4.facts.add(breezeXY4);
+        breeze4.facts.add(pitxyplus1);
+        rules.add(breeze4);
         
         //!Wumpus(-1,y) ^ !Wumpus(x,-1) ^ !Wumpus(x,World.size)^ !Wumpus(World.size,y)
         //!Wumpus(-1,y), !Wumpus(x,-1), !Wumpus(x,World.size), !Wumpus(World.size,y)

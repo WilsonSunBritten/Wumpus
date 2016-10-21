@@ -14,6 +14,7 @@ public class Fact extends Variable {
             variables.add(new Variable(var));
         }
         predicate = fact.predicate;
+        this.function = fact.function;
 
     }
 
@@ -26,6 +27,7 @@ public class Fact extends Variable {
         variables.add(var1);
         variables.add(var2);
         this.predicate = predicate;
+        
         this.not = not;
     }
 
