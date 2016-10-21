@@ -23,14 +23,22 @@ public class KnowledgeBase {
         }
         if(clause.facts.size() == 1){
             inferenceEngine.infer(clause.facts.get(0));
+            System.out.println("Added to kb Clause: ");
+            System.out.print("\t");
+            Clause.printClause(clause);
             clauses.add(clause);
         }
         else{
             int beforeSize = clauses.size();
             inferenceEngine.infer(clause);
-            if(clauses.size() == beforeSize)
+            if(clauses.size() == beforeSize){
                 clauses.add(clause);//We only need add the clause itself if we didn't infer anything, otherwise the inferred shortened clause which is more valuable got added
             
+            
+            System.out.println("Added to kb Clause: ");
+            System.out.print("\t");
+            Clause.printClause(clause);
+            }
         }
         //clauses.add(clause);
             
