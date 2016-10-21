@@ -204,15 +204,15 @@ public class LogicExplorer extends Agent {
     public void turnToSpace(Location loc) {
         if (location.x > loc.x) {
             switch (direction) {
-                case EAST:
+                case WEST:
                     break;
                 case NORTH:
-                    move(TURN_LEFT);
-                    break;
-                case SOUTH:
                     move(TURN_RIGHT);
                     break;
-                case WEST:
+                case SOUTH:
+                    move(TURN_LEFT);
+                    break;
+                case EAST:
                     move(TURN_RIGHT);
                     move(TURN_RIGHT);
                     break;
@@ -221,15 +221,15 @@ public class LogicExplorer extends Agent {
             }
         } else if (loc.x > location.x) {
             switch (direction) {
-                case WEST:
+                case EAST:
                     return;
-                case NORTH:
+                case SOUTH:
                     move(TURN_RIGHT);
                     break;
-                case SOUTH:
+                case NORTH:
                     move(TURN_LEFT);
                     break;
-                case EAST:
+                case WEST:
                     move(TURN_RIGHT);
                     move(TURN_RIGHT);
                     break;

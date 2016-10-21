@@ -22,6 +22,8 @@ public final class World {
             }
             
         }
+        System.out.println("Starting world:");
+        printWorld();
     }
 
     public void startGame(String id) {

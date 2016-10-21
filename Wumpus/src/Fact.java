@@ -37,7 +37,8 @@ public class Fact extends Variable {
         System.out.print(predicate + "(");
         for (Variable var : variables) {
             var.printVariable();
-            System.out.print(", ");
+            if(var != variables.get(variables.size()-1))
+                System.out.print(", ");
         }
         System.out.print(") ");
     }
