@@ -22,7 +22,7 @@ public class LogicExplorer extends Agent {
         kb.initializeRules();
         this.searchedPositions = new boolean[World.size][World.size];
         searchedPositions[location.x][location.y] = true;
-        initializeFrontier();
+        //initializeFrontier();
         run();
     }
 
@@ -119,6 +119,7 @@ public class LogicExplorer extends Agent {
         for (Location loc : frontier) {
             if (loc.x == locToRemove.x && loc.y == locToRemove.y) {
                 frontier.remove(loc);
+                return;
             }
         }
     }
@@ -174,12 +175,14 @@ public class LogicExplorer extends Agent {
             rhwTraversal(neighborSafeSpace(safeSpace));
             turnToSpace(safeSpace);
             move(MOVE);
+            removeFromFrontier(safeSpace);
         } 
         else if(arrowCount > 0 && wumpusInFrontier()){
             rhwTraversal(neighborSafeSpace(wumpusSpace));
             turnToSpace(wumpusSpace);
             move(SHOOT);
             move(MOVE);
+            removeFromFrontier(wumpusSpace);
         }
         else {
             rhwTraversal(neighborSafeSpace(frontier.get(0)));
