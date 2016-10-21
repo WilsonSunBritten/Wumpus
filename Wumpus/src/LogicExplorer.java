@@ -9,6 +9,7 @@ public class LogicExplorer extends Agent {
     private boolean[][] searchedPositions;
     private boolean navigatingToSafePosition;
     private Location safeSpace;
+    boolean notFirstMove =  false;
 
     public LogicExplorer(World world, int startingArrows, int startingX, int startingY, int direction) {
         super(world,startingArrows,startingX,startingY,direction);
@@ -32,7 +33,10 @@ public class LogicExplorer extends Agent {
     }
 
     public void updateLocation(){
-        super.updateLocation();
+        if(notFirstMove)
+            super.updateLocation();
+        else
+            notFirstMove = true;
         expandFrontier();
     }
     

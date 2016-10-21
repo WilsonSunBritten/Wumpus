@@ -79,6 +79,8 @@ public class InferenceEngine {
                             if (var.isVariable && var.variableId == sub.varIdToSubstitute) {
                                 var.isVariable = false;
                                 var.value = sub.valToSubstituteWith;
+                                if(var.function != null)
+                                    var.value = var.function.process(var.value);
                             }
                         }
                         for (Fact tempFact : clause.facts) {
@@ -87,6 +89,8 @@ public class InferenceEngine {
                                 if (var.isVariable && var.variableId == sub.varIdToSubstitute) {
                                     var.isVariable = false;
                                     var.value = sub.valToSubstituteWith;
+                                    if(var.function != null)
+                                        var.value = var.function.process(var.value);
                                 }
                             }
                         }
@@ -135,6 +139,7 @@ public class InferenceEngine {
                         }
                         clause.facts.remove(fact);
                         kb.addToClauses(clause);
+                        break;
                     }
                 }
             }
