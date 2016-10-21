@@ -108,6 +108,8 @@ public class InferenceEngine {
                     }
 
                     clause.facts.remove(ruleFact);
+                    System.out.println("Inferred:");
+                        Clause.printClause(clause);
                     kb.addToClauses(clause);
                     break;
                 }
@@ -156,6 +158,8 @@ public class InferenceEngine {
                         }
                         if(!substitutions.isEmpty()){
                             clause.facts.remove(fact);
+                            System.out.println("Inferred:");
+                            Clause.printClause(clause);
                             kb.addToClauses(clause);
                         }
                         break;
