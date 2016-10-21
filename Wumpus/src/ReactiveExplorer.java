@@ -22,7 +22,6 @@ public class ReactiveExplorer extends Agent {
     }
 
     private void run() {
-
         int i = 0;
         while (i < 10) {
             move();
@@ -36,6 +35,7 @@ public class ReactiveExplorer extends Agent {
             updateSafe();
             //go in random direction
             int rand = random.nextInt(3);
+            System.out.println("Safe space, action is : " + rand);
             switch (rand) {
                 case 0:     //try to go forward
                     percepts = world.action(MOVE);
@@ -78,6 +78,7 @@ public class ReactiveExplorer extends Agent {
                 percepts = world.action(safeMoves.get(rand));
             } else {
                 int rand = random.nextInt(3);
+                System.out.println("Unsafe space, action is : " + rand);
                 switch (rand) {
                     case 0:
                         percepts = world.action(MOVE);
