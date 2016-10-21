@@ -42,6 +42,8 @@ public class LogicExplorer extends Agent {
     private void run() {
 
         while (true) {
+            percepts = world.getPercepts();
+            processPercepts();
             decideNextAction();
         }
     }

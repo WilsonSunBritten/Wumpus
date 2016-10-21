@@ -23,6 +23,8 @@ public class Fact extends Variable {
     public Fact(String predicate, int var1Val, boolean var1Var, int var2Val, boolean var2Var, boolean not, IFunction var1Function, IFunction var2Function) {
         Variable var1 = new Variable(var1Val, var1Var, var1Function);
         Variable var2 = new Variable(var2Val, var2Var, var2Function);
+        variables.add(var1);
+        variables.add(var2);
         this.predicate = predicate;
         this.not = not;
     }
