@@ -108,13 +108,13 @@ public final class World {
                     case NORTH:
                         System.out.println("Moved north");
                         if (y + 1 < size) {
-                            if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
+                            if ((perceptMap[x][y+1] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                                 score -= 1000;
                                 wumpusDeaths++;
                                 System.out.println("Death to wumpus.");
                                 return DEATH_WUMPUS;
                             }
-                            if ((perceptMap[x][y] & DEATH) == DEATH) {
+                            if ((perceptMap[x][y+1] & DEATH) == DEATH) {
                                 score -= 1000;
                                 pitDeaths++;
                                 System.out.println("Death to pit.");
@@ -124,64 +124,64 @@ public final class World {
                             return perceptMap[x][y];
                         } else {
                             return BUMP;
-                        }
+                        } 
                     case EAST:
                         System.out.println("Moved east");
-                        if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
-                            score -= 1000;
-                            wumpusDeaths++;
-                            System.out.println("Death to wumpus.");
-                            return DEATH_WUMPUS;
-                        }
-                        if ((perceptMap[x][y] & DEATH) == DEATH) {
-                            score -= 1000;
-                            pitDeaths++;
-                            return DEATH;
-                        }
-                        if (x + 1 < size) {
-                            x = x + 1;
+                        if(x+1 < size){
+                            if ((perceptMap[x+1][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
+                                score -= 1000;
+                                wumpusDeaths++;
+                                System.out.println("Death to wumpus.");
+                                return DEATH_WUMPUS;
+                            }
+                            if ((perceptMap[x+1][y] & DEATH) == DEATH) {
+                                score -= 1000;
+                                pitDeaths++;
+                                return DEATH;
+                             }
+                             x = x + 1;
                             return perceptMap[x][y];
-                        } else {
+                        }else {
                             return BUMP;
                         }
                     case SOUTH:
                         System.out.println("Moved south");
-                        if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
+                        if(y-1 > 0){
+                        if ((perceptMap[x][y-1] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
                             wumpusDeaths++;
                             System.out.println("Death to wumpus.");
                             return DEATH_WUMPUS;
                         }
-                        if ((perceptMap[x][y] & DEATH) == DEATH) {
+                        if ((perceptMap[x][y-1] & DEATH) == DEATH) {
                             score -= 1000;
                             pitDeaths++;
                             System.out.println("Death to pit.");
                             return DEATH;
                         }
-                        if (y - 1 > 0) {
                             y -= 1;
                             return perceptMap[x][y];
-                        } else {
+                         }else {
                             return BUMP;
                         }
                     case WEST:
                         System.out.println("Moved west");
-                        if ((perceptMap[x][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
+                        if(x-1>0){
+                        if ((perceptMap[x-1][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
                             wumpusDeaths++;
                             System.out.println("Death to wumpus.");
                             return DEATH_WUMPUS;
                         }
-                        if ((perceptMap[x][y] & DEATH) == DEATH) {
+                        if ((perceptMap[x-1][y] & DEATH) == DEATH) {
                             score -= 1000;
                             pitDeaths++;
                             System.out.println("Death to pit.");
                             return DEATH;
                         }
-                        if (x - 1 > 0) {
                             x -= 1;
                             return perceptMap[x][y];
-                        } else {
+                        }else {
                             return BUMP;
                         }
                     default:
@@ -205,10 +205,10 @@ public final class World {
                 switch (direction) {
                     case 1: //shoot north
                         for (int i = y; i < perceptMap.length; i++) {
-                            if (perceptMap[x][i] == 16) {       //hits Wumpus
+                            if ((perceptMap[x][i] & DEATH_WUMPUS)!= 0) {       //hits Wumpus
                                 removeWumpus(x, i);
                                 return SCREAM;
-                            } else if (perceptMap[x][i] == 4) { //hits Obstacle
+                            } else if ((perceptMap[x][i] & BUMP)!= 0) { //hits Obstacle
                                 return perceptMap[x][y];
                             }
                         }
@@ -216,10 +216,10 @@ public final class World {
 
                     case 2: //shoot east
                         for (int i = y; i < perceptMap.length; i++) {
-                            if (perceptMap[i][y] == 16) {       //hits Wumpus
+                            if ((perceptMap[i][y] & DEATH_WUMPUS)!= 0) {       //hits Wumpus
                                 removeWumpus(i, y);
                                 return SCREAM;
-                            } else if (perceptMap[i][y] == 4) { //hits Obstacle
+                            } else if ((perceptMap[i][y] & BUMP)!=0) { //hits Obstacle
                                 return perceptMap[x][y];
                             }
                         }
@@ -227,10 +227,10 @@ public final class World {
 
                     case 3: //shoot south
                         for (int i = y; i > 0; i--) {
-                            if (perceptMap[x][i] == 16) {       //hits Wumpus
+                            if ((perceptMap[x][i] & DEATH_WUMPUS)!=0) {       //hits Wumpus
                                 removeWumpus(x, i);
                                 return SCREAM;
-                            } else if (perceptMap[x][i] == 4) { //hits Obstacle
+                            } else if ((perceptMap[x][i] & BUMP)!=0) { //hits Obstacle
                                 return perceptMap[x][y];
                             }
                         }
@@ -238,10 +238,10 @@ public final class World {
 
                     case 4: //shoot west
                         for (int i = y; i > 0; i--) {
-                            if (perceptMap[i][y] == 16) {       //hits Wumpus
+                            if ((perceptMap[i][y] & DEATH_WUMPUS)!=0) {       //hits Wumpus
                                 removeWumpus(i, y);
                                 return SCREAM;
-                            } else if (perceptMap[i][y] == 4) { //hits Obstacle
+                            } else if ((perceptMap[i][y] &BUMP)!=0) { //hits Obstacle
                                 return perceptMap[x][y];
                             }
                         }
