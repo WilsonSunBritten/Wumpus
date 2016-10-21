@@ -95,21 +95,21 @@ public class LogicExplorer extends Agent {
             searchedPositions[location.x][location.y] = true;
         }
         if((percepts&BUMP)!=0)
-            kb.tell(new Clause(new Fact("Obsticle",getForward().x,false,getForward().y,false,false,null,null)));
+            kb.tell(new Fact("Obsticle",getForward().x,false,getForward().y,false,false,null,null));
         else
-            kb.tell(new Clause(new Fact("Obsticle",getForward().x,false,getForward().y,false,true,null,null)));
+            kb.tell(new Fact("Obsticle",getForward().x,false,getForward().y,false,true,null,null));
         if ((percepts & STENCH) != 0) {
-            kb.tell(new Clause(new Fact("Stench", location.x, false, location.y, false, true, null, null)));
+            kb.tell(new Fact("Stench", location.x, false, location.y, false, true, null, null));
         } else {
-            kb.tell(new Clause(new Fact("Stench", location.x, false, location.y, false, false, null, null)));
+            kb.tell(new Fact("Stench", location.x, false, location.y, false, false, null, null));
         }
         if ((percepts & BREEZE) != 0) {
-            kb.tell(new Clause(new Fact("Breeze", location.x, false, location.y, false, true, null, null)));
+            kb.tell(new Fact("Breeze", location.x, false, location.y, false, true, null, null));
         } else {
-            kb.tell(new Clause(new Fact("Breeze", location.x, false, location.y, false, false, null, null)));
+            kb.tell(new Fact("Breeze", location.x, false, location.y, false, false, null, null));
         }
         if ((percepts & SCREAM) != 0) {
-            kb.tell(new Clause(new Fact("Scream", location.x, false, location.y, false, true, null, null)));
+            kb.tell(new Fact("Scream", location.x, false, location.y, false, true, null, null));
         }
     }
 

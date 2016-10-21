@@ -105,6 +105,7 @@ public class KnowledgeBase {
                 }
             }           
         }
+        clauses.add(new Clause(fact));
         //and check if there is a stench at any adjacent position, remove those facts too
     }
 }
