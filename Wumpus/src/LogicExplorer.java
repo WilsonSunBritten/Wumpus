@@ -48,16 +48,16 @@ public class LogicExplorer extends Agent {
     }
 
     public void expandFrontier() {
-        if (location.x > 0 && !searchedPositions[location.x - 1][location.y]) {
+        if (location.x > 0 && !searchedPositions[location.x - 1][location.y] && !inFrontier(new Location(location.x-1,location.y))) {
             frontier.add(new Location(location.x - 1, location.y));
         }
-        if (location.x < world.size - 1 && !searchedPositions[location.x + 1][location.y]) {
+        if (location.x < world.size - 1 && !searchedPositions[location.x + 1][location.y] && !inFrontier(new Location(location.x+1,location.y))) {
             frontier.add(new Location(location.x + 1, location.y));
         }
-        if (location.y > 0 && !searchedPositions[location.x][location.y - 1]) {
+        if (location.y > 0 && !searchedPositions[location.x][location.y - 1] && !inFrontier(new Location(location.x,location.y-1))) {
             frontier.add(new Location(location.x, location.y - 1));
         }
-        if (location.y < world.size - 1 && !searchedPositions[location.x][location.y + 1]) {
+        if (location.y < world.size - 1 && !searchedPositions[location.x][location.y + 1] && !inFrontier(new Location(location.x,location.y+1))) {
             frontier.add(new Location(location.x, location.y + 1));
         }
     }
@@ -84,7 +84,6 @@ public class LogicExplorer extends Agent {
                 moveHistory.add(MOVE);
                 System.out.println("Explorer Action: Moving");
                 percepts = (byte) world.action(MOVE);
-                processPercepts();
                 break;
             case TURN_LEFT:
                 moveHistory.add(TURN_LEFT);
@@ -176,6 +175,7 @@ public class LogicExplorer extends Agent {
                 if (kb.ask(new Fact("Pit", getForward().x, false, getForward().y, false, true, null, null))) {
                     if(inFrontier(getForward())){
                         move(World.MOVE);
+                        processPercepts();
                         return;
                     }
                     
@@ -186,18 +186,21 @@ public class LogicExplorer extends Agent {
             rhwTraversal(neighborSafeSpace(safeSpace));
             turnToSpace(safeSpace);
             move(MOVE);
+            processPercepts();
             removeFromFrontier(safeSpace);
         } else if (arrowCount > 0 && wumpusInFrontier()) {
             rhwTraversal(neighborSafeSpace(wumpusSpace));
             turnToSpace(wumpusSpace);
             move(SHOOT);
             move(MOVE);
+            processPercepts();
             removeFromFrontier(wumpusSpace);
         } else if (!frontier.isEmpty()) {
             rhwTraversal(neighborSafeSpace(frontier.get(frontier.size() - 1)));
             turnToSpace(frontier.get(frontier.size() - 1));
             frontier.remove(frontier.size() - 1);
             move(MOVE);
+            processPercepts();
         }
     }
 
