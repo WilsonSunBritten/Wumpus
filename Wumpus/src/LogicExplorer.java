@@ -48,7 +48,18 @@ public class LogicExplorer extends Agent {
     }
 
     public void expandFrontier() {
-        //TODO: write
+        if (location.x > 0 && !searchedPositions[location.x-1][location.y]) {
+            frontier.add(new Location(location.x - 1, location.y));
+        }
+        if (location.x < world.size && !searchedPositions[location.x+1][location.y]) {
+            frontier.add(new Location(location.x + 1, location.y));
+        }
+        if (location.y > 0 && !searchedPositions[location.x][location.y-1]) {
+            frontier.add(new Location(location.x, location.y - 1));
+        }
+        if (location.y < world.size && !searchedPositions[location.x][location.y+1]) {
+            frontier.add(new Location(location.x, location.y + 1));
+        }
     }
 
     private void run() {

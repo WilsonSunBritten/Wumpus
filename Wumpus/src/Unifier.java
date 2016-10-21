@@ -98,7 +98,26 @@ public class Unifier {
             }
         }
         
+        substitute(subs, fact1);
+        substitute(subs, fact2);
+        for(int i = 0; i < fact1.variables.size(); i++){
+            Variable var1 = fact1.variables.get(i);
+            Variable var2 = fact2.variables.get(i);
+            if(var1.value != var2.value)
+                return new ArrayList<Substitute>();
+        }
         return subs;
+    }
+    
+    public static void substitute(ArrayList<Substitute> subs, Fact fact){
+        for(Substitute sub : subs){
+            for(Variable var: fact.variables){
+                if(var.isVariable && var.variableId == sub.varIdToSubstitute){
+                    var.isVariable = false;
+                    var.value = sub.valToSubstituteWith;
+                }
+            }
+        }
     }
     public static ArrayList<Substitute> unify2(Fact f1, Fact f2) {
         
