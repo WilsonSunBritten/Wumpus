@@ -194,6 +194,7 @@ public final class World {
                 direction = (direction + 3) % 4;
                 return perceptMap[x][y];
             case TURN_RIGHT:
+                System.out.println("Turning right");
                 direction = (direction + 1) % 4;
                 return perceptMap[x][y];
             case SHOOT:

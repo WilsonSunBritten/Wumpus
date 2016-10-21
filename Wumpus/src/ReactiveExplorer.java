@@ -4,7 +4,8 @@ import java.util.ArrayList;
 public class ReactiveExplorer extends Agent {
 
     private Location prevLocation;
-    private State curState, prevState;    private boolean safeMap[][];
+    private State curState, prevState;
+    private boolean safeMap[][];
     private static final int FORWARD = 0, LEFT = 1, BACK = 2, RIGHT = 3;
 
     public ReactiveExplorer(World world, int arrows, int x, int y, int direction) {
@@ -31,6 +32,9 @@ public class ReactiveExplorer extends Agent {
     private void move() {
 
         if ((percepts & STENCH) != STENCH && (percepts & BREEZE) != BREEZE) {       //all adjacent spaces are safe
+            if((percepts & GLITTER) != GLITTER){
+                world.action(GRAB);
+            }
             updateSafe();
             //go in random direction
             int rand = random.nextInt(3);
@@ -45,7 +49,7 @@ public class ReactiveExplorer extends Agent {
                     turnLeft();
                     percepts = world.action(MOVE);
                     if ((percepts & BUMP) != BUMP) {
-                        System.out.println("Here");
+                        System.out.println("Not Reseting");
                         return;
                     }
                     turnRight();

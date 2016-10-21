@@ -15,7 +15,7 @@ public class Driver {
        // tester.testInferenceEngine();
         makeGame();
         World world = new World("PerceptBoard.txt");
-        world.startGame("LogicExplorer");
+        world.startGame("ReactiveExplorer");
     }
 
     public static void makeGame() throws IOException {
