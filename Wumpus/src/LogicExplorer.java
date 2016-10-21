@@ -13,7 +13,7 @@ public class LogicExplorer extends Agent {
     private boolean[][] searchedPositions;
     private boolean navigatingToSafePosition;
     private Location safeSpace;
-    boolean notFirstMove =  false;
+    boolean notFirstMove = false;
 
     public LogicExplorer(World world, int startingArrows, int startingX, int startingY, int direction) {
         super(world, startingArrows, startingX, startingY, direction);
@@ -29,36 +29,37 @@ public class LogicExplorer extends Agent {
         if (location.x > 0) {
             frontier.add(new Location(location.x - 1, location.y));
         }
-        if (location.x < world.size-1) {
+        if (location.x < world.size - 1) {
             frontier.add(new Location(location.x + 1, location.y));
         }
         if (location.y > 0) {
             frontier.add(new Location(location.x, location.y - 1));
         }
-        if (location.y < world.size-1) {
+        if (location.y < world.size - 1) {
             frontier.add(new Location(location.x, location.y + 1));
         }
     }
 
-    public void updateLocation(){
-        if(notFirstMove)
+    public void updateLocation() {
+        if (notFirstMove) {
             super.updateLocation();
-        else
+        } else {
             notFirstMove = true;
+        }
         expandFrontier();
     }
 
     public void expandFrontier() {
-        if (location.x > 0 && !searchedPositions[location.x-1][location.y]) {
+        if (location.x > 0 && !searchedPositions[location.x - 1][location.y]) {
             frontier.add(new Location(location.x - 1, location.y));
         }
-        if (location.x < world.size -1&& !searchedPositions[location.x+1][location.y]) {
+        if (location.x < world.size - 1 && !searchedPositions[location.x + 1][location.y]) {
             frontier.add(new Location(location.x + 1, location.y));
         }
-        if (location.y > 0 && !searchedPositions[location.x][location.y-1]) {
+        if (location.y > 0 && !searchedPositions[location.x][location.y - 1]) {
             frontier.add(new Location(location.x, location.y - 1));
         }
-        if (location.y < world.size -1&& !searchedPositions[location.x][location.y+1]) {
+        if (location.y < world.size - 1 && !searchedPositions[location.x][location.y + 1]) {
             frontier.add(new Location(location.x, location.y + 1));
         }
     }
@@ -125,8 +126,9 @@ public class LogicExplorer extends Agent {
             updateLocation();
             searchedPositions[location.x][location.y] = true;
         }
-        if((percepts&BUMP)!=0)
-            kb.tell(new Fact("Obsticle",getForward().x,false,getForward().y,false,false,null,null));
+        if ((percepts & BUMP) != 0) {
+            kb.tell(new Fact("Obsticle", getForward().x, false, getForward().y, false, false, null, null));
+        }
         if ((percepts & STENCH) != 0) {
             kb.tell(new Fact("Stench", location.x, false, location.y, false, true, null, null));
         } else {
@@ -170,38 +172,72 @@ public class LogicExplorer extends Agent {
     }
 
     private void rhwTraversal(Location location) {
-        
+
         Location current = this.location;
         Location goal = location;
-        
+
         Queue<Location> queue = new LinkedList<>();
         //add adjacent spaces to queue
         queue.addAll(getSafeAdjacent(location));
-        
+
     }
-    
+    //searchedpositions
+    int[][] grid = new int[World.size][World.size];
+
+    private void search(Location location) {
+        for (int i = 0; i < World.size; i++) {
+            for (int j = 0; j < World.size; j++) {
+                if (searchedPositions[i][j]) {
+                    grid[i][j] = 0;
+                } else {
+                    grid[i][j] = 1;
+                }
+            }
+        }
+        grid[location.x][location.y] = 2;
+        grid[this.location.x][this.location.y] = 3;
+        search(this.location.x, this.location.y);
+    }
+
+    private boolean search(int x, int y) {
+        //0 = safe, 1 = unsafe, 2 = goal, 3 = visited
+        if (grid[x][y] == 2) {
+            return true;
+        } else if (grid[x][y] == 1) {
+            return false;
+        } else if (grid[x][y] == 3) {
+            return false;
+        }
+        grid[x][y] = 3;
+        //explore neighbors clockwise
+        if ((x < grid.length - 1 && search(x + 1, y)) || (y > 0 && search(x, y - 1)) || (x > 0 && search(x - 1, y)) || (y < grid.length - 1 && search(x, y + 1))) {
+            return true;
+        }
+        return false;
+    }
+
     private ArrayList<Location> getSafeAdjacent(Location location) {
-        
+
         ArrayList<Location> adjacent = new ArrayList<>();
-        
+
         if (location.x < World.size - 1) {
-            if (searchedPositions[location.x+1][location.y]) {
-                adjacent.add(new Location(location.x+1, location.y));
+            if (searchedPositions[location.x + 1][location.y]) {
+                adjacent.add(new Location(location.x + 1, location.y));
             }
         }
         if (location.x > 0) {
-            if (searchedPositions[location.x-1][location.y]) {
-                adjacent.add(new Location(location.x-1, location.y));
+            if (searchedPositions[location.x - 1][location.y]) {
+                adjacent.add(new Location(location.x - 1, location.y));
             }
         }
         if (location.y < World.size - 1) {
-            if (searchedPositions[location.x][location.y+1]) {
-                adjacent.add(new Location(location.x, location.y+1));
+            if (searchedPositions[location.x][location.y + 1]) {
+                adjacent.add(new Location(location.x, location.y + 1));
             }
         }
         if (location.y > 0) {
-            if (searchedPositions[location.x][location.y-1]) {
-                adjacent.add(new Location(location.x, location.y-1));
+            if (searchedPositions[location.x][location.y - 1]) {
+                adjacent.add(new Location(location.x, location.y - 1));
             }
         }
         return adjacent;
@@ -226,9 +262,4 @@ public class LogicExplorer extends Agent {
         return false;
     }
 
-    private void RHWTraversal(int x, int y) {
-
-        //ArrayList<Location> path = PathFinder.getPath(x, y, location.x, location.y, searchedPositions);
-        //traverse path
-    }
 }
