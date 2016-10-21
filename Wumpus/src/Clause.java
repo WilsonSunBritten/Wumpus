@@ -20,6 +20,13 @@ public class Clause extends Fact {
     public Clause(Fact fact) {
         facts.add(fact);
     }
+    
+    public static void printClause(Clause clause){
+        for(Fact fact : clause.facts){
+            fact.printFact();
+        }
+        System.out.println("");
+    }
 
     @Override
     public boolean contains(Variable var) {

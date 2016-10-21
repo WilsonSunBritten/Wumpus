@@ -107,7 +107,7 @@ public final class World {
                 switch (direction) {
                     case NORTH:
                         System.out.println("Moved north");
-                        if (y + 1 < size) {
+                        if (y + 1 < size-1 && (perceptMap[x][y+1] & BUMP)!=0) {
                             if ((perceptMap[x][y+1] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                                 score -= 1000;
                                 wumpusDeaths++;
@@ -127,7 +127,7 @@ public final class World {
                         } 
                     case EAST:
                         System.out.println("Moved east");
-                        if(x+1 < size){
+                        if(x+1 < size-1 && (perceptMap[x+1][y] & BUMP)!=0){
                             if ((perceptMap[x+1][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                                 score -= 1000;
                                 wumpusDeaths++;
@@ -146,7 +146,7 @@ public final class World {
                         }
                     case SOUTH:
                         System.out.println("Moved south");
-                        if(y-1 > 0){
+                        if(y > 0 && (perceptMap[x][y-1] & BUMP)!=0){
                         if ((perceptMap[x][y-1] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
                             wumpusDeaths++;
@@ -166,7 +166,7 @@ public final class World {
                         }
                     case WEST:
                         System.out.println("Moved west");
-                        if(x-1>0){
+                        if(x>0 && (perceptMap[x-1][y] & BUMP)!=0){
                         if ((perceptMap[x-1][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
                             wumpusDeaths++;
@@ -198,7 +198,7 @@ public final class World {
                 return perceptMap[x][y];
             case SHOOT:
                 //shoot logic
-                if (arrowCount < 1) {
+                if (arrowCount == 0) {
                     return -1;      //out of arrows, which shouldn't be possible
                 }
                 arrowCount--;

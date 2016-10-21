@@ -132,10 +132,13 @@ public class LogicExplorer extends Agent {
         if (((percepts & BUMP) != BUMP) && (percepts & DEATH) != DEATH) {
             updateLocation();
             searchedPositions[location.x][location.y] = true;
+            removeFromFrontier(location);
         }
-        if ((percepts & BUMP) != 0) {
-            kb.tell(new Fact("Obsticle", getForward().x, false, getForward().y, false, false, null, null));
+        if((percepts & DEATH)!= 0){
+            removeFromFrontier(new Location(getForward().x,getForward().y));//
         }
+        if((percepts&BUMP)!=0)
+            kb.tell(new Fact("Obsticle",getForward().x,false,getForward().y,false,false,null,null));
         if ((percepts & STENCH) != 0) {
             kb.tell(new Fact("Stench", location.x, false, location.y, false, true, null, null));
         } else {
@@ -184,10 +187,11 @@ public class LogicExplorer extends Agent {
             move(SHOOT);
             move(MOVE);
             removeFromFrontier(wumpusSpace);
-        } else {
-            rhwTraversal(neighborSafeSpace(frontier.get(frontier.size() - 1)));
-            turnToSpace(frontier.get(frontier.size() - 1));
-            frontier.remove(frontier.size() - 1);
+        }
+        else if(!frontier.isEmpty()){
+            rhwTraversal(neighborSafeSpace(frontier.get(frontier.size()-1)));
+            turnToSpace(frontier.get(frontier.size()-1));
+            frontier.remove(frontier.size()-1);
             move(MOVE);
         }
     }

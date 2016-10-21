@@ -30,6 +30,8 @@ public class Variable {
         if (isVariable) {
             System.out.print((char) (variableId + 97));
         }
+        else
+            System.out.print(value);
     }
     
     public int getValue() {
