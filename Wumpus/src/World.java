@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public final class World {
 
-    public static final int NORTH = 1, EAST = 2, SOUTH = 3, WEST = 4;
+    public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
     public static final int GRAB = 1, MOVE = 2, TURN_LEFT = 3, TURN_RIGHT = 4, SHOOT = 5, QUIT = 6;
     protected final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH = 0b00010000, DEATH_WUMPUS = 0b00100000, SCREAM = 0b01000000;
 
@@ -31,8 +31,14 @@ public final class World {
         try {
             FileReader in = new FileReader(fileName);
             BufferedReader reader = new BufferedReader(in);
-            String next;
-            size = Integer.parseInt(reader.readLine());
+            String next = reader.readLine();
+            size = Integer.parseInt(next.substring(0, next.indexOf(" ")));
+            next = next.substring(next.indexOf(" ") + 1);
+            x = Integer.parseInt(next.substring(0,next.indexOf(" ")));
+            next = next.substring(next.indexOf(" ") + 1);
+            y = Integer.parseInt(next.substring(0, next.indexOf(" ")));
+            System.out.println(x);
+            System.out.println(y);
             perceptMap = new byte[size][size];
             int i = 0;
             while ((next = reader.readLine()) != null) {//((Integer) reader.read()).toString()).equals("-1")) {

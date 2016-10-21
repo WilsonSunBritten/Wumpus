@@ -130,13 +130,13 @@ public class ReactiveExplorer extends Agent {
 
     private void updateSafe() {
 
-        if (location.x < World.size) {
+        if (location.x < World.size - 1) {
             safeMap[location.x + 1][location.y] = true;
         }
         if (location.x > 0) {
             safeMap[location.x - 1][location.y] = true;
         }
-        if (location.y < World.size) {
+        if (location.y < World.size - 1) {
             safeMap[location.x][location.y + 1] = true;
         }
         if (location.y > 0) {

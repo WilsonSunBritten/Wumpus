@@ -32,7 +32,7 @@ public class Driver {
 
         //Agent explorer = new ReactiveExplorer(world, world.getLocation(), world.direction,world.getPercepts(), world.arrowCount);
         World world = new World("PerceptBoard.txt");
-        world.startGame("ReactiveExplorer");
+        world.startGame("LogicExplorer");
         //Agent explorer = new LogicExplorer(world);
 
         //world = new World("PerceptBoard.txt");
