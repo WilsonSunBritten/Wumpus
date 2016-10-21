@@ -115,8 +115,13 @@ public class InferenceEngine {
         //if negations are opposite, apply unification, if unification exists..
         //with the substitution, apply to copies of both
         //strip fact from input clause 
+        ArrayList<Clause> tempClone = new ArrayList<>(kb.rules);
+        ArrayList<Clause> kbClausesClone = new ArrayList<>();
+        for (Clause tempClause : tempClone) {
+            kbClausesClone.add(new Clause(tempClause));
+        }
         Clause addedClause = new Clause(clauseToCheck);
-        for (Clause ruleClause : kb.rules) {
+        for (Clause ruleClause : kbClausesClone) {
             if (ruleClause.facts.size() == 1) {
                 Fact ruleFact = new Fact(ruleClause.facts.get(0));//we use a copy
                 Clause clause = new Clause(addedClause);//copy the added clause, redo each time
