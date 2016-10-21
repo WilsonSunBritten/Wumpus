@@ -38,7 +38,7 @@ public class Agent {
     }
 
     public void turnLeft() {
-        direction = (direction - 1) % 4;
+        direction = (direction + 3) % 4;
         world.action(TURN_LEFT);
     }
 
@@ -47,7 +47,7 @@ public class Agent {
     }
 
     public int getLeft() {
-        return (direction - 1) % 4;
+        return (direction + 3) % 4;
     }
 
     public enum State { //im not sure were going to need this

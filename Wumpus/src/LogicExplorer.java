@@ -28,13 +28,13 @@ public class LogicExplorer extends Agent {
         if (location.x > 0) {
             frontier.add(new Location(location.x - 1, location.y));
         }
-        if (location.x < world.size) {
+        if (location.x < world.size-1) {
             frontier.add(new Location(location.x + 1, location.y));
         }
         if (location.y > 0) {
             frontier.add(new Location(location.x, location.y - 1));
         }
-        if (location.y < world.size) {
+        if (location.y < world.size-1) {
             frontier.add(new Location(location.x, location.y + 1));
         }
     }
@@ -51,13 +51,13 @@ public class LogicExplorer extends Agent {
         if (location.x > 0 && !searchedPositions[location.x-1][location.y]) {
             frontier.add(new Location(location.x - 1, location.y));
         }
-        if (location.x < world.size && !searchedPositions[location.x+1][location.y]) {
+        if (location.x < world.size -1&& !searchedPositions[location.x+1][location.y]) {
             frontier.add(new Location(location.x + 1, location.y));
         }
         if (location.y > 0 && !searchedPositions[location.x][location.y-1]) {
             frontier.add(new Location(location.x, location.y - 1));
         }
-        if (location.y < world.size && !searchedPositions[location.x][location.y+1]) {
+        if (location.y < world.size -1&& !searchedPositions[location.x][location.y+1]) {
             frontier.add(new Location(location.x, location.y + 1));
         }
     }
