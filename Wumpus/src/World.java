@@ -29,6 +29,10 @@ public final class World {
 
     public void importMap(String fileName) {
         try {
+            
+            FileReader in1 = new FileReader(fileName);
+            BufferedReader reader1 = new BufferedReader(in1);
+            
             FileReader in = new FileReader(fileName);
             BufferedReader reader = new BufferedReader(in);
             String next = reader.readLine();

@@ -23,7 +23,7 @@ public class ReactiveExplorer extends Agent {
 
     private void run() {
         int i = 0;
-        while (i < 10) {
+        while (i < 500) {
             move();
             i++;
         }
