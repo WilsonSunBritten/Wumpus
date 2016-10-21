@@ -50,8 +50,8 @@ public class WumpusGame {
     }
 
     public void initializeBoard() {
-        for (int i = 0; i < board.length; i++) {
-            for (int j = board[i].length - 1; j >= 0; j--) {
+        for (int i = board.length - 1; i >= 0; i--) {
+            for (int j = 0; j <board[i].length; j++) {
                 chooseState(i, j);
             }
         }
