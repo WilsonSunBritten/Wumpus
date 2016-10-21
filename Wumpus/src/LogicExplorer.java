@@ -156,6 +156,13 @@ public class LogicExplorer extends Agent {
         }}
     }
 
+    private boolean inFrontier(Location loc){
+        for(Location location : frontier){
+            if(location.x == loc.x && location.y == loc.y)
+                return true;
+        }
+        return false;
+    }
     private void decideNextAction() {
         if (frontier.isEmpty()) {
             move(World.QUIT);
@@ -166,10 +173,11 @@ public class LogicExplorer extends Agent {
         if (getForward().x >= 0 && getForward().x < World.size && getForward().y >= 0 && getForward().y < World.size) {
             if (kb.ask(new Fact("Wumpus", getForward().x, false, getForward().y, false, true, null, null))) {
                 if (kb.ask(new Fact("Pit", getForward().x, false, getForward().y, false, true, null, null))) {
-                    if (kb.ask(new Fact("Obsticle", getForward().x, false, getForward().y, false, true, null, null))) {
+                    if(inFrontier(getForward())){
                         move(World.MOVE);
                         return;
                     }
+                    
                 }
             }
         }
