@@ -67,7 +67,7 @@ public class Unifier {
         }
         return null;
     }
-    public static ArrayList<Substitute> wilsonUnify(Fact f1, Fact f2){
+    public static ArrayList<Substitute> unify(Fact f1, Fact f2){
         ArrayList<Substitute> subs = new ArrayList<>();
         if(!f1.predicate.equals(f2.predicate))
             return subs;
@@ -100,7 +100,7 @@ public class Unifier {
         
         return subs;
     }
-    public static ArrayList<Substitute> unify(Fact f1, Fact f2) {
+    public static ArrayList<Substitute> unify2(Fact f1, Fact f2) {
         
         ArrayList<Substitute> subs = new ArrayList<>();
         if(!f1.predicate.equals(f2.predicate)){

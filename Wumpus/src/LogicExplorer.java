@@ -9,6 +9,7 @@ public class LogicExplorer extends Agent {
     private boolean[][] searchedPositions;
     private boolean navigatingToSafePosition;
     private Location safeSpace;
+    boolean notFirstMove =  false;
 
     public LogicExplorer(World world, int startingArrows, int startingX, int startingY, int direction) {
         super(world,startingArrows,startingX,startingY,direction);
@@ -32,7 +33,10 @@ public class LogicExplorer extends Agent {
     }
 
     public void updateLocation(){
-        super.updateLocation();
+        if(notFirstMove)
+            super.updateLocation();
+        else
+            notFirstMove = true;
         expandFrontier();
     }
     
@@ -96,8 +100,6 @@ public class LogicExplorer extends Agent {
         }
         if((percepts&BUMP)!=0)
             kb.tell(new Fact("Obsticle",getForward().x,false,getForward().y,false,false,null,null));
-        else
-            kb.tell(new Fact("Obsticle",getForward().x,false,getForward().y,false,true,null,null));
         if ((percepts & STENCH) != 0) {
             kb.tell(new Fact("Stench", location.x, false, location.y, false, true, null, null));
         } else {

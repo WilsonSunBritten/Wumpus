@@ -13,7 +13,15 @@ public class KnowledgeBase {
     public void addToClauses(Clause clause){
         if(clause.facts.size() == 0)
             return;
-        else if(clause.facts.size() == 1){
+        else{
+            for(Fact fact : clause.facts){
+                for(Variable var : fact.variables){
+                    if(var.isVariable)
+                        return;
+                }
+            }
+        }
+        if(clause.facts.size() == 1){
             inferenceEngine.infer(clause.facts.get(0));
             clauses.add(clause);
         }
@@ -105,7 +113,7 @@ public class KnowledgeBase {
                 }
             }           
         }
-        clauses.add(new Clause(fact));
+        addToClauses(new Clause(fact));
         //and check if there is a stench at any adjacent position, remove those facts too
     }
 }
