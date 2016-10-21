@@ -165,11 +165,15 @@ public class LogicExplorer extends Agent {
                 if (kb.ask(new Fact("Pit", getForward().x, false, getForward().y, false, true, null, null))) {
                     if (kb.ask(new Fact("Obsticle", getForward().x, false, getForward().y, false, true, null, null))) {
                         move(World.MOVE);
+                        return;
                     }
                 }
             }
-        } else if (safeSpaceInFrontier()) {
-            rhwTraversal(safeSpace);
+        }
+        if (safeSpaceInFrontier()) {
+            rhwTraversal(neighborSafeSpace(safeSpace));
+            turnToSpace(safeSpace);
+            move(MOVE);
         } 
         else if(arrowCount > 0 && wumpusInFrontier()){
             rhwTraversal(neighborSafeSpace(wumpusSpace));
@@ -178,7 +182,9 @@ public class LogicExplorer extends Agent {
             move(MOVE);
         }
         else {
-            rhwTraversal(frontier.get(0));
+            rhwTraversal(neighborSafeSpace(frontier.get(0)));
+            turnToSpace(frontier.get(0));
+            move(MOVE);
         }
     }
     
@@ -221,10 +227,9 @@ public class LogicExplorer extends Agent {
     
     private Location neighborSafeSpace(Location location){
         Location loc = null;
-        if(location.x > 0){
-            if(searchedPositions[location.x-1][location.y]){
+        if(location.x > 0 && searchedPositions[location.x-1][location.y]){
                 loc = new Location(location.x-1,location.y);
-            }
+            
         }
         else if(location.x < World.size -1 && searchedPositions[location.x+1][location.y])
             loc = new Location(location.x+1,location.y);
@@ -232,6 +237,7 @@ public class LogicExplorer extends Agent {
             loc = new Location(location.x,location.y-1);
         else if(location.y < World.size -1 && searchedPositions[location.x][location.y+1])
             loc = new Location(location.x,location.y+1);
+        
         return loc;
     }
     
