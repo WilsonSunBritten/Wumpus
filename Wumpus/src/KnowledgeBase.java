@@ -94,8 +94,17 @@ public class KnowledgeBase {
         return inferenceEngine.follows(fact);
     }
 
-    public void tell(Clause clause) {
+    public void tell(Fact fact) {
         //If told DeadWumpus delete the wumpus entry at that position and add !Wumpus(x,y)
+        if(fact.predicate.equals("DeadWumpus")){
+            for(int i = 0; i < clauses.size(); i++){
+                for(int j = 0; j < clauses.get(i).facts.size(); j++){
+                    if(clauses.get(i).facts.get(j).variables.get(0).value == fact.variables.get(0).value && clauses.get(i).facts.get(j).variables.get(1).value == fact.variables.get(1).value){
+                        clauses.get(i).facts.get(j).not = true;
+                    }
+                }
+            }           
+        }
         //and check if there is a stench at any adjacent position, remove those facts too
     }
 }
