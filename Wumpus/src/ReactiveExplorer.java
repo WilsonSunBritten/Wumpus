@@ -75,7 +75,7 @@ public class ReactiveExplorer extends Agent {
             }
             if (safeMoves.size() > 0) {
                 int rand = random.nextInt(safeMoves.size());
-                percepts = world.action(safeMoves.get(rand));
+                percepts = world.action(safeMoves.get(rand) + 1);
             } else {
                 int rand = random.nextInt(3);
                 System.out.println("Unsafe space, action is : " + rand);

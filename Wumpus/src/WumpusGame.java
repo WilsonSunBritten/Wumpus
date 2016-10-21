@@ -10,22 +10,13 @@ import java.util.Random;
 
 public class WumpusGame {
 
-    private int boardSize;
-    private int wumpus;
-    private int startX;
-    private int startY;
+    private int boardSize, wumpus, startX, startY;
     private Space[][] board;
     private Random random = new Random();
     private HashMap probabilityGeneration;
     private int[] prob;
     private byte[][] perceptBoard;
-    private final byte BREEZE = 0b00000001;
-    private final byte STENTCH = 0b0000010;
-    private final byte BUMP = 0b00000100;
-    private final byte GLITTER = 0b00001000;
-    private final byte DEATH_BY_WUMPUS = 0b00010000;
-    private final byte DEATH_BY_PIT = 0b00100000;
-    private final byte SCREAM = 0b01000000;
+    protected final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH = 0b00010000, DEATH_WUMPUS = 0b00100000, SCREAM = 0b01000000;
     private PrintWriter out = new PrintWriter(new File("PerceptBoard.txt"));
 
     public WumpusGame(int boardSize, int[] prob) throws FileNotFoundException {
@@ -110,7 +101,7 @@ public class WumpusGame {
     public void placePit(int x, int y) {
         board[x][y].setHasHole(true);
         placeAdjacentPercept(x, y, BREEZE);
-        placePercept(x, y, DEATH_BY_PIT);
+        placePercept(x, y, DEATH);
     }
 
     public void placeGold(int x, int y) {
@@ -120,8 +111,8 @@ public class WumpusGame {
 
     public void placeWumpus(int x, int y) {
         board[x][y].toggleWumpus();
-        placeAdjacentPercept(x, y, STENTCH);
-        placePercept(x, y, DEATH_BY_WUMPUS);
+        placeAdjacentPercept(x, y, STENCH);
+        placePercept(x, y, DEATH_WUMPUS);
         wumpus++;
     }
 
