@@ -1,8 +1,6 @@
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class LogicExplorer extends Agent {
@@ -172,15 +170,67 @@ public class LogicExplorer extends Agent {
     }
 
     private void rhwTraversal(Location location) {
-
-        Location current = this.location;
-        Location goal = location;
-
-        Queue<Location> queue = new LinkedList<>();
-        //add adjacent spaces to queue
-        queue.addAll(getSafeAdjacent(location));
-
+        for (int i = 0; i < World.size; i++) {
+            for (int j = 0; j < World.size; j++) {
+                if (searchedPositions[i][j]) {
+                    grid[i][j] = 0;
+                } else {
+                    grid[i][j] = 1;
+                }
+            }
+        }
+        grid[location.x][location.y] = 2;
+        grid[this.location.x][this.location.y] = 3;
     }
+
+    private ArrayList<Location> getPath(Location goal, Location current, ArrayList<Location> path) {
+
+        solve(goal, current, path);
+        return path;
+    }
+
+    private boolean solve(Location goal, Location current, ArrayList<Location> path) {
+
+        boolean done = false;
+        if (valid(current.x, current.y)) {
+            //grid[current.x][current.y] = 3;
+            path.add(new Location(current.x, current.y));
+            if (current.x == goal.x && current.y == goal.y) {
+                return true;
+            } else {
+                solve(goal, new Location(current.x + 1, current.y), path);
+                done = solve(goal, new Location(current.x + 1, current.y), path);
+                if (!done) {
+                    done = solve(goal, new Location(current.x, current.y + 1), path);
+                }
+                if (!done) {
+                    done = solve(goal, new Location(current.x - 1, current.y), path);
+                }
+                if (!done) {
+                    done = solve(goal, new Location(current.x, current.y - 1), path);
+                }
+            }
+            if (done) {
+                //  grid[current][column] = 7;
+            }
+
+        } else {
+            return false;
+        }
+        return false;
+    }
+
+    private boolean valid(int row, int column) {
+        boolean result = false;
+        // check if cell is in the bounds of the matrix
+        if (row >= 0 && row < grid.length && column >= 0 && column < grid[0].length) {
+            if (grid[row][column] == 0) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
     //searchedpositions
     int[][] grid = new int[World.size][World.size];
 
