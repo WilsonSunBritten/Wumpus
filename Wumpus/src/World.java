@@ -49,13 +49,6 @@ public final class World {
                 }
                 i++;
             }
-//            System.out.println("");
-//            for (byte[] row : perceptMap) {
-//                for (int j = 0; j < row.length; j++) {
-//                    System.out.print(row[j] + " ");
-//                }
-//                System.out.println("");
-//            }
         } catch (IOException | NumberFormatException e) {
             System.out.println("Exception caught: " + e);
         }
@@ -79,13 +72,18 @@ public final class World {
         for (int i = perceptMap.length-1; i >= 0; i--) {
             for (int j = 0; j < perceptMap.length; j++) {
                 if (x == j && y == i) {
-                    System.out.print("A ");
+                    System.out.print("A  ");
                 } else {
-                    if ((perceptMap[j][i] & DEATH_WUMPUS) != 0) {
-                        System.out.print("W ");
-                    } 
-                    else {
+                    if ((perceptMap[j][i] & DEATH_WUMPUS) == DEATH_WUMPUS) {
+                        System.out.print("W  ");
+                    } else if ((perceptMap[j][i] & DEATH_PIT) == DEATH_PIT) {
+                        System.out.print("P  ");
+                    } else if ((perceptMap[j][i] & GLITTER) == GLITTER) {
+                        System.out.print("G  ");
+                    } else if (perceptMap[j][i] > 9) {
                         System.out.print(perceptMap[j][i] + " ");
+                    } else {
+                        System.out.print(perceptMap[j][i] + "  ");
                     }
                 }
             }
