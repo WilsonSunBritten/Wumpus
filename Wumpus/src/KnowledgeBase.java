@@ -68,16 +68,16 @@ public class KnowledgeBase {
         //Breeze(x,y)=>(Pit(x-1,y) v Pit(x+1,y) v Pit(x,y-1) v Pit(x, y+1)
         //!Breeze(x,y) v Pit(x-1,y) v Pit(x+1,y) v Pit(x,y-1) v Pit(x, y+1)
         Clause breeze = new Clause();
-        Fact breezehXY = new Fact("Breeze",0,true,1,true,true,null,null);
+        Fact breezeXY = new Fact("Breeze",0,true,1,true,true,null,null);
         Fact pitxminy = new Fact("Pit",0,true,1,true,false,new MinusFunction(),null);
         Fact pitxplusy = new Fact("Pit",0,true,1,true,false,new PlusFunction(),null);
         Fact pitxymin = new Fact("Pit",0,true,1,true,false,null,new MinusFunction());
         Fact pitxyplus = new Fact("Pit",0,true,1,true,false,null,new PlusFunction());
-        breeze.facts.add(stenchXY);
-        breeze.facts.add(wumpusxminy);
-        breeze.facts.add(wumpusxplusy);
-        breeze.facts.add(wumpusxymin);
-        breeze.facts.add(wumpusxyplus);
+        breeze.facts.add(breezeXY);
+        breeze.facts.add(pitxminy);
+        breeze.facts.add(pitxplusy);
+        breeze.facts.add(pitxymin);
+        breeze.facts.add(pitxyplus);
         rules.add(breeze);
         
         //!Wumpus(-1,y) ^ !Wumpus(x,-1) ^ !Wumpus(x,World.size)^ !Wumpus(World.size,y)

@@ -65,8 +65,9 @@ public class LogicExplorer extends Agent {
     private void run() {
 
         while (true) {
+            if(!notFirstMove){
             percepts = world.getPercepts();
-            processPercepts();
+            processPercepts();}
             decideNextAction();
         }
     }
@@ -136,21 +137,23 @@ public class LogicExplorer extends Agent {
         if ((percepts & BUMP) == BUMP) {       //theres soemthing funky here, hes bumping when there arent obsticales
             System.out.println("Explorer bumped after moving");
             moveHistory.remove(moveHistory.size() - 1);//why bump again?
+            removeFromFrontier(getForward());
             kb.tell(new Fact("Obsticle", getForward().x, false, getForward().y, false, false, null, null));
         }
+        else{//you if you bump than the only inputted percept should've been bump
         if ((percepts & STENCH) != 0) {
-            kb.tell(new Fact("Stench", location.x, false, location.y, false, true, null, null));
-        } else {
             kb.tell(new Fact("Stench", location.x, false, location.y, false, false, null, null));
+        } else {
+            kb.tell(new Fact("Stench", location.x, false, location.y, false, true, null, null));
         }
         if ((percepts & BREEZE) != 0) {
-            kb.tell(new Fact("Breeze", location.x, false, location.y, false, true, null, null));
-        } else {
             kb.tell(new Fact("Breeze", location.x, false, location.y, false, false, null, null));
+        } else {
+            kb.tell(new Fact("Breeze", location.x, false, location.y, false, true, null, null));
         }
         if ((percepts & SCREAM) != 0) {
-            kb.tell(new Fact("Scream", location.x, false, location.y, false, true, null, null));
-        }
+            kb.tell(new Fact("Scream", location.x, false, location.y, false, false, null, null));
+        }}
     }
 
     private void decideNextAction() {
@@ -298,10 +301,10 @@ public class LogicExplorer extends Agent {
     }
 
     private void rhwTraversal(Location location) {
-        // moveHistoryTraversal(location);
-        if (!this.location.equals(location) && !adjacent(location)) {
-            goTo(location.x, location.y);
-        }
+         moveHistoryTraversal(location);
+//        if (!this.location.equals(location) && !adjacent(location)) {
+//            goTo(location.x, location.y);
+//        }
         //go to location zach NOOOO!
     }
 

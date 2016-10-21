@@ -67,7 +67,7 @@ public final class World {
 
     public void printWorld() {
 
-        for (int i = 0; i < perceptMap.length; i++) {
+        for (int i = perceptMap.length-1; i >= 0; i--) {
             for (int j = 0; j < perceptMap.length; j++) {
                 if (x == i && y == j) {
                     System.out.print("A ");
@@ -107,7 +107,7 @@ public final class World {
                 switch (direction) {
                     case NORTH:
                         System.out.println("Moved north");
-                        if (y + 1 < size-1 && (perceptMap[x][y+1] & BUMP)!=0) {
+                        if (y + 1 < size-1 && (perceptMap[x][y+1] & BUMP)==0) {
                             if ((perceptMap[x][y+1] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                                 score -= 1000;
                                 wumpusDeaths++;
@@ -127,7 +127,7 @@ public final class World {
                         } 
                     case EAST:
                         System.out.println("Moved east");
-                        if(x+1 < size-1 && (perceptMap[x+1][y] & BUMP)!=0){
+                        if(x+1 < size-1 && (perceptMap[x+1][y] & BUMP)==0){
                             if ((perceptMap[x+1][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                                 score -= 1000;
                                 wumpusDeaths++;
@@ -146,7 +146,7 @@ public final class World {
                         }
                     case SOUTH:
                         System.out.println("Moved south");
-                        if(y > 0 && (perceptMap[x][y-1] & BUMP)!=0){
+                        if(y > 0 && (perceptMap[x][y-1] & BUMP)==0){
                         if ((perceptMap[x][y-1] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
                             wumpusDeaths++;
@@ -166,7 +166,7 @@ public final class World {
                         }
                     case WEST:
                         System.out.println("Moved west");
-                        if(x>0 && (perceptMap[x-1][y] & BUMP)!=0){
+                        if(x>0 && (perceptMap[x-1][y] & BUMP)==0){
                         if ((perceptMap[x-1][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                             score -= 1000;
                             wumpusDeaths++;
