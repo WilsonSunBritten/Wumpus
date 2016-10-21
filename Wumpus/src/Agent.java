@@ -5,7 +5,7 @@ public class Agent {
 
     protected Location location;
     protected int direction, arrowCount;
-    protected final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH = 0b00010000, DEATH_WUMPUS = 0b00100000, SCREAM = 0b01000000;
+    protected final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH_PIT = 0b00010000, DEATH_WUMPUS = 0b00100000, SCREAM = 0b01000000;
     protected static final int GRAB = 1, MOVE = 2, TURN_LEFT = 3, TURN_RIGHT = 4, SHOOT = 5, QUIT = 6;
     protected static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
     protected byte percepts;

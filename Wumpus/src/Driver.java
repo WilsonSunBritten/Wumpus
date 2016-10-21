@@ -13,7 +13,7 @@ public class Driver {
         //tester.testPathFinder();
         //tester.testUnify();
        // tester.testInferenceEngine();
-      //  makeGame();
+       // makeGame();
         World world = new World("PerceptBoard.txt");
         world.startGame("LogicExplorer");
     }
@@ -35,9 +35,9 @@ public class Driver {
         WumpusGame game = new WumpusGame(5, prob);
 
         //Agent explorer = new ReactiveExplorer(world, world.getLocation(), world.direction,world.getPercepts(), world.arrowCount);
-        World world = new World("PerceptBoard.txt");
+      //  World world = new World("PerceptBoard.txt");
         //world.startGame("LogicExplorer");
-        world.startGame("ReactiveExplorer");
+      //  world.startGame("ReactiveExplorer");
         //Agent explorer = new LogicExplorer(world);
 
         //world = new World("PerceptBoard.txt");

@@ -1,8 +1,5 @@
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 public class LogicExplorer extends Agent {
 
@@ -126,20 +123,20 @@ public class LogicExplorer extends Agent {
     }
 
     private void processPercepts() {        //there might still be an issue with wumpus death since its a seperate percept
-        if ((percepts & DEATH) != 0) {
+        if ((percepts & DEATH_PIT) == DEATH_PIT) {
             System.out.println("Explorer died after moving");
             removeFromFrontier(getForward());
-            moveHistory.remove(moveHistory.size()-1);//why die again?
+            moveHistory.remove(moveHistory.size() - 1);//why die again?
         }
-        if (((percepts & BUMP) != BUMP) && (percepts & DEATH) != DEATH) {
+        if ((((percepts & BUMP) != BUMP) && (percepts & DEATH_PIT) != DEATH_PIT) && ((percepts & DEATH_WUMPUS) != DEATH_WUMPUS)) {
             updateLocation();
             searchedPositions[location.x][location.y] = true;
             removeFromFrontier(location);
         }
-        if((percepts&BUMP)!=0){
+        if ((percepts & BUMP) == BUMP) {       //theres soemthing funky here, hes bumping when there arent obsticales
             System.out.println("Explorer bumped after moving");
-            moveHistory.remove(moveHistory.size()-1);//why bump again?
-            kb.tell(new Fact("Obsticle",getForward().x,false,getForward().y,false,false,null,null));
+            moveHistory.remove(moveHistory.size() - 1);//why bump again?
+            kb.tell(new Fact("Obsticle", getForward().x, false, getForward().y, false, false, null, null));
         }
         if ((percepts & STENCH) != 0) {
             kb.tell(new Fact("Stench", location.x, false, location.y, false, true, null, null));
@@ -163,12 +160,7 @@ public class LogicExplorer extends Agent {
         if ((percepts & GLITTER) != 0) {
             move(World.GRAB);
         }
-
-        //check if adjacent to any unexplored and safe spaces
-        //check forward
-        //check left
-        //check right
-        if (getForward().x >= 0 && getForward().x < world.size && getForward().y >= 0 && getForward().y < world.size) {
+        if (getForward().x >= 0 && getForward().x < World.size && getForward().y >= 0 && getForward().y < World.size) {
             if (kb.ask(new Fact("Wumpus", getForward().x, false, getForward().y, false, true, null, null))) {
                 if (kb.ask(new Fact("Pit", getForward().x, false, getForward().y, false, true, null, null))) {
                     if (kb.ask(new Fact("Obsticle", getForward().x, false, getForward().y, false, true, null, null))) {
@@ -189,47 +181,66 @@ public class LogicExplorer extends Agent {
             move(SHOOT);
             move(MOVE);
             removeFromFrontier(wumpusSpace);
-        }
-        else if(!frontier.isEmpty()){
-            rhwTraversal(neighborSafeSpace(frontier.get(frontier.size()-1)));
-            turnToSpace(frontier.get(frontier.size()-1));
-            frontier.remove(frontier.size()-1);
+        } else if (!frontier.isEmpty()) {
+            rhwTraversal(neighborSafeSpace(frontier.get(frontier.size() - 1)));
+            turnToSpace(frontier.get(frontier.size() - 1));
+            frontier.remove(frontier.size() - 1);
             move(MOVE);
         }
     }
 
     public void turnToSpace(Location loc) {
         if (location.x > loc.x) {
-            if (direction == EAST) {
-                return;
-            } else if (direction == NORTH) {
-                move(TURN_LEFT);
-            } else if (direction == SOUTH) {
-                move(TURN_RIGHT);
+            switch (direction) {
+                case EAST:
+                    break;
+                case NORTH:
+                    move(TURN_LEFT);
+                    break;
+                case SOUTH:
+                    move(TURN_RIGHT);
+                    break;
+                default:
+                    break;
             }
         } else if (loc.x > location.x) {
-            if (direction == WEST) {
-                return;
-            } else if (direction == NORTH) {
-                move(TURN_RIGHT);
-            } else if (direction == SOUTH) {
-                move(TURN_LEFT);
+            switch (direction) {
+                case WEST:
+                    return;
+                case NORTH:
+                    move(TURN_RIGHT);
+                    break;
+                case SOUTH:
+                    move(TURN_LEFT);
+                    break;
+                default:
+                    break;
             }
         } else if (loc.y < location.y) {
-            if (direction == SOUTH) {
-                return;
-            } else if (direction == WEST) {
-                move(TURN_LEFT);
-            } else if (direction == EAST) {
-                move(TURN_RIGHT);
+            switch (direction) {
+                case SOUTH:
+                    return;
+                case WEST:
+                    move(TURN_LEFT);
+                    break;
+                case EAST:
+                    move(TURN_RIGHT);
+                    break;
+                default:
+                    break;
             }
         } else if (loc.y > location.y) {
-            if (direction == NORTH) {
-                return;
-            } else if (direction == WEST) {
-                move(TURN_RIGHT);
-            } else if (direction == EAST) {
-                move(TURN_LEFT);
+            switch (direction) {
+                case NORTH:
+                    return;
+                case WEST:
+                    move(TURN_RIGHT);
+                    break;
+                case EAST:
+                    move(TURN_LEFT);
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -246,7 +257,6 @@ public class LogicExplorer extends Agent {
         } else if (location.y < World.size - 1 && searchedPositions[location.x][location.y + 1]) {
             loc = new Location(location.x, location.y + 1);
         }
-
         return loc;
     }
 
@@ -257,7 +267,6 @@ public class LogicExplorer extends Agent {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -270,38 +279,43 @@ public class LogicExplorer extends Agent {
                 return;
             }
             int move = moveHistory.get(i);
-            if (move == MOVE) {
-                move(TURN_LEFT);
-                move(TURN_LEFT);
-                move(MOVE);
-            } else if (move == TURN_LEFT) {
-                move(TURN_RIGHT);
-            } else if (move == TURN_RIGHT) {
-                move(TURN_LEFT);
+            switch (move) {
+                case MOVE:
+                    move(TURN_LEFT);
+                    move(TURN_LEFT);
+                    move(MOVE);
+                    break;
+                case TURN_LEFT:
+                    move(TURN_RIGHT);
+                    break;
+                case TURN_RIGHT:
+                    move(TURN_LEFT);
+                    break;
+                default:
+                    break;
             }
         }
     }
 
     private void rhwTraversal(Location location) {
-        //moveHistoryTraversal(location);
+        // moveHistoryTraversal(location);
         if (!this.location.equals(location) && !adjacent(location)) {
             goTo(location.x, location.y);
         }
-
         //go to location zach NOOOO!
     }
-    
+
     private boolean adjacent(Location location) {
-        
+
         if (location.x == this.location.x) {
             if (Math.abs(location.x - this.location.x) == 1) {
                 return true;
-            } 
+            }
         }
         if (location.y == this.location.y) {
             if (Math.abs(location.y - this.location.y) == 1) {
                 return true;
-            } 
+            }
         }
         return false;
     }
@@ -350,13 +364,13 @@ public class LogicExplorer extends Agent {
         if (curX == goalX && curY == goalY) {
             return true;
         }
-        if (isValid(curX, curY + 1)) { //north is valid
+        if (isValid(curX, curY + 1)) {  //north is valid
             return searchNext(curX, curY + 1, goalX, goalY, path);
         }
-        if (isValid(curX + 1, curY)) {
-            return searchNext(curX + 1, curY, goalX, goalY, path);    //east is valid
+        if (isValid(curX + 1, curY)) {  //east is valid
+            return searchNext(curX + 1, curY, goalX, goalY, path);
         }
-        if (isValid(curX - 1, curY)) {           //west is valid
+        if (isValid(curX - 1, curY)) {  //west is valid
             return searchNext(curX + 1, curY, goalX, goalY, path);
         }
         path.remove(path.size() - 1);
@@ -376,37 +390,25 @@ public class LogicExplorer extends Agent {
 
         while (path.size() > 0) {
             Location next = path.remove(0);
-            //turn to face
             if (next.x > this.location.x) {
                 //go east
                 turnToSpace(next);
                 move(MOVE);
-                //world.action(MOVE);
             } else if (next.x < this.location.x) {
                 //go west
                 turnToSpace(next);
                 move(MOVE);
-                //world.action(MOVE);
             } else if (next.y > this.location.y) {
                 //go north
                 turnToSpace(next);
                 move(MOVE);
-                //world.action(MOVE);
             } else if (next.y < this.location.y) {
                 //go south
                 turnToSpace(next);
                 move(MOVE);
-                //world.action(MOVE);
             } else {
                 System.out.println("Error traversing path.");
             }
-        }
-    }
-
-    private void turnToFace(int direction) {
-
-        while (this.direction != direction) {
-            turnLeft();
         }
     }
 }
