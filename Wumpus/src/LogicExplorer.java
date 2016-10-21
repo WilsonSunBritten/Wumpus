@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -169,7 +170,41 @@ public class LogicExplorer extends Agent {
     }
 
     private void rhwTraversal(Location location) {
-        //go to location zach NOOOO!
+        
+        Location current = this.location;
+        Location goal = location;
+        
+        Queue<Location> queue = new LinkedList<>();
+        //add adjacent spaces to queue
+        queue.addAll(getSafeAdjacent(location));
+        
+    }
+    
+    private ArrayList<Location> getSafeAdjacent(Location location) {
+        
+        ArrayList<Location> adjacent = new ArrayList<>();
+        
+        if (location.x < World.size - 1) {
+            if (searchedPositions[location.x+1][location.y]) {
+                adjacent.add(new Location(location.x+1, location.y));
+            }
+        }
+        if (location.x > 0) {
+            if (searchedPositions[location.x-1][location.y]) {
+                adjacent.add(new Location(location.x-1, location.y));
+            }
+        }
+        if (location.y < World.size - 1) {
+            if (searchedPositions[location.x][location.y+1]) {
+                adjacent.add(new Location(location.x, location.y+1));
+            }
+        }
+        if (location.y > 0) {
+            if (searchedPositions[location.x][location.y-1]) {
+                adjacent.add(new Location(location.x, location.y-1));
+            }
+        }
+        return adjacent;
     }
 
     private boolean safeSpaceInFrontier() {
