@@ -30,6 +30,8 @@ public class Fact extends Variable {
     }
 
     public void printFact() {
+        if(not)
+            System.out.print("!");
         System.out.print(predicate + "(");
         for (Variable var : variables) {
             var.printVariable();
