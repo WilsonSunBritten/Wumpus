@@ -127,18 +127,20 @@ public class LogicExplorer extends Agent {
 
     private void processPercepts() {
         if ((percepts & DEATH) != 0) {
+            System.out.println("Explorer died after moving");
             removeFromFrontier(getForward());
+            moveHistory.remove(moveHistory.size()-1);//why die again?
         }
         if (((percepts & BUMP) != BUMP) && (percepts & DEATH) != DEATH) {
             updateLocation();
             searchedPositions[location.x][location.y] = true;
             removeFromFrontier(location);
         }
-        if((percepts & DEATH)!= 0){
-            removeFromFrontier(new Location(getForward().x,getForward().y));//
-        }
-        if((percepts&BUMP)!=0)
+        if((percepts&BUMP)!=0){
+            System.out.println("Explorer bumped after moving");
+            moveHistory.remove(moveHistory.size()-1);//why bump again?
             kb.tell(new Fact("Obsticle",getForward().x,false,getForward().y,false,false,null,null));
+        }
         if ((percepts & STENCH) != 0) {
             kb.tell(new Fact("Stench", location.x, false, location.y, false, true, null, null));
         } else {

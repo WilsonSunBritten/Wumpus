@@ -121,7 +121,26 @@ public class KnowledgeBase {
                 }
             }           
         }
+        if(factInClauses(fact)){
+            return;
+        }
+        
         addToClauses(new Clause(fact));
         //and check if there is a stench at any adjacent position, remove those facts too
+    }
+    private boolean factInClauses(Fact fact){
+        for(Clause clause : clauses){
+            if(clause.facts.size() == 1){
+                Fact clauseFact = clause.facts.get(0);
+                if(clauseFact.predicate.equals(fact.predicate)){
+                    for(int i = 0; i < fact.variables.size(); i++){
+                        if(clauseFact.variables.get(i).value != fact.variables.get(i).value){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
