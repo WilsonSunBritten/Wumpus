@@ -1,6 +1,5 @@
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -13,6 +12,8 @@ public class LogicExplorer extends Agent {
     private boolean[][] searchedPositions;
     private boolean navigatingToSafePosition;
     private Location safeSpace;
+    private Location wumpusSpace;
+    private ArrayList<Integer> moveHistory = new ArrayList<>();
     boolean notFirstMove =  false;
 
     public LogicExplorer(World world, int startingArrows, int startingX, int startingY, int direction) {
@@ -81,16 +82,21 @@ public class LogicExplorer extends Agent {
                 System.out.println("Game failed to end after action(GRAB).");
                 break;
             case MOVE:
+                moveHistory.add(MOVE);
                 System.out.println("Moving");
                 percepts = (byte) world.action(MOVE);
                 processPercepts();
                 break;
             case TURN_LEFT:
+                moveHistory.add(TURN_LEFT);
                 System.out.println("Turning left");
+                direction = (direction + 3)%4;
                 world.action(TURN_LEFT);
                 break;
             case TURN_RIGHT:
+                moveHistory.add(TURN_RIGHT);
                 System.out.println("turning right");
+                direction = (direction+1)%4;
                 world.action(TURN_RIGHT);
                 break;
             case SHOOT:
@@ -159,52 +165,116 @@ public class LogicExplorer extends Agent {
                 if (kb.ask(new Fact("Pit", getForward().x, false, getForward().y, false, true, null, null))) {
                     if (kb.ask(new Fact("Obsticle", getForward().x, false, getForward().y, false, true, null, null))) {
                         move(World.MOVE);
+                        return;
                     }
                 }
             }
-        } else if (safeSpaceInFrontier()) {
-            rhwTraversal(safeSpace);
-        } else {
-            rhwTraversal(frontier.get(0));
         }
-    }
-
-    private void rhwTraversal(Location location) {
-        
-        Location current = this.location;
-        Location goal = location;
-        
-        Queue<Location> queue = new LinkedList<>();
-        //add adjacent spaces to queue
-        queue.addAll(getSafeAdjacent(location));
-        
+        if (safeSpaceInFrontier()) {
+            rhwTraversal(neighborSafeSpace(safeSpace));
+            turnToSpace(safeSpace);
+            move(MOVE);
+        } 
+        else if(arrowCount > 0 && wumpusInFrontier()){
+            rhwTraversal(neighborSafeSpace(wumpusSpace));
+            turnToSpace(wumpusSpace);
+            move(SHOOT);
+            move(MOVE);
+        }
+        else {
+            rhwTraversal(neighborSafeSpace(frontier.get(0)));
+            turnToSpace(frontier.get(0));
+            move(MOVE);
+        }
     }
     
-    private ArrayList<Location> getSafeAdjacent(Location location) {
+    public void turnToSpace(Location loc){
+        if(location.x > loc.x){
+            if(direction == EAST)
+                return;
+            else if(direction == NORTH)
+                move(TURN_LEFT);
+            else if(direction == SOUTH)
+                move(TURN_RIGHT);
+        }
+        else if(loc.x > location.x){
+            if(direction == WEST)
+                return;
+            else if(direction == NORTH)
+                move(TURN_RIGHT);
+            else if(direction == SOUTH)
+                move(TURN_LEFT);
+        }
+        else if(loc.y < location.y){
+            if(direction == SOUTH)
+                return;
+            else if(direction == WEST)
+                move(TURN_LEFT);
+            else if(direction == EAST)
+                move(TURN_RIGHT);
+        }
+        else if(loc.y > location.y){
+            if(direction == NORTH){
+                return;
+            }
+            else if(direction == WEST){
+                move(TURN_RIGHT);
+            }
+            else if(direction == EAST)
+                move(TURN_LEFT);
+        }
+    }
+    
+    private Location neighborSafeSpace(Location location){
+        Location loc = null;
+        if(location.x > 0 && searchedPositions[location.x-1][location.y]){
+                loc = new Location(location.x-1,location.y);
+            
+        }
+        else if(location.x < World.size -1 && searchedPositions[location.x+1][location.y])
+            loc = new Location(location.x+1,location.y);
+        else if(location.y > 0 && searchedPositions[location.x][location.y-1])
+            loc = new Location(location.x,location.y-1);
+        else if(location.y < World.size -1 && searchedPositions[location.x][location.y+1])
+            loc = new Location(location.x,location.y+1);
         
-        ArrayList<Location> adjacent = new ArrayList<>();
+        return loc;
+    }
+    
+    private boolean wumpusInFrontier(){
+        for(Location loc : frontier){
+            if(kb.ask(new Fact("Wumpus", loc.x, false, loc.y, false, false, null, null))){
+                wumpusSpace = loc;
+                return true;
+            }
+        }
         
-        if (location.x < World.size - 1) {
-            if (searchedPositions[location.x+1][location.y]) {
-                adjacent.add(new Location(location.x+1, location.y));
-            }
+        return false;
+    }
+
+    private void moveHistoryTraversal(Location loc){
+        if(loc.x == location.x && loc.y == location.y){
+            return;
         }
-        if (location.x > 0) {
-            if (searchedPositions[location.x-1][location.y]) {
-                adjacent.add(new Location(location.x-1, location.y));
+        for(int i = moveHistory.size()-1;i>=0; i--){
+            if(loc.x == location.x && loc.y == location.y){
+                return;
             }
-        }
-        if (location.y < World.size - 1) {
-            if (searchedPositions[location.x][location.y+1]) {
-                adjacent.add(new Location(location.x, location.y+1));
+            int move = moveHistory.get(i);
+            if(move == MOVE){
+                move(TURN_LEFT);
+                move(TURN_LEFT);
+                move(MOVE);
             }
+            else if(move == TURN_LEFT)
+                move(TURN_RIGHT);
+            else if(move == TURN_RIGHT)
+                move(TURN_LEFT);
         }
-        if (location.y > 0) {
-            if (searchedPositions[location.x][location.y-1]) {
-                adjacent.add(new Location(location.x, location.y-1));
-            }
-        }
-        return adjacent;
+    }
+    private void rhwTraversal(Location location) {
+        moveHistoryTraversal(location);
+        //go to location zach NOOOO!
     }
 
     private boolean safeSpaceInFrontier() {
@@ -218,8 +288,11 @@ public class LogicExplorer extends Agent {
                     }
                 }
             }
-            if (kb.ask(new Fact("Wumpus", loc.x, false, loc.y, false, false, null, null)) || kb.ask(new Fact("Pit", loc.x, false, loc.y, false, false, null, null)) || kb.ask(new Fact("Obsticle", loc.x, false, loc.y, false, false, null, null))) {
+            if ( kb.ask(new Fact("Pit", loc.x, false, loc.y, false, false, null, null)) || kb.ask(new Fact("Obsticle", loc.x, false, loc.y, false, false, null, null))) {
                 //there is specifically a wumpus, pit, or obsticle at this position, don't navigate to it.
+                frontier.remove(i);
+            }
+            else if(arrowCount == 0 && kb.ask(new Fact("Wumpus", loc.x, false, loc.y, false, false, null, null))){
                 frontier.remove(i);
             }
         }
