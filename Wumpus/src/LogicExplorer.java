@@ -303,9 +303,57 @@ public class LogicExplorer extends Agent {
         return false;
     }
 
-    private void RHWTraversal(int x, int y) {
+    private void goTo(int x, int y) {
 
-        //ArrayList<Location> path = PathFinder.getPath(x, y, location.x, location.y, searchedPositions);
-        //traverse path
+        ArrayList<Location> path = new ArrayList<>();
+        path = searchForPath(location.x, location.y, x, y, path);
+        traversePath(path);
+    }
+    
+    private ArrayList<Location> searchForPath(int curX, int curY, int goalX, int goalY, ArrayList<Location> path) {
+        
+
+        if (searchNext(curX, curY, goalX, goalY, path)) {
+            return path;
+        } else {
+            System.out.println("Path finding error, no path found.");
+            return null;
+        }
+    }
+    
+    private boolean searchNext(int curX, int curY, int goalX, int goalY, ArrayList<Location> path) {
+        
+        path.add(new Location(curX, curY));
+        if (curX == goalX && curY == goalY) {
+            return true;
+        }
+        if (isValid(curX, curY + 1)) { //north is valid
+            return searchNext(curX, curY + 1, goalX, goalY, path);
+        }
+        if (isValid(curX + 1, curY)) {
+            return searchNext(curX + 1, curY, goalX, goalY, path);    //east is valid
+        }
+        if (isValid(curX - 1, curY)) {           //west is valid
+            return searchNext(curX + 1, curY, goalX, goalY, path);
+        }
+        path.remove(path.size() - 1);
+        return false;
+    }
+    
+    private boolean isValid(int x, int y) {
+        
+        if (x >= 0 && y >= 0 && x < World.size && y < World.size) {
+            return searchedPositions[x][y];
+        } else {
+            return false;
+        }
+    }
+    
+    private void traversePath(ArrayList<Location> path) {
+        
+        while (!path.isEmpty()) {
+            Location next = path.remove(0);
+            //go to next
+        }
     }
 }
