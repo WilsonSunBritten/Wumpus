@@ -28,13 +28,13 @@ public class LogicExplorer extends Agent {
         if (location.x > 0) {
             frontier.add(new Location(location.x - 1, location.y));
         }
-        if (location.x < world.size) {
+        if (location.x < world.size-1) {
             frontier.add(new Location(location.x + 1, location.y));
         }
         if (location.y > 0) {
             frontier.add(new Location(location.x, location.y - 1));
         }
-        if (location.y < world.size) {
+        if (location.y < world.size-1) {
             frontier.add(new Location(location.x, location.y + 1));
         }
     }
@@ -51,13 +51,13 @@ public class LogicExplorer extends Agent {
         if (location.x > 0 && !searchedPositions[location.x-1][location.y]) {
             frontier.add(new Location(location.x - 1, location.y));
         }
-        if (location.x < world.size && !searchedPositions[location.x+1][location.y]) {
+        if (location.x < world.size -1&& !searchedPositions[location.x+1][location.y]) {
             frontier.add(new Location(location.x + 1, location.y));
         }
         if (location.y > 0 && !searchedPositions[location.x][location.y-1]) {
             frontier.add(new Location(location.x, location.y - 1));
         }
-        if (location.y < world.size && !searchedPositions[location.x][location.y+1]) {
+        if (location.y < world.size -1&& !searchedPositions[location.x][location.y+1]) {
             frontier.add(new Location(location.x, location.y + 1));
         }
     }
@@ -75,25 +75,31 @@ public class LogicExplorer extends Agent {
 
         switch (action) {
             case GRAB:
+                System.out.println("Grabbing");
                 world.action(GRAB);
                 System.out.println("Game failed to end after action(GRAB).");
                 break;
             case MOVE:
+                System.out.println("Moving");
                 percepts = (byte) world.action(MOVE);
                 processPercepts();
                 break;
             case TURN_LEFT:
+                System.out.println("Turning left");
                 world.action(TURN_LEFT);
                 break;
             case TURN_RIGHT:
+                System.out.println("turning right");
                 world.action(TURN_RIGHT);
                 break;
             case SHOOT:
+                System.out.println("shooting");
                 arrowCount--;
                 percepts = (byte) world.action(SHOOT);
                 processPercepts();
                 break;
             case QUIT:
+                System.out.println("no possible solution");
                 world.action(QUIT);
                 System.out.println("Game failed to end after action(QUIT).");
                 break;
@@ -163,7 +169,7 @@ public class LogicExplorer extends Agent {
     }
 
     private void rhwTraversal(Location location) {
-        //go to location zach
+        //go to location zach NOOOO!
     }
 
     private boolean safeSpaceInFrontier() {

@@ -92,6 +92,7 @@ public final class World {
         numMoves++;
         switch (action) {
             case GRAB:
+                score--;
                 if ((perceptMap[x][y] & GLITTER) != 0) {
                     perceptMap[x][y] -= GLITTER;
                     score += 1000;
@@ -190,10 +191,10 @@ public final class World {
                 }
                 break;
             case TURN_LEFT:
-                direction = (direction + 3);
+                direction = (direction + 3) % 4;
                 return perceptMap[x][y];
             case TURN_RIGHT:
-                direction = (direction + 1);
+                direction = (direction + 1) % 4;
                 return perceptMap[x][y];
             case SHOOT:
                 //shoot logic

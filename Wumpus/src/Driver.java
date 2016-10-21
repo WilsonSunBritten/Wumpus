@@ -9,6 +9,8 @@ public class Driver {
 //        Driver driver = new Driver();
 //        Tester tester = new Tester();
 //        tester.testPathFinder();
+        //Tester tester = new Tester();
+        //tester.testPathFinder();
         //tester.testUnify();
        // tester.testInferenceEngine();
         makeGame();
