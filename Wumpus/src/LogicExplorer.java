@@ -129,6 +129,7 @@ public class LogicExplorer extends Agent {
             default:
                 System.out.println("Error processing movement.");
         }
+        System.out.println("(Agent) thinks location after move: " + location.x + ", " + location.y);
     }
 
     public void removeFromFrontier(Location locToRemove) {
@@ -402,7 +403,7 @@ public class LogicExplorer extends Agent {
         if (!this.location.equals(curLoc)) {
             path.add(curLoc);
         }
-        //printPath(path);
+        printPath(path);
         traversed[curX][curY] = true;
         boolean done = false;
         if (checkAdjacent(curX, curY, goalX, goalY)) {
@@ -422,6 +423,7 @@ public class LogicExplorer extends Agent {
         }
         if (!done) {
             path.remove(path.size() - 1);
+            printPath(path);
         }
         //traversed[curX][curY] = false;
         return done;
@@ -443,10 +445,10 @@ public class LogicExplorer extends Agent {
     private boolean isValid(int x, int y) {
 
         if (x >= 0 && y >= 0 && x < World.size && y < World.size) {
-            boolean wumpus = !kb.ask(new Fact("Wumpus", x, false, y, false, true, null, null));
-            boolean pit = !kb.ask(new Fact("Pit", x, false, y, false, true, null, null));
-            boolean bump = kb.ask(new Fact("Obsticle", x, false, y, false, false, null, null));
-            return searchedPositions[x][y] && !bump && !pit && !wumpus;
+            boolean wumpus = kb.ask(new Fact("Wumpus", x, false, y, false, true, null, null));
+            boolean pit = kb.ask(new Fact("Pit", x, false, y, false, true, null, null));
+            boolean bump = !kb.ask(new Fact("Obsticle", x, false, y, false, true, null, null));
+            return searchedPositions[x][y] && bump && pit && wumpus;
         } else {
             return false;
         }
