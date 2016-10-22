@@ -49,10 +49,11 @@ public class LogicExplorer extends Agent {
     }
 
     public void addToFrontier(Location loc){
+        if(!searchedPositions[loc.x][loc.y]){
         if(inFrontier(loc)){
             removeFromFrontier(loc);
         }
-        frontier.add(loc);
+        frontier.add(loc);}
     }
     public void expandFrontier() {
         if (location.x > 0 && !searchedPositions[location.x - 1][location.y]) {
@@ -91,7 +92,8 @@ public class LogicExplorer extends Agent {
                 moveHistory.add(MOVE);
                 System.out.println("Explorer Action: Moving");
                 percepts = (byte) world.action(MOVE);
-                processPercepts();
+                searchedPositions[getForward().x][getForward().y] = true;
+                    processPercepts();
                 break;
             case TURN_LEFT:
                 moveHistory.add(TURN_LEFT);
@@ -173,7 +175,7 @@ public class LogicExplorer extends Agent {
     }
     private void decideNextAction() {
         if ((percepts & GLITTER) != 0) {
-            move(World.GRAB);
+            move(GRAB);
         }
         
         if (frontier.isEmpty()) {
@@ -183,7 +185,8 @@ public class LogicExplorer extends Agent {
             if (kb.ask(new Fact("Wumpus", getForward().x, false, getForward().y, false, true, null, null))) {
                 if (kb.ask(new Fact("Pit", getForward().x, false, getForward().y, false, true, null, null))) {
                     if(inFrontier(getForward())){
-                        move(World.MOVE);
+                        move(MOVE);
+                        removeFromFrontier(getForward());
                         return;
                     }
                     
@@ -321,6 +324,8 @@ public class LogicExplorer extends Agent {
                     move(TURN_LEFT);
                     move(TURN_LEFT);
                     move(MOVE);
+                    move(TURN_LEFT);
+                    move(TURN_LEFT);
                     break;
                 case TURN_LEFT:
                     move(TURN_RIGHT);
