@@ -106,15 +106,21 @@ public class Unifier {
             }
         }
         
+        if(equalWithSubs(fact1,fact2,subs))
+            return subs;
+        else return new ArrayList<Substitute>();
+    }
+    
+    public static boolean equalWithSubs(Fact fact1, Fact fact2, ArrayList<Substitute> subs){
         substitute(subs, fact1);
         substitute(subs, fact2);
         for(int i = 0; i < fact1.variables.size(); i++){
             Variable var1 = fact1.variables.get(i);
             Variable var2 = fact2.variables.get(i);
             if(var1.value != var2.value)
-                return new ArrayList<Substitute>();
+                return false;
         }
-        return subs;
+        return true;
     }
     
     public static void substitute(ArrayList<Substitute> subs, Fact fact){

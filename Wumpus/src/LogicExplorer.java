@@ -137,6 +137,8 @@ public class LogicExplorer extends Agent {
             moveHistory.remove(moveHistory.size() - 1);//why die again?
         }
         if ((((percepts & BUMP) != BUMP) && (percepts & DEATH_PIT) != DEATH_PIT) && ((percepts & DEATH_WUMPUS) != DEATH_WUMPUS)) {
+            kb.tell(new Fact("Wumpus",location.x,false,location.y,false,true,null,null));
+            kb.tell(new Fact("Pit",location.x,false,location.y,false,true,null,null));
             updateLocation();
             removeFromFrontier(location);
         }

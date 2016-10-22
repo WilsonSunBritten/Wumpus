@@ -38,7 +38,7 @@ public class InferenceEngine {
                                 }
                             }
                             if(!skipOut){
-                            kbClause.facts.remove(kbFact);
+                            kbClause.facts.remove(kbFact);//maybe commment out this line
                             clause.facts.remove(followFact);
                             clause.facts.addAll(kbClause.facts);
 
@@ -74,6 +74,7 @@ public class InferenceEngine {
         //look at each fact in each clause in kb.rules, if predicates match, and negations are opposite
         Fact fact = new Fact(factStart);
         ArrayList<Clause> tempClone = new ArrayList<>(kb.rules);
+        tempClone.addAll(kb.getClauses());
         ArrayList<Clause> kbClausesClone = new ArrayList<>();
         for (Clause tempClause : tempClone) {
             kbClausesClone.add(new Clause(tempClause));
@@ -82,7 +83,7 @@ public class InferenceEngine {
             for (Fact ruleFact : clause.facts) {
                 if (ruleFact.predicate.equals(fact.predicate) && ruleFact.not == !fact.not) {
                     ArrayList<Substitute> substitutions = Unifier.unify(fact, ruleFact);
-                    if (substitutions.isEmpty()) {
+                    if (!Unifier.equalWithSubs(fact, ruleFact, substitutions)) {
                         continue;
                     }
                     for (Substitute sub : substitutions) {
@@ -128,6 +129,7 @@ public class InferenceEngine {
         //with the substitution, apply to copies of both
         //strip fact from input clause 
         ArrayList<Clause> tempClone = new ArrayList<>(kb.rules);
+        tempClone.addAll(kb.getClauses());
         ArrayList<Clause> kbClausesClone = new ArrayList<>();
         for (Clause tempClause : tempClone) {
             kbClausesClone.add(new Clause(tempClause));
@@ -156,13 +158,14 @@ public class InferenceEngine {
                                 }
                             }
                         }
-                        if(!substitutions.isEmpty()){
+                        if(Unifier.equalWithSubs(fact, ruleFact, substitutions)){
                             clause.facts.remove(fact);
                             System.out.println("Inferred:");
                             Clause.printClause(clause);
                             kb.addToClauses(clause);
+                            return;//the smaller clause will be inferred against again, no need to keep trying rules immediately.
                         }
-                        break;
+                        continue;
                     }
                 }
             }
