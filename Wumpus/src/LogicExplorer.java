@@ -482,7 +482,7 @@ public class LogicExplorer extends Agent {
                 return true;
             }
         }
-        if (curY == goalY) {
+        else if (curY == goalY) {
             if (Math.abs(curX - goalX) == 1) {
                 return true;
             }
@@ -497,7 +497,7 @@ public class LogicExplorer extends Agent {
                 return true;
             }
         }
-        if (location.y == this.location.y) {
+        else if (location.y == this.location.y) {
             if (Math.abs(location.x - this.location.x) == 1) {
                 return true;
             }
