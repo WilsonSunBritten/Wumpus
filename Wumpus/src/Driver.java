@@ -18,26 +18,31 @@ public class Driver {
 
     public static void makeGame() throws IOException {
 
-//        BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in));
-//        int[] prob = new int[3];
-//        System.out.println("Size of board: ");
-//
-//        int size = Integer.parseInt(dataIn.readLine());
-//        System.out.print("% chance of generating pit: ");
-//        prob[0] = Integer.parseInt(dataIn.readLine());
-//        System.out.println();
-//        System.out.print("% chance of generating obstacle: ");
-//        prob[1] = Integer.parseInt(dataIn.readLine());
-//        System.out.println("");
-//        System.out.print("% chance of generating wumpus: ");
-//        prob[2] = Integer.parseInt(dataIn.readLine());
-//        System.out.println("");
+        boolean newBoard = false;
+        boolean newStart = true;
+        WumpusGame game;
+        if (newBoard) {
+            BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in));
+            int[] prob = new int[3];
+            System.out.println("Size of board: ");
 
-        WumpusGame game = new WumpusGame("clean.txt");
-
-//            game = new WumpusGame(size, prob, true);
-            World world = new World("PerceptBoard.txt");
-            world.startGame("LogicExplorer");
+            int size = Integer.parseInt(dataIn.readLine());
+            System.out.print("% chance of generating pit: ");
+            prob[0] = Integer.parseInt(dataIn.readLine());
+            System.out.println();
+            System.out.print("% chance of generating obstacle: ");
+            prob[1] = Integer.parseInt(dataIn.readLine());
+            System.out.println("");
+            System.out.print("% chance of generating wumpus: ");
+            prob[2] = Integer.parseInt(dataIn.readLine());
+            System.out.println("");
+            game = new WumpusGame(size, prob);
+        }
+        if (newStart) {
+            game = new WumpusGame("clean.txt");
+        }
+        World world = new World("PerceptBoard.txt");
+        world.startGame("LogicExplorer");
 
         //Agent explorer = new ReactiveExplorer(world, world.getLocation(), world.direction,world.getPercepts(), world.arrowCount);
         //  World world = new World("PerceptBoard.txt");

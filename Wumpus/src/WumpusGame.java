@@ -29,26 +29,19 @@ public class WumpusGame {
         System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
     }
 
-    public WumpusGame(int boardSize, int[] prob, boolean newOrNo) throws FileNotFoundException {
+    public WumpusGame(int boardSize, int[] prob) throws FileNotFoundException {
         this.boardSize = boardSize;
         this.prob = prob;
         perceptBoard = new byte[boardSize][boardSize];
         board = new Space[boardSize][boardSize];
         setBoard();
-        if (!newOrNo) {
-            initializeBoard();
-            PrintStream out = new PrintStream(new FileOutputStream("world.txt"));
-            System.setOut(out);
-            printBoards();
-            System.setOut(new PrintStream(new FileOutputStream("clean.txt")));
-            printBoards();
-            System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
-        } else {
-            newStart("clean.txt");
-            System.setOut(new PrintStream(new FileOutputStream("world.txt")));
-            printBoards();
-            System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
-        }
+        initializeBoard();
+        PrintStream out = new PrintStream(new FileOutputStream("world.txt"));
+        System.setOut(out);
+        printBoards();
+        System.setOut(new PrintStream(new FileOutputStream("clean.txt")));
+        printBoards();
+        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 
     }
 
