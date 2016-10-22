@@ -230,7 +230,13 @@ public class LogicExplorer extends Agent {
             //frontier.remove(frontier.size() - 1);
             move(MOVE);
             //if(!kb.ask(new Fact("Wumpus",getForward().x,false,getForward().y,false,false,null,null)))
+            try {
                 frontier.remove(frontier.size() - 1);
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                System.out.println("Exception caught: ArrayOutOfBounds");
+                world.action(QUIT);
+            }
+
             if (kb.ask(new Fact("Wumpus", getForward().x, false, getForward().y, false, false, null, null))) {
                 addToFrontier(getForward());//since there is definitely a wumpus forward, put in frontier so we can kill it later maybe.
             }
@@ -307,7 +313,7 @@ public class LogicExplorer extends Agent {
             }
         }
     }
-    
+
     private boolean wumpusInFrontier() {
         for (Location loc : frontier) {
             if (kb.ask(new Fact("Wumpus", loc.x, false, loc.y, false, false, null, null))) {
@@ -348,7 +354,7 @@ public class LogicExplorer extends Agent {
     }
 
     private void traversal(Location location) {
-      //moveHistoryTraversal(location);
+        //moveHistoryTraversal(location);
         goTo(location);
     }
 
