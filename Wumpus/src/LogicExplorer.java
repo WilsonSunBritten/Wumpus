@@ -225,12 +225,13 @@ public class LogicExplorer extends Agent {
             move(MOVE);
             removeFromFrontier(wumpusSpace);
         } else if (!frontier.isEmpty()) {
-            traversal(frontier.get(frontier.size() - 1));
-            turnToSpace(frontier.get(frontier.size() - 1));
+            Location goalLoc = frontier.get(frontier.size() -1);
+            traversal(goalLoc);
+            turnToSpace(goalLoc);
             //frontier.remove(frontier.size() - 1);
             move(MOVE);
             //if(!kb.ask(new Fact("Wumpus",getForward().x,false,getForward().y,false,false,null,null)))
-                frontier.remove(frontier.size() - 1);
+                removeFromFrontier(goalLoc);
             if (kb.ask(new Fact("Wumpus", getForward().x, false, getForward().y, false, false, null, null))) {
                 addToFrontier(getForward());//since there is definitely a wumpus forward, put in frontier so we can kill it later maybe.
             }
