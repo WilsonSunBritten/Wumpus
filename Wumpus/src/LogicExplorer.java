@@ -364,7 +364,6 @@ public class LogicExplorer extends Agent {
         //if (!this.location.equals(location) && !adjacent(location)) {
             goTo(location);
         //}
-        //go to location zach NOOOO!
     }
     private boolean safeSpaceInFrontier() {
         for (int i = frontier.size() - 1; i >= 0; i--) {
@@ -408,13 +407,15 @@ public class LogicExplorer extends Agent {
     private ArrayList<Location> searchForPath(int curX, int curY, int goalX, int goalY, ArrayList<Location> path) {
 
         boolean[][] traversed = new boolean[World.size][World.size];
-        if (searchNext(curX, curY, goalX, goalY, path, traversed)) {
-            return path;
-        } else {
-            System.out.println("Path finding error, no path found.");
-            path.removeAll(path);
-            return path;
-        }
+        searchNext(curX, curY, goalX, goalY, path, traversed);
+        return path;
+//        if (searchNext(curX, curY, goalX, goalY, path, traversed)) {
+//            return path;
+//        } else {
+//            System.out.println("Path finding error, no path found.");
+//            path.removeAll(path);
+//            return path;
+//        }
     }
 
     private boolean searchNext(int curX, int curY, int goalX, int goalY, ArrayList<Location> path, boolean[][] traversed) {
@@ -445,9 +446,9 @@ public class LogicExplorer extends Agent {
             done = searchNext(curX - 1, curY, goalX, goalY, path, traversed);
         }
        // System.out.println("path length: " + path.size());
-        if (!path.isEmpty()) {
-            path.remove(path.size() - 1);
-        }
+//        if (!path.isEmpty()) {
+//            path.remove(path.size() - 1);
+//        }
         
         //traversed[curX][curY] = false;
         return done;
