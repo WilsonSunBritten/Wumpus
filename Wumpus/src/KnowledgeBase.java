@@ -197,21 +197,8 @@ public class KnowledgeBase {
     public void tell(Fact fact) {
         //If told DeadWumpus delete the wumpus entry at that position and add !Wumpus(x,y)
         if(fact.predicate.equals("DeadWumpus")){
-            for(int i = 0; i < clauses.size(); i++){
-                for(int j = 0; j < clauses.get(i).facts.size(); j++){
-                    if(clauses.get(i).facts.get(j).variables.get(0).value == fact.variables.get(0).value && clauses.get(i).facts.get(j).variables.get(1).value == fact.variables.get(1).value){
-                        
-                    if(clauses.get(i).facts.get(j).predicate.equals("Wumpus")){
-                        clauses.get(i).facts.get(j).not = true;
-                    }
-                    else if(clauses.get(i).facts.get(j).predicate.equals("Stench")){
-                        clauses.get(i).facts.remove(j);
-                        if(clauses.get(i).facts.size() == 0)
-                            clauses.remove(i);
-                    }
-                    }
-                }
-            }           
+            removeWumpusAndStench(fact);
+            
         }
         if(factInClauses(fact)){
             return;
@@ -219,6 +206,25 @@ public class KnowledgeBase {
         
         addToClauses(new Clause(fact));
         //and check if there is a stench at any adjacent position, remove those facts too
+    }
+    
+    private void removeWumpusAndStench(Fact fact){
+        for(int i = clauses.size()-1; i >= 0; i--){
+            if(clauses.get(i).facts.size()==1){
+                Fact toRemove = clauses.get(i).facts.get(0);
+                    if(toRemove.predicate.equals("Wumpus")){
+                        
+                    if(toRemove.variables.get(0).value == fact.variables.get(0).value && toRemove.variables.get(1).value == fact.variables.get(1).value){
+                        toRemove.not = true;
+                    }
+                    }
+                    else if(toRemove.predicate.equals("Stench")){
+                    if((toRemove.variables.get(0).value == fact.variables.get(0).value && Math.abs(toRemove.variables.get(1).value - fact.variables.get(1).value) == 1)||(toRemove.variables.get(1).value == fact.variables.get(1).value && Math.abs(toRemove.variables.get(0).value - fact.variables.get(0).value) == 1)){
+                        clauses.remove(i);
+                    }
+                }
+            }
+            }           
     }
     private boolean factInClauses(Fact fact){
         for(Clause clause : clauses){
