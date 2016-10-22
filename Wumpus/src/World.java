@@ -273,7 +273,7 @@ public final class World {
                         return perceptMap[x][y];
 
                     case WEST: //shoot west
-                        for (int i = x - 1; i > 0; i--) {
+                        for (int i = x - 1; i >= 0; i--) {
                             if ((perceptMap[i][y] & DEATH_WUMPUS) != 0) {       //hits Wumpus
                                 removeWumpus(i, y);
                                 return SCREAM;
