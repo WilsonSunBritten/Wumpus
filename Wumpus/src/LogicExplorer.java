@@ -439,7 +439,11 @@ public class LogicExplorer extends Agent {
         if (isValid(curX - 1, curY) && !traversed[curX - 1][curY]) {    //west is valid
             return searchNext(curX - 1, curY, goalX, goalY, path, traversed);
         }
-        path.remove(path.size() - 1);
+       // System.out.println("path length: " + path.size());
+        if (!path.isEmpty()) {
+            path.remove(path.size() - 1);
+        }
+        
         traversed[curX][curY] = false;
         return false;
     }

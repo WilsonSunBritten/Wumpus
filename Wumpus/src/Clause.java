@@ -22,12 +22,12 @@ public class Clause extends Fact {
     }
     
     public static void printClause(Clause clause){
-        for(Fact fact : clause.facts){
-            fact.printFact();
-            if(fact != clause.facts.get(clause.facts.size()-1))
-                System.out.print(" v ");
-        }
-        System.out.println("");
+//        for(Fact fact : clause.facts){
+//            fact.printFact();
+//            if(fact != clause.facts.get(clause.facts.size()-1))
+//                System.out.print(" v ");
+//        }
+//        System.out.println("");
     }
 
     @Override

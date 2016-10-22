@@ -13,23 +13,24 @@ public class InferenceEngine {
         Clause clause = new Clause();
         //Step 1: negate input fact
         fact.not = !fact.not;
-        
+
         clause.facts.add(fact);
         ArrayList<Clause> tempClone = new ArrayList<>(kb.getClauses());
         ArrayList<Clause> kbClausesClone = new ArrayList<>();
         for (Clause tempClause : tempClone) {
             kbClausesClone.add(new Clause(tempClause));
         }
-        
+
         //shortcut, check for direct contradiction to original fact
-        for(Clause factClause : kbClausesClone){
-            if(factClause.facts.size() == 1){
+        for (Clause factClause : kbClausesClone) {
+            if (factClause.facts.size() == 1) {
                 Fact holder = factClause.facts.get(0);
-                if(holder.predicate == fact.predicate && holder.not != fact.not && Unifier.equalWithSubs(holder, fact, new ArrayList<Substitute>()))
+                if (holder.predicate.equals(fact.predicate) && holder.not != fact.not && Unifier.equalWithSubs(holder, fact, new ArrayList<>())) {
                     return true;
+                }
             }
         }
-        
+
         boolean keepGoing = true;
         //Step 2: Run negated facts against all known facts
         while (!kbClausesClone.isEmpty()) {
@@ -41,23 +42,23 @@ public class InferenceEngine {
                         if (kbFact.predicate.equals(followFact.predicate) && kbFact.not == !followFact.not) {
                             //extend clause with everything in kbClause, remove kbFact and followFact, start over
                             boolean skipOut = false;
-                            for(int i = 0; i < kbFact.variables.size(); i++){
+                            for (int i = 0; i < kbFact.variables.size(); i++) {
                                 Variable var1 = kbFact.variables.get(i);
                                 Variable var2 = followFact.variables.get(i);
-                                if(var1.value != var2.value){
+                                if (var1.value != var2.value) {
                                     skipOut = true;
                                 }
                             }
-                            if(!skipOut){
-                            kbClause.facts.remove(kbFact);//maybe commment out this line
-                            clause.facts.remove(followFact);
-                            clause.facts.addAll(kbClause.facts);
+                            if (!skipOut) {
+                                kbClause.facts.remove(kbFact);//maybe commment out this line
+                                clause.facts.remove(followFact);
+                                clause.facts.addAll(kbClause.facts);
 
-                            //before starting over check if clause is empty...
-                            if (clause.facts.isEmpty()) {
-                                return true;
-                            }
-                            keepGoing = false;
+                                //before starting over check if clause is empty...
+                                if (clause.facts.isEmpty()) {
+                                    return true;
+                                }
+                                keepGoing = false;
                             }
                         }
                         if (!keepGoing) {
@@ -102,8 +103,9 @@ public class InferenceEngine {
                             if (var.isVariable && var.variableId == sub.varIdToSubstitute) {
                                 var.isVariable = false;
                                 var.value = sub.valToSubstituteWith;
-                                if(var.function != null)
+                                if (var.function != null) {
                                     var.value = var.function.process(var.value);
+                                }
                             }
                         }
                         for (Fact tempFact : clause.facts) {
@@ -112,16 +114,17 @@ public class InferenceEngine {
                                 if (var.isVariable && var.variableId == sub.varIdToSubstitute) {
                                     var.isVariable = false;
                                     var.value = sub.valToSubstituteWith;
-                                    if(var.function != null)
+                                    if (var.function != null) {
                                         var.value = var.function.process(var.value);
+                                    }
                                 }
                             }
                         }
                     }
 
                     clause.facts.remove(ruleFact);
-                    System.out.println("Inferred:");
-                        Clause.printClause(clause);
+                  //  System.out.println("Inferred:");
+                  //  Clause.printClause(clause);
                     kb.addToClauses(clause);
                     break;
                 }
@@ -169,14 +172,13 @@ public class InferenceEngine {
                                 }
                             }
                         }
-                        if(Unifier.equalWithSubs(fact, ruleFact, substitutions)){
+                        if (Unifier.equalWithSubs(fact, ruleFact, substitutions)) {
                             clause.facts.remove(fact);
-                            System.out.println("Inferred:");
-                            Clause.printClause(clause);
+                   //         System.out.println("Inferred:");
+                      //      Clause.printClause(clause);
                             kb.addToClauses(clause);
                             return;//the smaller clause will be inferred against again, no need to keep trying rules immediately.
                         }
-                        continue;
                     }
                 }
             }

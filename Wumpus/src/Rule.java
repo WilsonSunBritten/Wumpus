@@ -28,32 +28,32 @@ public class Rule {
     }
 
     public void printRule() {
-        if (justFact) {
-            fact.printFact();
-            return;
-        }
-        for (Quantifier quantifier : quantifiers) {
-            quantifier.printQuantifier();
-        }
-        System.out.print(" (");
-        leftRule.printRule();
-        System.out.print(") ");
-        switch (connector) {
-            case OR:
-                System.out.print("OR");
-                break;
-            case AND:
-                System.out.print("AND");
-                break;
-            case IFF:
-                System.out.print("IFF");
-                break;
-            case IMPLIES:
-                System.out.print("IMPLIES");
-        }
-        System.out.print(" (");
-        rightRule.printRule();
-        System.out.println(")");
+//        if (justFact) {
+//            fact.printFact();
+//            return;
+//        }
+//        for (Quantifier quantifier : quantifiers) {
+//            quantifier.printQuantifier();
+//        }
+//        System.out.print(" (");
+//        leftRule.printRule();
+//        System.out.print(") ");
+//        switch (connector) {
+//            case OR:
+//                System.out.print("OR");
+//                break;
+//            case AND:
+//                System.out.print("AND");
+//                break;
+//            case IFF:
+//                System.out.print("IFF");
+//                break;
+//            case IMPLIES:
+//                System.out.print("IMPLIES");
+//        }
+//        System.out.print(" (");
+//        rightRule.printRule();
+//        System.out.println(")");
 
     }
 }
