@@ -17,10 +17,11 @@ public final class World {
         importMap(fileName);
         for (int i = 0; i < perceptMap.length; i++) {
             for (int j = 0; j < perceptMap.length; j++) {
-                if((perceptMap[i][j] & DEATH_WUMPUS) != 0)
+                if ((perceptMap[i][j] & DEATH_WUMPUS) != 0) {
                     arrowCount++;
+                }
             }
-            
+
         }
         System.out.println("Starting world:");
         printWorld();
@@ -41,10 +42,10 @@ public final class World {
 
     public void importMap(String fileName) {
         try {
-            
+
             FileReader in1 = new FileReader(fileName);
             BufferedReader reader1 = new BufferedReader(in1);
-            
+
             FileReader in = new FileReader(fileName);
             BufferedReader reader = new BufferedReader(in);
             String next = reader.readLine();
@@ -239,7 +240,7 @@ public final class World {
                 score -= 10;
                 switch (direction) {
                     case NORTH: //shoot north
-                        for (int i = y+1; i < perceptMap.length; i++) {
+                        for (int i = y + 1; i < perceptMap.length; i++) {
                             if ((perceptMap[x][i] & DEATH_WUMPUS) != 0) {       //hits Wumpus
                                 removeWumpus(x, i);
                                 return SCREAM;
@@ -250,7 +251,7 @@ public final class World {
                         return perceptMap[x][y];
 
                     case EAST: //shoot east
-                        for (int i = x+1; i < perceptMap.length; i++) {
+                        for (int i = x + 1; i < perceptMap.length; i++) {
                             if ((perceptMap[i][y] & DEATH_WUMPUS) != 0) {       //hits Wumpus
                                 removeWumpus(i, y);
                                 return SCREAM;
@@ -261,7 +262,7 @@ public final class World {
                         return perceptMap[x][y];
 
                     case SOUTH: //shoot south
-                        for (int i = y-1; i >= 0; i--) {
+                        for (int i = y - 1; i >= 0; i--) {
                             if ((perceptMap[x][i] & DEATH_WUMPUS) != 0) {       //hits Wumpus
                                 removeWumpus(x, i);
                                 return SCREAM;
@@ -272,7 +273,7 @@ public final class World {
                         return perceptMap[x][y];
 
                     case WEST: //shoot west
-                        for (int i = x-1; i > 0; i--) {
+                        for (int i = x - 1; i > 0; i--) {
                             if ((perceptMap[i][y] & DEATH_WUMPUS) != 0) {       //hits Wumpus
                                 removeWumpus(i, y);
                                 return SCREAM;
@@ -307,21 +308,40 @@ public final class World {
         if (x > 0) {
             //remove stentch to left
             perceptMap[x - 1][y] = (byte) (perceptMap[x - 1][y] & ~STENCH);
-            if (x < size - 1) {
-                //remove stentch to right
-                perceptMap[x + 1][y] = (byte) (perceptMap[x + 1][y] & ~STENCH);
-            }
+        }
+
+        if (x < size - 1) {
+            //remove stentch to right
+            perceptMap[x + 1][y] = (byte) (perceptMap[x + 1][y] & ~STENCH);
         }
         if (y > 0) {
             //remove stentch below
             perceptMap[x][y - 1] = (byte) (perceptMap[x][y - 1] & ~STENCH);
-            if (y < size - 1) {
-                //remove stentch above
-                perceptMap[x][y + 1] = (byte) (perceptMap[x][y + 1] & ~STENCH);
+        }
+        if (y < size - 1) {
+            //remove stentch above
+            perceptMap[x][y + 1] = (byte) (perceptMap[x][y + 1] & ~STENCH);
+        }
+        remakeStenches();
+        killedWumpus++;
+        score += 10;
+    }
+    
+    public void remakeStenches(){
+        for (int i = 0; i < perceptMap.length; i++) {
+            for (int j = 0; j < perceptMap.length; j++) {
+                if((perceptMap[i][j] & DEATH_WUMPUS) != 0){
+                    if(i>0){
+                        perceptMap[i-1][j] |= STENCH;
+                    }
+                    if(i < size-1)
+                        perceptMap[i+1][j] |= STENCH;
+                    if(j > 0)
+                        perceptMap[i][j-1] |= STENCH;
+                    if(j < size-1)
+                        perceptMap[i][j+1] |= STENCH;
+                }
             }
         }
-        
-        killedWumpus++;
-        score+=10;
     }
 }
