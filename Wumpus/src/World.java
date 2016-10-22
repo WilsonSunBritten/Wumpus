@@ -238,8 +238,8 @@ public final class World {
                 arrowCount--;
                 score -= 10;
                 switch (direction) {
-                    case 1: //shoot north
-                        for (int i = y; i < perceptMap.length; i++) {
+                    case NORTH: //shoot north
+                        for (int i = y+1; i < perceptMap.length; i++) {
                             if ((perceptMap[x][i] & DEATH_WUMPUS) != 0) {       //hits Wumpus
                                 removeWumpus(x, i);
                                 score += 10;
@@ -251,8 +251,8 @@ public final class World {
                         }
                         return perceptMap[x][y];
 
-                    case 2: //shoot east
-                        for (int i = y; i < perceptMap.length; i++) {
+                    case EAST: //shoot east
+                        for (int i = x+1; i < perceptMap.length; i++) {
                             if ((perceptMap[i][y] & DEATH_WUMPUS) != 0) {       //hits Wumpus
                                 removeWumpus(i, y);
                                 return SCREAM;
@@ -262,8 +262,8 @@ public final class World {
                         }
                         return perceptMap[x][y];
 
-                    case 3: //shoot south
-                        for (int i = y; i > 0; i--) {
+                    case SOUTH: //shoot south
+                        for (int i = y-1; i >= 0; i--) {
                             if ((perceptMap[x][i] & DEATH_WUMPUS) != 0) {       //hits Wumpus
                                 removeWumpus(x, i);
                                 return SCREAM;
@@ -273,8 +273,8 @@ public final class World {
                         }
                         return perceptMap[x][y];
 
-                    case 4: //shoot west
-                        for (int i = y; i > 0; i--) {
+                    case WEST: //shoot west
+                        for (int i = x-1; i > 0; i--) {
                             if ((perceptMap[i][y] & DEATH_WUMPUS) != 0) {       //hits Wumpus
                                 removeWumpus(i, y);
                                 return SCREAM;

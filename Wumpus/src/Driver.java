@@ -35,7 +35,7 @@ public class Driver {
         prob[2] = Integer.parseInt(dataIn.readLine());
         System.out.println("");
 
-        WumpusGame game = new WumpusGame(size, prob, false);
+        WumpusGame game = new WumpusGame(size, prob);
 
         //Agent explorer = new ReactiveExplorer(world, world.getLocation(), world.direction,world.getPercepts(), world.arrowCount);
       //  World world = new World("PerceptBoard.txt");

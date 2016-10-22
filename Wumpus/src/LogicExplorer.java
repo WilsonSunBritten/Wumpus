@@ -137,9 +137,9 @@ public class LogicExplorer extends Agent {
             moveHistory.remove(moveHistory.size() - 1);//why die again?
         }
         if ((((percepts & BUMP) != BUMP) && (percepts & DEATH_PIT) != DEATH_PIT) && ((percepts & DEATH_WUMPUS) != DEATH_WUMPUS)) {
+            updateLocation();
             kb.tell(new Fact("Wumpus",location.x,false,location.y,false,true,null,null));
             kb.tell(new Fact("Pit",location.x,false,location.y,false,true,null,null));
-            updateLocation();
             removeFromFrontier(location);
         }
         if ((percepts & BUMP) == BUMP) {       //theres soemthing funky here, hes bumping when there arent obsticales
@@ -197,7 +197,7 @@ public class LogicExplorer extends Agent {
             move(MOVE);
             removeFromFrontier(safeSpace);
         } else if (arrowCount > 0 && wumpusInFrontier()) {
-            if(!adjacent(safeSpace))
+            if(!adjacent(wumpusSpace))
                 rhwTraversal(wumpusSpace);
             turnToSpace(wumpusSpace);
             move(SHOOT);
