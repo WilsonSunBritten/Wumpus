@@ -11,7 +11,7 @@ public class KnowledgeBase {
         return clauses;
     }
     public void addToClauses(Clause clause){
-        if(clause.facts.size() == 0)
+        if(clause.facts.isEmpty())
             return;
         else{
             for(Fact fact : clause.facts){
@@ -25,8 +25,8 @@ public class KnowledgeBase {
             if(factInClauses(clause.facts.get(0))){
                 return;
             }
-           // System.out.println("Added to kb Clause: ");
-          //  System.out.print("\t");
+            System.out.println("Added to kb Clause: ");
+            System.out.print("\t");
             Clause.printClause(clause);
             clauses.add(clause);
             inferenceEngine.infer(clause.facts.get(0));
@@ -38,8 +38,8 @@ public class KnowledgeBase {
                 clauses.add(clause);//We only need add the clause itself if we didn't infer anything, otherwise the inferred shortened clause which is more valuable got added
             
             
-         //   System.out.println("Added to kb Clause: ");
-          //  System.out.print("\t");
+            System.out.println("Added to kb Clause: ");
+            System.out.print("\t");
             Clause.printClause(clause);
             }
         }

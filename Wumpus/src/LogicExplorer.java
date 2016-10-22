@@ -210,21 +210,21 @@ public class LogicExplorer extends Agent {
         }
         if (safeSpaceInFrontier()) {
             if (!adjacent(safeSpace)) {
-                goTo(safeSpace);
+                traversal(safeSpace);
             }
             turnToSpace(safeSpace);
             move(MOVE);
             removeFromFrontier(safeSpace);
         } else if (arrowCount > 0 && wumpusInFrontier()) {
             if (!adjacent(wumpusSpace)) {
-                goTo(wumpusSpace);
+                traversal(wumpusSpace);
             }
             turnToSpace(wumpusSpace);
             move(SHOOT);
             move(MOVE);
             removeFromFrontier(wumpusSpace);
         } else if (!frontier.isEmpty()) {
-            goTo(frontier.get(frontier.size() - 1));
+            traversal(frontier.get(frontier.size() - 1));
             turnToSpace(frontier.get(frontier.size() - 1));
             //frontier.remove(frontier.size() - 1);
             move(MOVE);
@@ -331,41 +331,41 @@ public class LogicExplorer extends Agent {
         return false;
     }
 
-//    private void moveHistoryTraversal(Location loc) {
-//        if (adjacent(loc)) {
-//            return;
-//        }
-//        for (int i = moveHistory.size() - 1; i >= 0; i--) {
-//            if (adjacent(loc)) {
-//                return;
-//            }
-//            int move = moveHistory.get(i);
-//            switch (move) {
-//                case MOVE:
-//                    move(TURN_LEFT);
-//                    move(TURN_LEFT);
-//                    move(MOVE);
-//                    move(TURN_LEFT);
-//                    move(TURN_LEFT);
-//                    break;
-//                case TURN_LEFT:
-//                    move(TURN_RIGHT);
-//                    break;
-//                case TURN_RIGHT:
-//                    move(TURN_LEFT);
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//    }
-//    private void rhwTraversal(Location location) {
-//   //      moveHistoryTraversal(location);
-//        //if (!this.location.equals(location) && !adjacent(location)) {
-//            goTo(location.x, location.y);
-//        //}
-//        //go to location zach NOOOO!
-//    }
+    private void moveHistoryTraversal(Location loc) {
+        if (adjacent(loc)) {
+            return;
+        }
+        for (int i = moveHistory.size() - 1; i >= 0; i--) {
+            if (adjacent(loc)) {
+                return;
+            }
+            int move = moveHistory.get(i);
+            switch (move) {
+                case MOVE:
+                    move(TURN_LEFT);
+                    move(TURN_LEFT);
+                    move(MOVE);
+                    move(TURN_LEFT);
+                    move(TURN_LEFT);
+                    break;
+                case TURN_LEFT:
+                    move(TURN_RIGHT);
+                    break;
+                case TURN_RIGHT:
+                    move(TURN_LEFT);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    private void traversal(Location location) {
+   //      moveHistoryTraversal(location);
+        //if (!this.location.equals(location) && !adjacent(location)) {
+            goTo(location);
+        //}
+        //go to location zach NOOOO!
+    }
     private boolean safeSpaceInFrontier() {
         for (int i = frontier.size() - 1; i >= 0; i--) {
             Location loc = frontier.get(i);
@@ -397,8 +397,11 @@ public class LogicExplorer extends Agent {
             //path.add(new Location(target.x, y));
             printPath(path);
             traversePath(path);
-            System.out.println("Done traversing to " + target.x + ", " + target.y);
-            System.out.println("Actual location: " + this.location.x + ", " + this.location.y);
+            if (adjacent(target)) {
+               System.out.println("Done traversing to " + target.x + ", " + target.y); 
+            } else {
+                System.out.println("Failed to reach " + target.x + ", " + target.y); 
+            }
         }
     }
 
@@ -409,6 +412,7 @@ public class LogicExplorer extends Agent {
             return path;
         } else {
             System.out.println("Path finding error, no path found.");
+            path.removeAll(path);
             return path;
         }
     }
@@ -424,28 +428,29 @@ public class LogicExplorer extends Agent {
 //        if (curX == goalX && curY == goalY) {
 //            return true;
 //        }
+        boolean done = false;
         if (checkAdjacent(curX, curY, goalX, goalY)) {
             return true;
         }
-        if (isValid(curX, curY + 1) && !traversed[curX][curY + 1]) {    //north is valid
-            return searchNext(curX, curY + 1, goalX, goalY, path, traversed);
+        if (!done && isValid(curX, curY + 1) && !traversed[curX][curY + 1]) {    //north is valid
+            done = searchNext(curX, curY + 1, goalX, goalY, path, traversed);
         }
-        if (isValid(curX + 1, curY) && !traversed[curX + 1][curY]) {    //east is valid
-            return searchNext(curX + 1, curY, goalX, goalY, path, traversed);
+        if (!done && isValid(curX + 1, curY) && !traversed[curX + 1][curY]) {    //east is valid
+            done = searchNext(curX + 1, curY, goalX, goalY, path, traversed);
         }
-        if (isValid(curX, curY - 1) && !traversed[curX][curY - 1]) {    //south is valid
-            return searchNext(curX, curY - 1, goalX, goalY, path, traversed);
+        if (!done && isValid(curX, curY - 1) && !traversed[curX][curY - 1]) {    //south is valid
+            done = searchNext(curX, curY - 1, goalX, goalY, path, traversed);
         }
-        if (isValid(curX - 1, curY) && !traversed[curX - 1][curY]) {    //west is valid
-            return searchNext(curX - 1, curY, goalX, goalY, path, traversed);
+        if (!done && isValid(curX - 1, curY) && !traversed[curX - 1][curY]) {    //west is valid
+            done = searchNext(curX - 1, curY, goalX, goalY, path, traversed);
         }
        // System.out.println("path length: " + path.size());
         if (!path.isEmpty()) {
             path.remove(path.size() - 1);
         }
         
-        traversed[curX][curY] = false;
-        return false;
+        //traversed[curX][curY] = false;
+        return done;
     }
 
     private void printPath(ArrayList<Location> path) {
