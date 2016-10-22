@@ -89,7 +89,7 @@ public final class World {
         for (int i = perceptMap.length - 1; i >= 0; i--) {
             for (int j = 0; j < perceptMap.length; j++) {
                 if (x == j && y == i) {
-                    System.out.print("A  ");
+                    System.out.print("\u001B[31m" + "A  " + "\u001B[0m");
                 } else {
                     if ((perceptMap[j][i] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                         System.out.print("W  ");

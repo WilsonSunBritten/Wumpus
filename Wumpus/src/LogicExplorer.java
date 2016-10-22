@@ -29,17 +29,18 @@ public class LogicExplorer extends Agent {
         if (location.x > 0) {
             frontier.add(new Location(location.x - 1, location.y));
         }
-        if (location.x < world.size - 1) {
+        if (location.x < World.size - 1) {
             frontier.add(new Location(location.x + 1, location.y));
         }
         if (location.y > 0) {
             frontier.add(new Location(location.x, location.y - 1));
         }
-        if (location.y < world.size - 1) {
+        if (location.y < World.size - 1) {
             frontier.add(new Location(location.x, location.y + 1));
         }
     }
 
+    @Override
     public void updateLocation() {
         if (notFirstMove) {
             super.updateLocation();
@@ -63,13 +64,13 @@ public class LogicExplorer extends Agent {
         if (location.x > 0 && !searchedPositions[location.x - 1][location.y]) {
             addToFrontier(new Location(location.x - 1, location.y));
         }
-        if (location.x < world.size - 1 && !searchedPositions[location.x + 1][location.y]) {
+        if (location.x < World.size - 1 && !searchedPositions[location.x + 1][location.y]) {
             addToFrontier(new Location(location.x + 1, location.y));
         }
         if (location.y > 0 && !searchedPositions[location.x][location.y - 1]) {
             addToFrontier(new Location(location.x, location.y - 1));
         }
-        if (location.y < world.size - 1 && !searchedPositions[location.x][location.y + 1]) {
+        if (location.y < World.size - 1 && !searchedPositions[location.x][location.y + 1]) {
             addToFrontier(new Location(location.x, location.y + 1));
         }
     }
@@ -209,29 +210,29 @@ public class LogicExplorer extends Agent {
         }
         if (safeSpaceInFrontier()) {
             if (!adjacent(safeSpace)) {
-                rhwTraversal(safeSpace);
+                goTo(safeSpace);
             }
             turnToSpace(safeSpace);
             move(MOVE);
             removeFromFrontier(safeSpace);
         } else if (arrowCount > 0 && wumpusInFrontier()) {
             if (!adjacent(wumpusSpace)) {
-                rhwTraversal(wumpusSpace);
+                goTo(wumpusSpace);
             }
             turnToSpace(wumpusSpace);
             move(SHOOT);
             move(MOVE);
             removeFromFrontier(wumpusSpace);
         } else if (!frontier.isEmpty()) {
-            rhwTraversal(frontier.get(frontier.size() - 1));
+            goTo(frontier.get(frontier.size() - 1));
             turnToSpace(frontier.get(frontier.size() - 1));
             //frontier.remove(frontier.size() - 1);
             move(MOVE);
             //if(!kb.ask(new Fact("Wumpus",getForward().x,false,getForward().y,false,false,null,null)))
 //                frontier.remove(frontier.size() - 1);
-            if(kb.ask(new Fact("Wumpus",getForward().x,false,getForward().y,false,false,null,null)))
+            if (kb.ask(new Fact("Wumpus", getForward().x, false, getForward().y, false, false, null, null))) {
                 addToFrontier(getForward());//since there is definitely a wumpus forward, put in frontier so we can kill it later maybe.
-
+            }
         }
     }
 
@@ -306,21 +307,20 @@ public class LogicExplorer extends Agent {
         }
     }
 
-    private Location neighborSafeSpace(Location location) {
-        Location loc = null;
-        if (location.x > 0 && searchedPositions[location.x - 1][location.y]) {
-            loc = new Location(location.x - 1, location.y);
-
-        } else if (location.x < World.size - 1 && searchedPositions[location.x + 1][location.y]) {
-            loc = new Location(location.x + 1, location.y);
-        } else if (location.y > 0 && searchedPositions[location.x][location.y - 1]) {
-            loc = new Location(location.x, location.y - 1);
-        } else if (location.y < World.size - 1 && searchedPositions[location.x][location.y + 1]) {
-            loc = new Location(location.x, location.y + 1);
-        }
-        return loc;
-    }
-
+//    private Location neighborSafeSpace(Location location) {
+//        Location loc = null;
+//        if (location.x > 0 && searchedPositions[location.x - 1][location.y]) {
+//            loc = new Location(location.x - 1, location.y);
+//
+//        } else if (location.x < World.size - 1 && searchedPositions[location.x + 1][location.y]) {
+//            loc = new Location(location.x + 1, location.y);
+//        } else if (location.y > 0 && searchedPositions[location.x][location.y - 1]) {
+//            loc = new Location(location.x, location.y - 1);
+//        } else if (location.y < World.size - 1 && searchedPositions[location.x][location.y + 1]) {
+//            loc = new Location(location.x, location.y + 1);
+//        }
+//        return loc;
+//    }
     private boolean wumpusInFrontier() {
         for (Location loc : frontier) {
             if (kb.ask(new Fact("Wumpus", loc.x, false, loc.y, false, false, null, null))) {
@@ -331,58 +331,41 @@ public class LogicExplorer extends Agent {
         return false;
     }
 
-    private void moveHistoryTraversal(Location loc) {
-        if (adjacent(loc)) {
-            return;
-        }
-        for (int i = moveHistory.size() - 1; i >= 0; i--) {
-            if (adjacent(loc)) {
-                return;
-            }
-            int move = moveHistory.get(i);
-            switch (move) {
-                case MOVE:
-                    move(TURN_LEFT);
-                    move(TURN_LEFT);
-                    move(MOVE);
-                    move(TURN_LEFT);
-                    move(TURN_LEFT);
-                    break;
-                case TURN_LEFT:
-                    move(TURN_RIGHT);
-                    break;
-                case TURN_RIGHT:
-                    move(TURN_LEFT);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    private void rhwTraversal(Location location) {
-   //      moveHistoryTraversal(location);
-        if (!this.location.equals(location) && !adjacent(location)) {
-            goTo(location.x, location.y);
-        }
-        //go to location zach NOOOO!
-    }
-
-    private boolean adjacent(Location location) {
-
-        if (location.x == this.location.x) {
-            if (Math.abs(location.y - this.location.y) == 1) {
-                return true;
-            }
-        }
-        if (location.y == this.location.y) {
-            if (Math.abs(location.x - this.location.x) == 1) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+//    private void moveHistoryTraversal(Location loc) {
+//        if (adjacent(loc)) {
+//            return;
+//        }
+//        for (int i = moveHistory.size() - 1; i >= 0; i--) {
+//            if (adjacent(loc)) {
+//                return;
+//            }
+//            int move = moveHistory.get(i);
+//            switch (move) {
+//                case MOVE:
+//                    move(TURN_LEFT);
+//                    move(TURN_LEFT);
+//                    move(MOVE);
+//                    move(TURN_LEFT);
+//                    move(TURN_LEFT);
+//                    break;
+//                case TURN_LEFT:
+//                    move(TURN_RIGHT);
+//                    break;
+//                case TURN_RIGHT:
+//                    move(TURN_LEFT);
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//    }
+//    private void rhwTraversal(Location location) {
+//   //      moveHistoryTraversal(location);
+//        //if (!this.location.equals(location) && !adjacent(location)) {
+//            goTo(location.x, location.y);
+//        //}
+//        //go to location zach NOOOO!
+//    }
     private boolean safeSpaceInFrontier() {
         for (int i = frontier.size() - 1; i >= 0; i--) {
             Location loc = frontier.get(i);
@@ -404,16 +387,19 @@ public class LogicExplorer extends Agent {
         return false;
     }
 
-    private void goTo(int x, int y) {
+    private void goTo(Location target) {
 
-        System.out.println("Traversing to " + x + ", " + y);
-        ArrayList<Location> path = new ArrayList<>();
-        path = searchForPath(location.x, location.y, x, y, path);
-        path.add(new Location(x, y));
-        printPath(path);
-        traversePath(path);
-        System.out.println("Done traversing to " + x + ", " + y);
-        System.out.println("Actual location: " + this.location.x + ", " + this.location.y);
+        if (!adjacent(target)) {
+
+            System.out.println("Traversing to " + target.x + ", " + target.y);
+            ArrayList<Location> path = new ArrayList<>();
+            path = searchForPath(location.x, location.y, target.x, target.y, path);
+            //path.add(new Location(target.x, y));
+            printPath(path);
+            traversePath(path);
+            System.out.println("Done traversing to " + target.x + ", " + target.y);
+            System.out.println("Actual location: " + this.location.x + ", " + this.location.y);
+        }
     }
 
     private ArrayList<Location> searchForPath(int curX, int curY, int goalX, int goalY, ArrayList<Location> path) {
@@ -435,9 +421,9 @@ public class LogicExplorer extends Agent {
         }
         printPath(path);
         traversed[curX][curY] = true;
-        if (curX == goalX && curY == goalY) {
-            return true;
-        }
+//        if (curX == goalX && curY == goalY) {
+//            return true;
+//        }
         if (checkAdjacent(curX, curY, goalX, goalY)) {
             return true;
         }
@@ -454,6 +440,7 @@ public class LogicExplorer extends Agent {
             return searchNext(curX - 1, curY, goalX, goalY, path, traversed);
         }
         path.remove(path.size() - 1);
+        traversed[curX][curY] = false;
         return false;
     }
 
@@ -473,7 +460,12 @@ public class LogicExplorer extends Agent {
     private boolean isValid(int x, int y) {
 
         if (x >= 0 && y >= 0 && x < World.size && y < World.size) {
-            return searchedPositions[x][y];
+            boolean wumpus = !kb.ask(new Fact("Wumpus", x, false, y, false, true, null, null));
+            boolean pit = !kb.ask(new Fact("Pit", x, false, y, false, true, null, null));
+            boolean bump = kb.ask(new Fact("Obsticle", x, false, y, false, false, null, null));
+           // boolean bump = kb.ask(new Fact("Obsticle", x, false, y, false, false, null, null))
+            //System.out.println("Pit: " + pit + " Wumpus: " + wumpus + " Obsticle: " + bump);
+            return searchedPositions[x][y] && !bump && !pit && !wumpus;
         } else {
             return false;
         }
@@ -488,6 +480,21 @@ public class LogicExplorer extends Agent {
         }
         if (curY == goalY) {
             if (Math.abs(curX - goalX) == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean adjacent(Location location) {
+
+        if (location.x == this.location.x) {
+            if (Math.abs(location.y - this.location.y) == 1) {
+                return true;
+            }
+        }
+        if (location.y == this.location.y) {
+            if (Math.abs(location.x - this.location.x) == 1) {
                 return true;
             }
         }
