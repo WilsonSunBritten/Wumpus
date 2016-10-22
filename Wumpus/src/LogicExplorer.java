@@ -450,10 +450,7 @@ public class LogicExplorer extends Agent {
         if (!done) {
             path.remove(path.size() - 1);
         }
-            
-       // }
-        
-        //traversed[curX][curY] = false;
+        traversed[curX][curY] = false;
         return done;
     }
 
