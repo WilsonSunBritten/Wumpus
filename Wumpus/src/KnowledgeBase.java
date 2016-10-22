@@ -193,7 +193,15 @@ public class KnowledgeBase {
             for(int i = 0; i < clauses.size(); i++){
                 for(int j = 0; j < clauses.get(i).facts.size(); j++){
                     if(clauses.get(i).facts.get(j).variables.get(0).value == fact.variables.get(0).value && clauses.get(i).facts.get(j).variables.get(1).value == fact.variables.get(1).value){
+                        
+                    if(clauses.get(i).facts.get(j).predicate.equals("Wumpus")){
                         clauses.get(i).facts.get(j).not = true;
+                    }
+                    else if(clauses.get(i).facts.get(j).predicate.equals("Stench")){
+                        clauses.get(i).facts.remove(j);
+                        if(clauses.get(i).facts.size() == 0)
+                            clauses.remove(i);
+                    }
                     }
                 }
             }           
