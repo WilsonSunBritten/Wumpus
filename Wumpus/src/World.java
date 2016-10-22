@@ -144,17 +144,21 @@ public final class World {
                                 score -= 1000;
                                 wumpusDeaths++;
                                 System.out.println("Death to wumpus: arrows remaining = " + arrowCount);
+                                System.out.println("(World) thinks location after move: " + x + ", " + y);
                                 return DEATH_WUMPUS;
                             }
                             if ((perceptMap[x][y + 1] & DEATH_PIT) == DEATH_PIT) {
                                 score -= 1000;
                                 pitDeaths++;
                                 System.out.println("Death to pit.");
+                                System.out.println("(World) thinks location after move: " + x + ", " + y);
                                 return DEATH_PIT;
                             }
                             y = y + 1;
+                            System.out.println("(World) thinks location after move: " + x + ", " + y);
                             return perceptMap[x][y];
                         } else {
+                            System.out.println("(World) thinks location after move: " + x + ", " + y);
                             return BUMP;
                         }
                     case EAST:
@@ -164,16 +168,20 @@ public final class World {
                                 score -= 1000;
                                 wumpusDeaths++;
                                 System.out.println("Death to wumpus: arrows remaining = " + arrowCount);
+                                System.out.println("(World) thinks location after move: " + x + ", " + y);
                                 return DEATH_WUMPUS;
                             }
                             if ((perceptMap[x + 1][y] & DEATH_PIT) == DEATH_PIT) {
                                 score -= 1000;
                                 pitDeaths++;
+                                System.out.println("(World) thinks location after move: " + x + ", " + y);
                                 return DEATH_PIT;
                             }
                             x = x + 1;
+                            System.out.println("(World) thinks location after move: " + x + ", " + y);
                             return perceptMap[x][y];
                         } else {
+                            System.out.println("(World) thinks location after move: " + x + ", " + y);
                             return BUMP;
                         }
                     case SOUTH:
@@ -183,17 +191,21 @@ public final class World {
                                 score -= 1000;
                                 wumpusDeaths++;
                                 System.out.println("Death to wumpus: arrows remaining = " + arrowCount);
+                                System.out.println("(World) thinks location after move: " + x + ", " + y);
                                 return DEATH_WUMPUS;
                             }
                             if ((perceptMap[x][y - 1] & DEATH_PIT) == DEATH_PIT) {
                                 score -= 1000;
                                 pitDeaths++;
                                 System.out.println("Death to pit.");
+                                System.out.println("(World) thinks location after move: " + x + ", " + y);
                                 return DEATH_PIT;
                             }
                             y -= 1;
+                            System.out.println("(World) thinks location after move: " + x + ", " + y);
                             return perceptMap[x][y];
                         } else {
+                            System.out.println("(World) thinks location after move: " + x + ", " + y);
                             return BUMP;
                         }
                     case WEST:
@@ -203,22 +215,27 @@ public final class World {
                                 score -= 1000;
                                 wumpusDeaths++;
                                 System.out.println("Death to wumpus: arrows remaining = " + arrowCount);
+                                System.out.println("(World) thinks location after move: " + x + ", " + y);
                                 return DEATH_WUMPUS;
                             }
                             if ((perceptMap[x - 1][y] & DEATH_PIT) == DEATH_PIT) {
                                 score -= 1000;
                                 pitDeaths++;
                                 System.out.println("Death to pit.");
+                                System.out.println("(World) thinks location after move: " + x + ", " + y);
                                 return DEATH_PIT;
                             }
                             x -= 1;
+                            System.out.println("(World) thinks location after move: " + x + ", " + y);
                             return perceptMap[x][y];
                         } else {
+                            System.out.println("(World) thinks location after move: " + x + ", " + y);
                             return BUMP;
                         }
                     default:
                         System.out.println("Defaulted");
                         System.out.println(direction);
+                        System.out.println("(World) thinks location after move: " + x + ", " + y);
                         break;
                 }
                 break;
