@@ -402,7 +402,7 @@ public class LogicExplorer extends Agent {
         if (!this.location.equals(curLoc)) {
             path.add(curLoc);
         }
-        printPath(path);
+        //printPath(path);
         traversed[curX][curY] = true;
         boolean done = false;
         if (checkAdjacent(curX, curY, goalX, goalY)) {

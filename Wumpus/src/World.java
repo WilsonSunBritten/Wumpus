@@ -143,7 +143,7 @@ public final class World {
                             if ((perceptMap[x][y + 1] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                                 score -= 1000;
                                 wumpusDeaths++;
-                                System.out.println("Death to wumpus.");
+                                System.out.println("Death to wumpus: arrows remaining = " + arrowCount);
                                 return DEATH_WUMPUS;
                             }
                             if ((perceptMap[x][y + 1] & DEATH_PIT) == DEATH_PIT) {
@@ -163,7 +163,7 @@ public final class World {
                             if ((perceptMap[x + 1][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                                 score -= 1000;
                                 wumpusDeaths++;
-                                System.out.println("Death to wumpus.");
+                                System.out.println("Death to wumpus: arrows remaining = " + arrowCount);
                                 return DEATH_WUMPUS;
                             }
                             if ((perceptMap[x + 1][y] & DEATH_PIT) == DEATH_PIT) {
@@ -182,7 +182,7 @@ public final class World {
                             if ((perceptMap[x][y - 1] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                                 score -= 1000;
                                 wumpusDeaths++;
-                                System.out.println("Death to wumpus.");
+                                System.out.println("Death to wumpus: arrows remaining = " + arrowCount);
                                 return DEATH_WUMPUS;
                             }
                             if ((perceptMap[x][y - 1] & DEATH_PIT) == DEATH_PIT) {
@@ -202,7 +202,7 @@ public final class World {
                             if ((perceptMap[x - 1][y] & DEATH_WUMPUS) == DEATH_WUMPUS) {
                                 score -= 1000;
                                 wumpusDeaths++;
-                                System.out.println("Death to wumpus.");
+                                System.out.println("Death to wumpus: arrows remaining = " + arrowCount);
                                 return DEATH_WUMPUS;
                             }
                             if ((perceptMap[x - 1][y] & DEATH_PIT) == DEATH_PIT) {
