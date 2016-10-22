@@ -65,7 +65,7 @@ public class Agent {
                     location.y += 1;
                 }
                 break;
-            case EAST:
+            case WEST:
                 if (location.x > 0) {
                     location.x -= 1;
                 }
@@ -75,7 +75,7 @@ public class Agent {
                     location.y--;
                 }
                 break;
-            case WEST:
+            case EAST:
                 if (location.x < World.size - 1) {
                     location.x++;
                 }
