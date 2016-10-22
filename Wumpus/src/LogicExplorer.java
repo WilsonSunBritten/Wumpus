@@ -50,13 +50,15 @@ public class LogicExplorer extends Agent {
         expandFrontier();
     }
 
-    public void addToFrontier(Location loc){
-        if(!searchedPositions[loc.x][loc.y]){
-        if(inFrontier(loc)){
-            removeFromFrontier(loc);
+    public void addToFrontier(Location loc) {
+        if (!searchedPositions[loc.x][loc.y]) {
+            if (inFrontier(loc)) {
+                removeFromFrontier(loc);
+            }
+            frontier.add(loc);
         }
-        frontier.add(loc);}
     }
+
     public void expandFrontier() {
         if (location.x > 0 && !searchedPositions[location.x - 1][location.y]) {
             addToFrontier(new Location(location.x - 1, location.y));
@@ -75,9 +77,10 @@ public class LogicExplorer extends Agent {
     private void run() {
 
         while (true) {
-            if(!notFirstMove){
-            percepts = world.getPercepts();
-            processPercepts();}
+            if (!notFirstMove) {
+                percepts = world.getPercepts();
+                processPercepts();
+            }
             decideNextAction();
         }
     }
@@ -94,8 +97,9 @@ public class LogicExplorer extends Agent {
                 moveHistory.add(MOVE);
                 System.out.println("Explorer Action: Moving");
                 percepts = (byte) world.action(MOVE);
-                if(getForward().x >=0  && getForward().x <World.size && getForward().y >=0 && getForward().y < World.size)
+                if (getForward().x >= 0 && getForward().x < World.size && getForward().y >= 0 && getForward().y < World.size) {
                     searchedPositions[getForward().x][getForward().y] = true;
+                }
                 processPercepts();
                 break;
             case TURN_LEFT:
@@ -136,19 +140,20 @@ public class LogicExplorer extends Agent {
     }
 
     private void processPercepts() {        //there might still be an issue with wumpus death since its a seperate percept
-        if ((percepts & DEATH_PIT) == DEATH_PIT || (percepts & DEATH_WUMPUS)!= 0) {
+        if ((percepts & DEATH_PIT) == DEATH_PIT || (percepts & DEATH_WUMPUS) != 0) {
             System.out.println("Explorer died after moving");
-            Clause clause = new Clause(new Fact("Wumpus",getForward().x,false,getForward().y,false,false,null,null));
-            clause.facts.add(new Fact("Pit",getForward().x,false,getForward().y,false,false,null,null));
+            Clause clause = new Clause(new Fact("Wumpus", getForward().x, false, getForward().y, false, false, null, null));
+            clause.facts.add(new Fact("Pit", getForward().x, false, getForward().y, false, false, null, null));
             kb.tell(clause);
-            if(kb.ask(new Fact("Wumpus",getForward().x,false,getForward().y,false,true,null,null)))
+            if (kb.ask(new Fact("Wumpus", getForward().x, false, getForward().y, false, true, null, null))) {
                 removeFromFrontier(getForward()); //we want to keep it in frontier so we can kill wumpus
+            }
             moveHistory.remove(moveHistory.size() - 1);//why die again?
         }
         if ((((percepts & BUMP) != BUMP) && (percepts & DEATH_PIT) != DEATH_PIT) && ((percepts & DEATH_WUMPUS) != DEATH_WUMPUS) && ((percepts & SCREAM) == 0)) {
             updateLocation();
-            kb.tell(new Fact("Wumpus",location.x,false,location.y,false,true,null,null));
-            kb.tell(new Fact("Pit",location.x,false,location.y,false,true,null,null));
+            kb.tell(new Fact("Wumpus", location.x, false, location.y, false, true, null, null));
+            kb.tell(new Fact("Pit", location.x, false, location.y, false, true, null, null));
             removeFromFrontier(location);
         }
         if ((percepts & BUMP) == BUMP) {       //theres soemthing funky here, hes bumping when there arent obsticales
@@ -156,59 +161,63 @@ public class LogicExplorer extends Agent {
             moveHistory.remove(moveHistory.size() - 1);//why bump again?
             removeFromFrontier(getForward());
             kb.tell(new Fact("Obsticle", getForward().x, false, getForward().y, false, false, null, null));
+        } else if ((percepts & DEATH_PIT) == 0 && (percepts & DEATH_WUMPUS) == 0) {//you if you bump than the only inputted percept should've been bump
+            if ((percepts & STENCH) != 0) {
+                kb.tell(new Fact("Stench", location.x, false, location.y, false, false, null, null));
+            } else {
+                kb.tell(new Fact("Stench", location.x, false, location.y, false, true, null, null));
+            }
+            if ((percepts & BREEZE) != 0) {
+                kb.tell(new Fact("Breeze", location.x, false, location.y, false, false, null, null));
+            } else {
+                kb.tell(new Fact("Breeze", location.x, false, location.y, false, true, null, null));
+            }
+            if ((percepts & SCREAM) != 0) {
+                kb.tell(new Fact("DeadWumpus", getForward().x, false, getForward().y, false, false, null, null));
+            }
         }
-        else if((percepts & DEATH_PIT) == 0 && (percepts & DEATH_WUMPUS)==0){//you if you bump than the only inputted percept should've been bump
-        if ((percepts & STENCH) != 0) {
-            kb.tell(new Fact("Stench", location.x, false, location.y, false, false, null, null));
-        } else {
-            kb.tell(new Fact("Stench", location.x, false, location.y, false, true, null, null));
-        }
-        if ((percepts & BREEZE) != 0) {
-            kb.tell(new Fact("Breeze", location.x, false, location.y, false, false, null, null));
-        } else {
-            kb.tell(new Fact("Breeze", location.x, false, location.y, false, true, null, null));
-        }
-        if ((percepts & SCREAM) != 0) {
-            kb.tell(new Fact("DeadWumpus", getForward().x, false, getForward().y, false, false, null, null));
-        }}
     }
 
-    private boolean inFrontier(Location loc){
-        for(Location location : frontier){
-            if(location.x == loc.x && location.y == loc.y)
+    private boolean inFrontier(Location loc) {
+        for (Location location : frontier) {
+            if (location.x == loc.x && location.y == loc.y) {
                 return true;
+            }
         }
         return false;
     }
+
     private void decideNextAction() {
         if ((percepts & GLITTER) != 0) {
             move(GRAB);
         }
-        
+
         if (frontier.isEmpty()) {
             move(World.QUIT);
         }
         if (getForward().x >= 0 && getForward().x < World.size && getForward().y >= 0 && getForward().y < World.size) {
             if (kb.ask(new Fact("Wumpus", getForward().x, false, getForward().y, false, true, null, null))) {
                 if (kb.ask(new Fact("Pit", getForward().x, false, getForward().y, false, true, null, null))) {
-                    if(inFrontier(getForward())){
+                    if (inFrontier(getForward())) {
                         move(MOVE);
                         removeFromFrontier(getForward());
                         return;
                     }
-                    
+
                 }
             }
         }
         if (safeSpaceInFrontier()) {
-            if(!adjacent(safeSpace))
+            if (!adjacent(safeSpace)) {
                 rhwTraversal(safeSpace);
+            }
             turnToSpace(safeSpace);
             move(MOVE);
             removeFromFrontier(safeSpace);
         } else if (arrowCount > 0 && wumpusInFrontier()) {
-            if(!adjacent(wumpusSpace))
+            if (!adjacent(wumpusSpace)) {
                 rhwTraversal(wumpusSpace);
+            }
             turnToSpace(wumpusSpace);
             move(SHOOT);
             move(MOVE);
@@ -218,8 +227,9 @@ public class LogicExplorer extends Agent {
             turnToSpace(frontier.get(frontier.size() - 1));
             //frontier.remove(frontier.size() - 1);
             move(MOVE);
-            if(!kb.ask(new Fact("Wumpus",getForward().x,false,getForward().y,false,false,null,null)))
+            if (!kb.ask(new Fact("Wumpus", getForward().x, false, getForward().y, false, false, null, null))) {
                 frontier.remove(frontier.size() - 1);
+            }
         }
     }
 
@@ -350,9 +360,9 @@ public class LogicExplorer extends Agent {
 
     private void rhwTraversal(Location location) {
          moveHistoryTraversal(location);
-        //if (!this.location.equals(location) && !adjacent(location)) {
-        //    goTo(location.x, location.y);
-        //}
+//        if (!this.location.equals(location) && !adjacent(location)) {
+//            goTo(location.x, location.y);
+//        }
         //go to location zach NOOOO!
     }
 
@@ -377,16 +387,16 @@ public class LogicExplorer extends Agent {
             if (kb.ask(new Fact("Wumpus", loc.x, false, loc.y, false, true, null, null))) {
                 if (kb.ask(new Fact("Pit", loc.x, false, loc.y, false, true, null, null))) {
                     //hopefully no obsticle is in frontier as it should be removed when found...
-                        safeSpace = new Location(loc.x, loc.y);
-                        return true;
-                    
+                    safeSpace = new Location(loc.x, loc.y);
+                    return true;
+
                 }
             }
             if (kb.ask(new Fact("Pit", loc.x, false, loc.y, false, false, null, null)) || kb.ask(new Fact("Obsticle", loc.x, false, loc.y, false, false, null, null))) {
                 //there is specifically a wumpus, pit, or obsticle at this position, don't navigate to it.
                 frontier.remove(i);
             } //else if (arrowCount == 0 && kb.ask(new Fact("Wumpus", loc.x, false, loc.y, false, false, null, null))) {
-                //frontier.remove(i);
+            //frontier.remove(i);
             //}  We want wumpus so we can kill it...
         }
         return false;
@@ -394,14 +404,20 @@ public class LogicExplorer extends Agent {
 
     private void goTo(int x, int y) {
 
+        System.out.println("Traversing to " + x + ", " + y);
         ArrayList<Location> path = new ArrayList<>();
         path = searchForPath(location.x, location.y, x, y, path);
+        path.add(new Location(x, y));
+        printPath(path);
         traversePath(path);
+        System.out.println("Done traversing to " + x + ", " + y);
+        System.out.println("Actual location: " + this.location.x + ", " + this.location.y);
     }
 
     private ArrayList<Location> searchForPath(int curX, int curY, int goalX, int goalY, ArrayList<Location> path) {
 
-        if (searchNext(curX, curY, goalX, goalY, path)) {
+        boolean[][] traversed = new boolean[World.size][World.size];
+        if (searchNext(curX, curY, goalX, goalY, path, traversed)) {
             return path;
         } else {
             System.out.println("Path finding error, no path found.");
@@ -409,23 +425,47 @@ public class LogicExplorer extends Agent {
         }
     }
 
-    private boolean searchNext(int curX, int curY, int goalX, int goalY, ArrayList<Location> path) {
+    private boolean searchNext(int curX, int curY, int goalX, int goalY, ArrayList<Location> path, boolean[][] traversed) {
 
-        path.add(new Location(curX, curY));
+        Location curLoc = new Location(curX, curY);
+        if (!this.location.equals(curLoc)) {
+            path.add(curLoc);
+        }
+        printPath(path);
+        traversed[curX][curY] = true;
         if (curX == goalX && curY == goalY) {
             return true;
         }
-        if (isValid(curX, curY + 1)) {  //north is valid
-            return searchNext(curX, curY + 1, goalX, goalY, path);
+        if (checkAdjacent(curX, curY, goalX, goalY)) {
+            return true;
         }
-        if (isValid(curX + 1, curY)) {  //east is valid
-            return searchNext(curX + 1, curY, goalX, goalY, path);
+        if (isValid(curX, curY + 1) && !traversed[curX][curY + 1]) {    //north is valid
+            return searchNext(curX, curY + 1, goalX, goalY, path, traversed);
         }
-        if (isValid(curX - 1, curY)) {  //west is valid
-            return searchNext(curX + 1, curY, goalX, goalY, path);
+        if (isValid(curX + 1, curY) && !traversed[curX + 1][curY]) {    //east is valid
+            return searchNext(curX + 1, curY, goalX, goalY, path, traversed);
+        }
+        if (isValid(curX, curY - 1) && !traversed[curX][curY - 1]) {    //south is valid
+            return searchNext(curX, curY - 1, goalX, goalY, path, traversed);
+        }
+        if (isValid(curX - 1, curY) && !traversed[curX - 1][curY]) {    //west is valid
+            return searchNext(curX - 1, curY, goalX, goalY, path, traversed);
         }
         path.remove(path.size() - 1);
         return false;
+    }
+
+    private void printPath(ArrayList<Location> path) {
+        if (!path.isEmpty()) {
+            System.out.print("Path: ");
+            for (Location l : path) {
+                System.out.print("[" + l.x + ", " + l.y + "] ");
+            }
+            System.out.println();
+        } else {
+            System.out.println("Path: [ ]");
+        }
+
     }
 
     private boolean isValid(int x, int y) {
@@ -435,6 +475,21 @@ public class LogicExplorer extends Agent {
         } else {
             return false;
         }
+    }
+
+    private boolean checkAdjacent(int curX, int curY, int goalX, int goalY) {
+
+        if (curX == goalX) {
+            if (Math.abs(curY - goalY) == 1) {
+                return true;
+            }
+        }
+        if (curY == goalY) {
+            if (Math.abs(curX - goalX) == 1) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void traversePath(ArrayList<Location> path) {
