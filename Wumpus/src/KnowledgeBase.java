@@ -22,6 +22,9 @@ public class KnowledgeBase {
             }
         }
         if(clause.facts.size() == 1){
+            if(factInClauses(clause.facts.get(0))){
+                return;
+            }
             System.out.println("Added to kb Clause: ");
             System.out.print("\t");
             Clause.printClause(clause);
