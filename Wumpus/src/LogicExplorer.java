@@ -306,21 +306,7 @@ public class LogicExplorer extends Agent {
             }
         }
     }
-
-//    private Location neighborSafeSpace(Location location) {
-//        Location loc = null;
-//        if (location.x > 0 && searchedPositions[location.x - 1][location.y]) {
-//            loc = new Location(location.x - 1, location.y);
-//
-//        } else if (location.x < World.size - 1 && searchedPositions[location.x + 1][location.y]) {
-//            loc = new Location(location.x + 1, location.y);
-//        } else if (location.y > 0 && searchedPositions[location.x][location.y - 1]) {
-//            loc = new Location(location.x, location.y - 1);
-//        } else if (location.y < World.size - 1 && searchedPositions[location.x][location.y + 1]) {
-//            loc = new Location(location.x, location.y + 1);
-//        }
-//        return loc;
-//    }
+    
     private boolean wumpusInFrontier() {
         for (Location loc : frontier) {
             if (kb.ask(new Fact("Wumpus", loc.x, false, loc.y, false, false, null, null))) {
@@ -359,12 +345,12 @@ public class LogicExplorer extends Agent {
             }
         }
     }
+
     private void traversal(Location location) {
-   //      moveHistoryTraversal(location);
-        //if (!this.location.equals(location) && !adjacent(location)) {
-            goTo(location);
-        //}
+      //moveHistoryTraversal(location);
+        goTo(location);
     }
+
     private boolean safeSpaceInFrontier() {
         for (int i = frontier.size() - 1; i >= 0; i--) {
             Location loc = frontier.get(i);
@@ -393,13 +379,12 @@ public class LogicExplorer extends Agent {
             System.out.println("Traversing to " + target.x + ", " + target.y);
             ArrayList<Location> path = new ArrayList<>();
             path = searchForPath(location.x, location.y, target.x, target.y, path);
-            //path.add(new Location(target.x, y));
             printPath(path);
             traversePath(path);
             if (adjacent(target)) {
-               System.out.println("Done traversing to " + target.x + ", " + target.y); 
+                System.out.println("Done traversing to " + target.x + ", " + target.y);
             } else {
-                System.out.println("Failed to reach " + target.x + ", " + target.y); 
+                System.out.println("Failed to reach " + target.x + ", " + target.y);
             }
         }
     }
@@ -409,13 +394,6 @@ public class LogicExplorer extends Agent {
         boolean[][] traversed = new boolean[World.size][World.size];
         searchNext(curX, curY, goalX, goalY, path, traversed);
         return path;
-//        if (searchNext(curX, curY, goalX, goalY, path, traversed)) {
-//            return path;
-//        } else {
-//            System.out.println("Path finding error, no path found.");
-//            path.removeAll(path);
-//            return path;
-//        }
     }
 
     private boolean searchNext(int curX, int curY, int goalX, int goalY, ArrayList<Location> path, boolean[][] traversed) {
@@ -426,9 +404,6 @@ public class LogicExplorer extends Agent {
         }
         printPath(path);
         traversed[curX][curY] = true;
-//        if (curX == goalX && curY == goalY) {
-//            return true;
-//        }
         boolean done = false;
         if (checkAdjacent(curX, curY, goalX, goalY)) {
             return true;
@@ -445,12 +420,10 @@ public class LogicExplorer extends Agent {
         if (!done && isValid(curX - 1, curY) && !traversed[curX - 1][curY]) {    //west is valid
             done = searchNext(curX - 1, curY, goalX, goalY, path, traversed);
         }
-       // System.out.println("path length: " + path.size());
-        //if (!path.isEmpty()) {
         if (!done) {
             path.remove(path.size() - 1);
         }
-        traversed[curX][curY] = false;
+        //traversed[curX][curY] = false;
         return done;
     }
 
@@ -473,8 +446,6 @@ public class LogicExplorer extends Agent {
             boolean wumpus = !kb.ask(new Fact("Wumpus", x, false, y, false, true, null, null));
             boolean pit = !kb.ask(new Fact("Pit", x, false, y, false, true, null, null));
             boolean bump = kb.ask(new Fact("Obsticle", x, false, y, false, false, null, null));
-           // boolean bump = kb.ask(new Fact("Obsticle", x, false, y, false, false, null, null))
-            //System.out.println("Pit: " + pit + " Wumpus: " + wumpus + " Obsticle: " + bump);
             return searchedPositions[x][y] && !bump && !pit && !wumpus;
         } else {
             return false;
@@ -487,8 +458,7 @@ public class LogicExplorer extends Agent {
             if (Math.abs(curY - goalY) == 1) {
                 return true;
             }
-        }
-        else if (curY == goalY) {
+        } else if (curY == goalY) {
             if (Math.abs(curX - goalX) == 1) {
                 return true;
             }
@@ -502,8 +472,7 @@ public class LogicExplorer extends Agent {
             if (Math.abs(location.y - this.location.y) == 1) {
                 return true;
             }
-        }
-        else if (location.y == this.location.y) {
+        } else if (location.y == this.location.y) {
             if (Math.abs(location.x - this.location.x) == 1) {
                 return true;
             }
