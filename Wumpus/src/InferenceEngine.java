@@ -13,12 +13,23 @@ public class InferenceEngine {
         Clause clause = new Clause();
         //Step 1: negate input fact
         fact.not = !fact.not;
+        
         clause.facts.add(fact);
         ArrayList<Clause> tempClone = new ArrayList<>(kb.getClauses());
         ArrayList<Clause> kbClausesClone = new ArrayList<>();
         for (Clause tempClause : tempClone) {
             kbClausesClone.add(new Clause(tempClause));
         }
+        
+        //shortcut, check for direct contradiction to original fact
+        for(Clause factClause : kbClausesClone){
+            if(factClause.facts.size() == 1){
+                Fact holder = factClause.facts.get(0);
+                if(holder.predicate == fact.predicate && holder.not != fact.not && Unifier.equalWithSubs(holder, fact, new ArrayList<Substitute>()))
+                    return true;
+            }
+        }
+        
         boolean keepGoing = true;
         //Step 2: Run negated facts against all known facts
         while (!kbClausesClone.isEmpty()) {

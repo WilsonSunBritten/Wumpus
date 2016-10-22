@@ -189,6 +189,10 @@ public class KnowledgeBase {
         
         return inferenceEngine.follows(fact);
     }
+    
+    public void tell(Clause clause){
+        addToClauses(clause);
+    }
 
     public void tell(Fact fact) {
         //If told DeadWumpus delete the wumpus entry at that position and add !Wumpus(x,y)

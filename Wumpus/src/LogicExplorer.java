@@ -19,6 +19,8 @@ public class LogicExplorer extends Agent {
         kb.initializeRules();
         this.searchedPositions = new boolean[World.size][World.size];
         searchedPositions[location.x][location.y] = true;
+        percepts = world.getPercepts();
+        processPercepts();
         //initializeFrontier();
         run();
     }
@@ -92,8 +94,9 @@ public class LogicExplorer extends Agent {
                 moveHistory.add(MOVE);
                 System.out.println("Explorer Action: Moving");
                 percepts = (byte) world.action(MOVE);
-                searchedPositions[getForward().x][getForward().y] = true;
-                    processPercepts();
+                if(getForward().x >=0  && getForward().x <World.size && getForward().y >=0 && getForward().y < World.size)
+                    searchedPositions[getForward().x][getForward().y] = true;
+                processPercepts();
                 break;
             case TURN_LEFT:
                 moveHistory.add(TURN_LEFT);
@@ -135,10 +138,14 @@ public class LogicExplorer extends Agent {
     private void processPercepts() {        //there might still be an issue with wumpus death since its a seperate percept
         if ((percepts & DEATH_PIT) == DEATH_PIT || (percepts & DEATH_WUMPUS)!= 0) {
             System.out.println("Explorer died after moving");
-            removeFromFrontier(getForward());
+            Clause clause = new Clause(new Fact("Wumpus",getForward().x,false,getForward().y,false,false,null,null));
+            clause.facts.add(new Fact("Pit",getForward().x,false,getForward().y,false,false,null,null));
+            kb.tell(clause);
+            if(kb.ask(new Fact("Wumpus",getForward().x,false,getForward().y,false,true,null,null)))
+                removeFromFrontier(getForward()); //we want to keep it in frontier so we can kill wumpus
             moveHistory.remove(moveHistory.size() - 1);//why die again?
         }
-        if ((((percepts & BUMP) != BUMP) && (percepts & DEATH_PIT) != DEATH_PIT) && ((percepts & DEATH_WUMPUS) != DEATH_WUMPUS)) {
+        if ((((percepts & BUMP) != BUMP) && (percepts & DEATH_PIT) != DEATH_PIT) && ((percepts & DEATH_WUMPUS) != DEATH_WUMPUS) && ((percepts & SCREAM) == 0)) {
             updateLocation();
             kb.tell(new Fact("Wumpus",location.x,false,location.y,false,true,null,null));
             kb.tell(new Fact("Pit",location.x,false,location.y,false,true,null,null));
@@ -209,8 +216,10 @@ public class LogicExplorer extends Agent {
         } else if (!frontier.isEmpty()) {
             rhwTraversal(frontier.get(frontier.size() - 1));
             turnToSpace(frontier.get(frontier.size() - 1));
-            frontier.remove(frontier.size() - 1);
+            //frontier.remove(frontier.size() - 1);
             move(MOVE);
+            if(!kb.ask(new Fact("Wumpus",getForward().x,false,getForward().y,false,false,null,null)))
+                frontier.remove(frontier.size() - 1);
         }
     }
 
@@ -376,9 +385,9 @@ public class LogicExplorer extends Agent {
             if (kb.ask(new Fact("Pit", loc.x, false, loc.y, false, false, null, null)) || kb.ask(new Fact("Obsticle", loc.x, false, loc.y, false, false, null, null))) {
                 //there is specifically a wumpus, pit, or obsticle at this position, don't navigate to it.
                 frontier.remove(i);
-            } else if (arrowCount == 0 && kb.ask(new Fact("Wumpus", loc.x, false, loc.y, false, false, null, null))) {
-                frontier.remove(i);
-            }
+            } //else if (arrowCount == 0 && kb.ask(new Fact("Wumpus", loc.x, false, loc.y, false, false, null, null))) {
+                //frontier.remove(i);
+            //}  We want wumpus so we can kill it...
         }
         return false;
     }

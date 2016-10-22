@@ -242,8 +242,6 @@ public final class World {
                         for (int i = y+1; i < perceptMap.length; i++) {
                             if ((perceptMap[x][i] & DEATH_WUMPUS) != 0) {       //hits Wumpus
                                 removeWumpus(x, i);
-                                score += 10;
-                                killedWumpus++;
                                 return SCREAM;
                             } else if ((perceptMap[x][i] & BUMP) != 0) { //hits Obstacle
                                 return perceptMap[x][y];
@@ -322,5 +320,8 @@ public final class World {
                 perceptMap[x][y + 1] = (byte) (perceptMap[x][y + 1] & ~STENCH);
             }
         }
+        
+        killedWumpus++;
+        score+=10;
     }
 }
