@@ -446,9 +446,12 @@ public class LogicExplorer extends Agent {
             done = searchNext(curX - 1, curY, goalX, goalY, path, traversed);
         }
        // System.out.println("path length: " + path.size());
-//        if (!path.isEmpty()) {
-//            path.remove(path.size() - 1);
-//        }
+        //if (!path.isEmpty()) {
+        if (!done) {
+            path.remove(path.size() - 1);
+        }
+            
+       // }
         
         //traversed[curX][curY] = false;
         return done;
