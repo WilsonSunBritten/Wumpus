@@ -179,10 +179,6 @@ public class KnowledgeBase {
         // Fact notObstacle = new Fact("Obstacle",0,true,1,true,true,null,null);
         notWumpusOrNotPit.facts.add(notWumpus);
         notWumpusOrNotPit.facts.add(notPit);
-<<<<<<< HEAD
-=======
-        // notWumpusOrNotPit.facts.add(notObstacle);
->>>>>>> 8f81eb5be1bf47b1a7850c4163f55411047630ed
         rules.add(notWumpusOrNotPit);
        // !Wumpus(x,y) v !Obstacle(x,y)
         Clause notWumpusOrNotObstacle = new Clause();
