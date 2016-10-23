@@ -20,15 +20,15 @@ public class Driver {
 
     public static void makeGame() throws IOException {
 
-        boolean newBoard = false;
-        boolean newStart = false;
+        boolean newBoard = true;
+        boolean newStart = true;
         WumpusGame game;
         if (newBoard) {
             BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in));
             int[] prob = new int[3];
             System.out.println("Size of board: ");
 
-            int size = 10;//Integer.parseInt(dataIn.readLine());
+            int size = 5;//Integer.parseInt(dataIn.readLine());
             System.out.print("% chance of generating pit: ");
             prob[0] = 5;// Integer.parseInt(dataIn.readLine());
             System.out.println();

@@ -25,7 +25,7 @@ public class ReactiveExplorer extends Agent {
     private void run() {
         
         int i = 0;
-        while (i < 10) {
+        while (i < 1000) {
             move();
             i++;
         }
@@ -48,21 +48,25 @@ public class ReactiveExplorer extends Agent {
             switch (rand) {
                 case 0:     //try to go forward
                     percepts = world.action(MOVE);
+                    processPercepts();
                     break;
                 case 1:     //try to go left
                     turnLeft();
                     percepts = world.action(MOVE);
+                    processPercepts();
                     turnRight();
                     break;
                 case 2:     //try go right
                     turnRight();
                     percepts = world.action(MOVE);
+                    processPercepts();
                     turnLeft();
                     break;
                 default:    //turn around
                     turnRight();
                     turnRight();
                     percepts = world.action(MOVE);
+                    processPercepts();
                     break;
             }
         } else {    //if forward is safe, go forward
@@ -113,6 +117,20 @@ public class ReactiveExplorer extends Agent {
                         break;
                 }
             }
+        }
+    }
+    
+    private void processPercepts() {
+        
+        if ((percepts & BUMP) == BUMP) {
+            return;
+        }
+        if ((percepts & DEATH_WUMPUS) == DEATH_WUMPUS) {
+            killWumpus();
+        }
+        if ((percepts & DEATH_PIT) == DEATH_PIT) {
+            Location forward = getForward();
+            safeMap[forward.x][forward.y] = false;
         }
     }
 
