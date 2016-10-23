@@ -224,6 +224,7 @@ public final class World {
                             System.out.println("(World) thinks location after move: " + x + ", " + y);
                             return perceptMap[x][y];
                         } else {
+                            System.out.println("Bumped");
                             System.out.println("(World) thinks location after move: " + x + ", " + y);
                             return BUMP;
                         }

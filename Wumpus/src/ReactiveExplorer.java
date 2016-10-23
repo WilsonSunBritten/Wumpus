@@ -25,7 +25,7 @@ public class ReactiveExplorer extends Agent {
     private void run() {
         
         int i = 0;
-        while (i < 500) {
+        while (i < 10) {
             move();
             i++;
         }
@@ -37,6 +37,8 @@ public class ReactiveExplorer extends Agent {
         if ((percepts & GLITTER) == GLITTER) {
             world.action(GRAB);
         }
+        
+        System.out.println("Making new move");
 
         if ((percepts & STENCH) != STENCH && (percepts & BREEZE) != BREEZE) {       //all adjacent spaces are safe
             updateSafe();
@@ -46,27 +48,32 @@ public class ReactiveExplorer extends Agent {
             switch (rand) {
                 case 0:     //try to go forward
                     percepts = world.action(MOVE);
-                    if ((percepts & BUMP) != BUMP) {
+                    if ((percepts & BUMP) == BUMP) {
                         return;
                     }
+                    break;
                 case 1:     //try to go left
                     turnLeft();
                     percepts = world.action(MOVE);
-                    if ((percepts & BUMP) != BUMP) {
+                    if ((percepts & BUMP) == BUMP) {
+                        System.out.println("Didn't reset position");
                         return;
                     }
                     turnRight();
+                    break;
                 case 2:     //try go right
                     turnRight();
                     percepts = world.action(MOVE);
-                    if ((percepts & BUMP) != BUMP) {
+                    if ((percepts & BUMP) == BUMP) {
                         return;
                     }
                     turnLeft();
+                    break;
                 default:    //turn around
                     turnRight();
                     turnRight();
                     percepts = world.action(MOVE);
+                    break;
             }
         } else {    //if forward is safe, go forward
             
@@ -92,6 +99,7 @@ public class ReactiveExplorer extends Agent {
                         if ((percepts & BUMP) != BUMP) {
                             return;
                         }
+                        break;
                     case 1:
                         turnLeft();
                         percepts = world.action(MOVE);
@@ -99,6 +107,7 @@ public class ReactiveExplorer extends Agent {
                             return;
                         }
                         turnRight();
+                        break;
                     case 2:
                         turnRight();
                         percepts = world.action(MOVE);
@@ -106,10 +115,12 @@ public class ReactiveExplorer extends Agent {
                             return;
                         }
                         turnLeft();
+                        break;
                     default:
                         turnRight();
                         turnRight();
                         percepts = world.action(MOVE);
+                        break;
                 }
             }
         }
