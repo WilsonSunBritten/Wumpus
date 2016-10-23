@@ -231,10 +231,10 @@ public class LogicExplorer extends Agent {
             //frontier.remove(frontier.size() - 1);
             move(MOVE);
             //if(!kb.ask(new Fact("Wumpus",getForward().x,false,getForward().y,false,false,null,null)))
-                removeFromFrontier(goalLoc);
+            removeFromFrontier(goalLoc);
             if (kb.ask(new Fact("Wumpus", getForward().x, false, getForward().y, false, false, null, null))) {
-                addToFrontier(getForward());//since there is definitely a wumpus forward, put in frontier so we can kill it later maybe.
-            }
+                frontier.add(getForward());//since there is definitely a wumpus forward, put in frontier so we can kill it later maybe.
+            }//we add straight to frontier even if it was searched in this case, that's why it's not addToFrontier
         }
     }
 
@@ -423,7 +423,8 @@ public class LogicExplorer extends Agent {
             done = searchNext(curX - 1, curY, goalX, goalY, path, traversed);
         }
         if (!done) {
-            path.remove(path.size() - 1);
+            if(path.size() > 0)
+                path.remove(path.size() - 1);
             printPath(path);
         }
         //traversed[curX][curY] = false;

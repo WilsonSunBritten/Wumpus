@@ -123,8 +123,8 @@ public class InferenceEngine {
                     }
 
                     clause.facts.remove(ruleFact);
-                  //  System.out.println("Inferred:");
-                  //  Clause.printClause(clause);
+                    System.out.println("Inferred:");
+                    Clause.printClause(clause);
                     kb.addToClauses(clause);
                     break;
                 }
