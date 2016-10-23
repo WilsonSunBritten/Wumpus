@@ -16,13 +16,12 @@ public final class World {
     private Agent explorer;
     public World(String fileName) {
         importMap(fileName);
-        for (int i = 0; i < perceptMap.length; i++) {
+        for (byte[] cell : perceptMap) {
             for (int j = 0; j < perceptMap.length; j++) {
-                if ((perceptMap[i][j] & DEATH_WUMPUS) != 0) {
+                if ((cell[j] & DEATH_WUMPUS) != 0) {
                     arrowCount++;
                 }
             }
-
         }
         System.out.println("Starting world:");
         printWorld();
@@ -37,15 +36,11 @@ public final class World {
                 explorer = new ReactiveExplorer(this, arrowCount, x, y, direction);
                 break;
         }
-
     }
 
     public void importMap(String fileName) {
+
         try {
-
-            FileReader in1 = new FileReader(fileName);
-            BufferedReader reader1 = new BufferedReader(in1);
-
             FileReader in = new FileReader(fileName);
             BufferedReader reader = new BufferedReader(in);
             String next = reader.readLine();
@@ -56,7 +51,7 @@ public final class World {
             y = Integer.parseInt(next.substring(0, next.indexOf(" ")));
             perceptMap = new byte[size][size];
             int i = 0;
-            while ((next = reader.readLine()) != null) {//((Integer) reader.read()).toString()).equals("-1")) {
+            while ((next = reader.readLine()) != null) {
                 int j = 0;
                 while (next.contains(" ") && !next.equals(" ")) {
                     perceptMap[i][j] = (byte) Integer.parseInt(next.substring(0, next.indexOf(" ")));
@@ -80,6 +75,7 @@ public final class World {
     }
     
     public void printStats() {
+
         System.out.println("Number of Actions: " + numMoves);
         System.out.println("Number of major decisions: " + majorDecisions);
         System.out.println("Final score: " + score);
@@ -101,7 +97,7 @@ public final class World {
                     } else if ((perceptMap[j][i] & DEATH_PIT) == DEATH_PIT) {
                         System.out.print("P  ");
                     } else if ((perceptMap[j][i] & GLITTER) == GLITTER) {
-                        System.out.print("G  ");
+                        System.out.print("\u001B[32m" + "G  " + "\u001B[0m");
                     } else if ((perceptMap[j][i] & BUMP) == BUMP) {
                         System.out.print("B  ");
                     } else if (perceptMap[j][i] > 9) {
@@ -117,14 +113,9 @@ public final class World {
     }
 
     public byte action(int action) {
-        byte percepts = action(action, true);
-        printWorld();
-        return percepts;
-    }
 
-    public byte action(int action, boolean thing) {
-        System.out.println("Action: " + action);
-        System.out.println("");
+        printWorld();
+        System.out.println("Action: " + action + "\n");
         numMoves++;
         switch (action) {
             case GRAB:
@@ -138,7 +129,6 @@ public final class World {
                 } else {
                     System.out.println("Error: Gold not found");
                 }
-                break;
             case MOVE:
                 score--;
                 switch (direction) {
@@ -254,9 +244,9 @@ public final class World {
                 return perceptMap[x][y];
             case SHOOT:
                 //shoot logic
-                if (arrowCount == 0) {
+                if (arrowCount <= 0) {
                     System.out.println("Error: Out of arrows");
-                    return -1;      //out of arrows, which shouldn't be possible
+                    return -1;
                 }
                 arrowCount--;
                 score -= 10;
@@ -266,7 +256,7 @@ public final class World {
                             if ((perceptMap[x][i] & DEATH_WUMPUS) != 0) {       //hits Wumpus
                                 removeWumpus(x, i);
                                 return SCREAM;
-                            } else if ((perceptMap[x][i] & BUMP) != 0) { //hits Obstacle
+                            } else if ((perceptMap[x][i] & BUMP) != 0) {        //hits Obstacle
                                 return perceptMap[x][y];
                             }
                         }
@@ -277,7 +267,7 @@ public final class World {
                             if ((perceptMap[i][y] & DEATH_WUMPUS) != 0) {       //hits Wumpus
                                 removeWumpus(i, y);
                                 return SCREAM;
-                            } else if ((perceptMap[i][y] & BUMP) != 0) { //hits Obstacle
+                            } else if ((perceptMap[i][y] & BUMP) != 0) {        //hits Obstacle
                                 return perceptMap[x][y];
                             }
                         }
@@ -288,7 +278,7 @@ public final class World {
                             if ((perceptMap[x][i] & DEATH_WUMPUS) != 0) {       //hits Wumpus
                                 removeWumpus(x, i);
                                 return SCREAM;
-                            } else if ((perceptMap[x][i] & BUMP) != 0) { //hits Obstacle
+                            } else if ((perceptMap[x][i] & BUMP) != 0) {        //hits Obstacle
                                 return perceptMap[x][y];
                             }
                         }
@@ -299,7 +289,7 @@ public final class World {
                             if ((perceptMap[i][y] & DEATH_WUMPUS) != 0) {       //hits Wumpus
                                 removeWumpus(i, y);
                                 return SCREAM;
-                            } else if ((perceptMap[i][y] & BUMP) != 0) { //hits Obstacle
+                            } else if ((perceptMap[i][y] & BUMP) != 0) {        //hits Obstacle
                                 return perceptMap[x][y];
                             }
                         }
@@ -348,20 +338,23 @@ public final class World {
         killedWumpus++;
         score += 10;
     }
-    
-    public void remakeStenches(){
+
+    public void remakeStenches() {
         for (int i = 0; i < perceptMap.length; i++) {
             for (int j = 0; j < perceptMap.length; j++) {
-                if((perceptMap[i][j] & DEATH_WUMPUS) != 0){
-                    if(i>0){
-                        perceptMap[i-1][j] |= STENCH;
+                if ((perceptMap[i][j] & DEATH_WUMPUS) != 0) {
+                    if (i > 0) {
+                        perceptMap[i - 1][j] |= STENCH;
                     }
-                    if(i < size-1)
-                        perceptMap[i+1][j] |= STENCH;
-                    if(j > 0)
-                        perceptMap[i][j-1] |= STENCH;
-                    if(j < size-1)
-                        perceptMap[i][j+1] |= STENCH;
+                    if (i < size - 1) {
+                        perceptMap[i + 1][j] |= STENCH;
+                    }
+                    if (j > 0) {
+                        perceptMap[i][j - 1] |= STENCH;
+                    }
+                    if (j < size - 1) {
+                        perceptMap[i][j + 1] |= STENCH;
+                    }
                 }
             }
         }

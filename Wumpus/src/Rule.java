@@ -3,31 +3,26 @@ import java.util.ArrayList;
 
 public class Rule {
 
-    public static final int AND = 1;
-    public static final int OR = 2;
-    public static final int IMPLIES = 3;
-    public static final int IFF = 4;
+    private static final int AND = 1, OR = 2, IMPLIES = 3, IFF = 4;
 
-    ArrayList<Quantifier> quantifiers = new ArrayList<>();
-    boolean negated;
-    //boolean leftRuleNot;
-    //boolean rightRuleNot;
-    Fact fact;
-    Rule leftRule;
-    Rule rightRule;
-    boolean justFact = false;
-    int connector;
+    private final ArrayList<Quantifier> quantifiers = new ArrayList<>();
+    private Fact fact;
+    private Rule leftRule, rightRule;
+    private boolean justFact = false;
+    private int connector;
 
     public Rule() {
-        
+
     }
 
     public Rule(Fact fact) {
+
         this.fact = fact;
         justFact = true;
     }
 
     public void printRule() {
+
         if (justFact) {
             fact.printFact();
             return;

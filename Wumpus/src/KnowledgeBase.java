@@ -176,9 +176,13 @@ public class KnowledgeBase {
         Clause notWumpusOrNotPit = new Clause();
         Fact notWumpus = new Fact("Wumpus", 0, true, 1, true, true, null, null);
         Fact notPit = new Fact("Pit", 0, true, 1, true, true, null, null);
-       // Fact notObstacle = new Fact("Obstacle",0,true,1,true,true,null,null);
+        // Fact notObstacle = new Fact("Obstacle",0,true,1,true,true,null,null);
         notWumpusOrNotPit.facts.add(notWumpus);
         notWumpusOrNotPit.facts.add(notPit);
+<<<<<<< HEAD
+=======
+        // notWumpusOrNotPit.facts.add(notObstacle);
+>>>>>>> 8f81eb5be1bf47b1a7850c4163f55411047630ed
         rules.add(notWumpusOrNotPit);
        // !Wumpus(x,y) v !Obstacle(x,y)
         Clause notWumpusOrNotObstacle = new Clause();
@@ -197,16 +201,16 @@ public class KnowledgeBase {
 
     public boolean ask(Fact fact) {
 
-        //if question follows from known facts ==> return true
-        //else return false
         return inferenceEngine.follows(fact);
     }
 
     public void tell(Clause clause) {
+
         addToClauses(clause);
     }
 
     public void tell(Fact fact) {
+
         //If told DeadWumpus delete the wumpus entry at that position and add !Wumpus(x,y)
         if (fact.predicate.equals("DeadWumpus")) {
             removeWumpusAndStench(fact);
@@ -221,6 +225,7 @@ public class KnowledgeBase {
     }
 
     private void removeWumpusAndStench(Fact fact) {
+
         for (int i = clauses.size() - 1; i >= 0; i--) {
             if (clauses.get(i).facts.size() == 1) {
                 Fact toRemove = clauses.get(i).facts.get(0);
@@ -250,6 +255,7 @@ public class KnowledgeBase {
     }
 
     private boolean factInClauses(Fact fact) {
+
         for (Clause clause : clauses) {
             if (clause.facts.size() == 1) {
                 Fact clauseFact = clause.facts.get(0);

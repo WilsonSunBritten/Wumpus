@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /*
     A clause contains a list of predicates
  */
-public class Clause extends Fact {
+public class Clause {
 
     ArrayList<Fact> facts = new ArrayList<>();
 
@@ -18,6 +18,7 @@ public class Clause extends Fact {
     }
 
     public Clause(Fact fact) {
+        
         facts.add(fact);
     }
     
@@ -28,21 +29,5 @@ public class Clause extends Fact {
                 System.out.print(" v ");
         }
         System.out.println("");
-    }
-
-    @Override
-    public boolean contains(Variable var) {
-
-        for (Fact f : facts) {
-            if (f.contains(var) || f.equals(var)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public ArrayList getArgs() {
-        return facts;
     }
 }

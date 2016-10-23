@@ -6,10 +6,12 @@ public class InferenceEngine {
     KnowledgeBase kb;
 
     public InferenceEngine(KnowledgeBase kb) {
+
         this.kb = kb;
     }
 
     public boolean follows(Fact fact) {
+
         Clause clause = new Clause();
         //Step 1: negate input fact
         fact.not = !fact.not;
@@ -31,7 +33,7 @@ public class InferenceEngine {
             }
         }
 
-        boolean keepGoing = true;
+        boolean keepGoing;
         //Step 2: Run negated facts against all known facts
         while (!kbClausesClone.isEmpty()) {
             keepGoing = true;
@@ -83,6 +85,7 @@ public class InferenceEngine {
     }
 
     public void infer(Fact factStart) {
+
         //look at each fact in each clause in kb.rules, if predicates match, and negations are opposite
         Fact fact = new Fact(factStart);
         ArrayList<Clause> tempClone = new ArrayList<>(kb.rules);
@@ -174,8 +177,8 @@ public class InferenceEngine {
                         }
                         if (Unifier.equalWithSubs(fact, ruleFact, substitutions)) {
                             clause.facts.remove(fact);
-                   //         System.out.println("Inferred:");
-                      //      Clause.printClause(clause);
+                            //System.out.println("Inferred:");
+                            //Clause.printClause(clause);
                             kb.addToClauses(clause);
                             return;//the smaller clause will be inferred against again, no need to keep trying rules immediately.
                         }
