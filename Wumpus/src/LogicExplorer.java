@@ -118,7 +118,8 @@ public class LogicExplorer extends Agent {
                 System.out.println("Explorer Action: shooting");
                 arrowCount--;
                 percepts = (byte) world.action(SHOOT);
-                processPercepts();
+                if((percepts & SCREAM) != 0)
+                    processPercepts();
                 break;
             case QUIT:
                 System.out.println("no possible solution");
@@ -155,6 +156,7 @@ public class LogicExplorer extends Agent {
             updateLocation();
             kb.tell(new Fact("Wumpus", location.x, false, location.y, false, true, null, null));
             kb.tell(new Fact("Pit", location.x, false, location.y, false, true, null, null));
+            kb.tell(new Fact("Obstacle", location.x, false, location.y, false, true, null, null));
             removeFromFrontier(location);
         }
         if ((percepts & BUMP) == BUMP) {       //theres soemthing funky here, hes bumping when there arent obsticales
@@ -416,7 +418,7 @@ public class LogicExplorer extends Agent {
         if (x >= 0 && y >= 0 && x < World.size && y < World.size) {
             boolean wumpus = kb.ask(new Fact("Wumpus", x, false, y, false, true, null, null));
             boolean pit = kb.ask(new Fact("Pit", x, false, y, false, true, null, null));
-            boolean bump = !kb.ask(new Fact("Obstacle", x, false, y, false, true, null, null));
+            boolean bump = kb.ask(new Fact("Obstacle", x, false, y, false, true, null, null));
             return searchedPositions[x][y] && bump && pit && wumpus;
         } else {
             return false;

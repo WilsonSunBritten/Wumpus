@@ -172,15 +172,27 @@ public class KnowledgeBase {
         rules.add(new Clause(new Fact("Pit", World.size, false, 1, true, true, null, null)));
 
         //Wumpus(x,y)=>!Pit(x,y)
-        //!Wumpus(x,y) v !Pit(x,y) v !Obstacle
+        //!Wumpus(x,y) v !Pit(x,y)
         Clause notWumpusOrNotPit = new Clause();
         Fact notWumpus = new Fact("Wumpus", 0, true, 1, true, true, null, null);
         Fact notPit = new Fact("Pit", 0, true, 1, true, true, null, null);
        // Fact notObstacle = new Fact("Obstacle",0,true,1,true,true,null,null);
         notWumpusOrNotPit.facts.add(notWumpus);
         notWumpusOrNotPit.facts.add(notPit);
-       // notWumpusOrNotPit.facts.add(notObstacle);
         rules.add(notWumpusOrNotPit);
+       // !Wumpus(x,y) v !Obstacle(x,y)
+        Clause notWumpusOrNotObstacle = new Clause();
+        Fact notObstacle = new Fact("Obstacle",0,true,1,true,true,null,null);
+        notWumpusOrNotObstacle.facts.add(new Fact(notWumpus));
+        notWumpusOrNotObstacle.facts.add(notObstacle);
+        
+        rules.add(notWumpusOrNotObstacle);
+        //!Pit v !Obstacle
+        Clause notPitOrNotObstacle = new Clause();
+        notPitOrNotObstacle.facts.add(new Fact(notObstacle));
+        notPitOrNotObstacle.facts.add(new Fact(notPit));
+        rules.add(notPitOrNotObstacle);
+        
     }
 
     public boolean ask(Fact fact) {
