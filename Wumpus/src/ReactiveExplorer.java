@@ -4,8 +4,7 @@ import java.util.ArrayList;
 public class ReactiveExplorer extends Agent {
 
     private Location prevLocation;
-    private State curState, prevState;
-    private boolean safeMap[][];
+    private State safeMap[][];
     private static final int FORWARD = 0, LEFT = 1, BACK = 2, RIGHT = 3;
 
     public ReactiveExplorer(World world, int arrows, int x, int y, int direction) {
@@ -13,12 +12,8 @@ public class ReactiveExplorer extends Agent {
         super(world, arrows, x, y, direction);
         prevLocation = location;
         percepts = world.getPercepts();
-        if (((percepts & STENCH) != STENCH) && ((percepts & BREEZE) != BREEZE)) {
-            curState = State.SAFE;
-            prevState = State.SAFE;
-        }
-        safeMap = new boolean[World.size][World.size];
-        safeMap[location.x][location.y] = true;
+        safeMap = new State[World.size][World.size];
+        safeMap[location.x][location.y] = State.SAFE;
         run();
     }
 
@@ -116,14 +111,14 @@ public class ReactiveExplorer extends Agent {
         if ((percepts & BUMP) == BUMP) {
             Location forward = getForward();
             if (forward.x >= 0 && forward.x < World.size && forward.y >= 0 && forward.y < World.size) {
-                safeMap[forward.x][forward.y] = false;
+                safeMap[forward.x][forward.y] = State.UNSAFE;
             }
         } else if ((percepts & DEATH_WUMPUS) == DEATH_WUMPUS) {
             killWumpus();
         } else if ((percepts & DEATH_PIT) == DEATH_PIT) {
             Location forward = getForward();
             if (forward.x >= 0 && forward.x < World.size && forward.y >= 0 && forward.y < World.size) {
-                safeMap[forward.x][forward.y] = false;
+                safeMap[forward.x][forward.y] = State.UNSAFE;
             }
         } else {
             this.prevLocation = this.location;
@@ -137,13 +132,13 @@ public class ReactiveExplorer extends Agent {
             int trueDirection = (this.direction - direction + 4) % 4;
             switch (trueDirection) {
                 case NORTH:
-                    return safeMap[location.x][location.y + 1];
+                    return (safeMap[location.x][location.y + 1] == State.SAFE);
                 case SOUTH:
-                    return safeMap[location.x][location.y - 1];
+                    return safeMap[location.x][location.y - 1] == State.SAFE;
                 case EAST:
-                    return safeMap[location.x + 1][location.y];
+                    return safeMap[location.x + 1][location.y] == State.SAFE;
                 case WEST:
-                    return safeMap[location.x - 1][location.y];
+                    return safeMap[location.x - 1][location.y] == State.SAFE;
             }
             System.out.println("Invalid direction mapping, getSafe(): " + direction + "     " + trueDirection);
             return true;
@@ -156,16 +151,16 @@ public class ReactiveExplorer extends Agent {
 
         try {
             if (location.x < World.size - 1) {
-                safeMap[location.x + 1][location.y] = true;
+                safeMap[location.x + 1][location.y] = State.SAFE;
             }
             if (location.x > 0) {
-                safeMap[location.x - 1][location.y] = true;
+                safeMap[location.x - 1][location.y] = State.SAFE;
             }
             if (location.y < World.size - 1) {
-                safeMap[location.x][location.y + 1] = true;
+                safeMap[location.x][location.y + 1] = State.SAFE;
             }
             if (location.y > 0) {
-                safeMap[location.x][location.y - 1] = true;
+                safeMap[location.x][location.y - 1] = State.SAFE;
             }
         } catch (Exception e) {
             System.out.println("Location: " + location.x + ", " + location.y);
