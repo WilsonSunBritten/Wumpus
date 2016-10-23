@@ -21,14 +21,15 @@ public class Agent {
     }
 
     public Location getForward() {
-        if (direction == NORTH) {
-            return new Location(location.x, location.y + 1);
-        } else if (direction == EAST) {
-            return new Location(location.x + 1, location.y);
-        } else if (direction == SOUTH) {
-            return new Location(location.x, location.y - 1);
-        } else {
-            return new Location(location.x - 1, location.y);
+        switch (direction) {
+            case NORTH:
+                return new Location(location.x, location.y + 1);
+            case EAST:
+                return new Location(location.x + 1, location.y);
+            case SOUTH:
+                return new Location(location.x, location.y - 1);
+            default:
+                return new Location(location.x - 1, location.y);
         }
     }
 
