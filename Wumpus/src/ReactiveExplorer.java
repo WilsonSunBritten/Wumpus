@@ -9,6 +9,7 @@ public class ReactiveExplorer extends Agent {
     private static final int FORWARD = 0, LEFT = 1, BACK = 2, RIGHT = 3;
 
     public ReactiveExplorer(World world, int arrows, int x, int y, int direction) {
+        
         super(world, arrows, x, y, direction);
         prevLocation = location;
         percepts = world.getPercepts();
@@ -22,11 +23,13 @@ public class ReactiveExplorer extends Agent {
     }
 
     private void run() {
+        
         int i = 0;
         while (i < 500) {
             move();
             i++;
         }
+        world.action(QUIT);
     }
 
     private void move() {
@@ -65,8 +68,8 @@ public class ReactiveExplorer extends Agent {
                     turnRight();
                     percepts = world.action(MOVE);
             }
-        } else {
-            //if forward is safe, go forward
+        } else {    //if forward is safe, go forward
+            
             ArrayList<Integer> safeMoves = new ArrayList();
             if (getSafe(FORWARD)) {
                 safeMoves.add(FORWARD);
