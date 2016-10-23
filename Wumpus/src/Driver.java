@@ -14,14 +14,14 @@ public class Driver {
         //tester.testUnify();
         // tester.testInferenceEngine();
         makeGame();
-        World world = new World("PerceptBoard.txt");
-        world.startGame("LogicExplorer");
+//        World world = new World("PerceptBoard.txt");
+//        world.startGame("LogicExplorer");
     }
 
     public static void makeGame() throws IOException {
 
-        boolean newBoard = true;
-        boolean newStart = true;
+        boolean newBoard = false;
+        boolean newStart = false;
         WumpusGame game;
         if (newBoard) {
             BufferedReader dataIn = new BufferedReader(new InputStreamReader(System.in));
@@ -44,7 +44,7 @@ public class Driver {
             game = new WumpusGame("clean.txt");
         }
         World world = new World("PerceptBoard.txt");
-        world.startGame("LogicExplorer");
+        world.startGame("ReactiveExplorer");
         //Agent explorer = new ReactiveExplorer(world, world.getLocation(), world.direction,world.getPercepts(), world.arrowCount);
         //  World world = new World("PerceptBoard.txt");
         //world.startGame("LogicExplorer");

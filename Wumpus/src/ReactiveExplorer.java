@@ -31,10 +31,11 @@ public class ReactiveExplorer extends Agent {
 
     private void move() {
 
+        if ((percepts & GLITTER) == GLITTER) {
+            world.action(GRAB);
+        }
+
         if ((percepts & STENCH) != STENCH && (percepts & BREEZE) != BREEZE) {       //all adjacent spaces are safe
-            if((percepts & GLITTER) != GLITTER){
-                world.action(GRAB);
-            }
             updateSafe();
             //go in random direction
             int rand = random.nextInt(3);
@@ -49,7 +50,6 @@ public class ReactiveExplorer extends Agent {
                     turnLeft();
                     percepts = world.action(MOVE);
                     if ((percepts & BUMP) != BUMP) {
-                        System.out.println("Not Reseting");
                         return;
                     }
                     turnRight();
