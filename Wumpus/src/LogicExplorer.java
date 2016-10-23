@@ -161,7 +161,7 @@ public class LogicExplorer extends Agent {
             System.out.println("Explorer bumped after moving");
             moveHistory.remove(moveHistory.size() - 1);//why bump again?
             removeFromFrontier(getForward());
-            kb.tell(new Fact("Obsticle", getForward().x, false, getForward().y, false, false, null, null));
+            kb.tell(new Fact("Obstacle", getForward().x, false, getForward().y, false, false, null, null));
         } else if ((percepts & DEATH_PIT) == 0 && (percepts & DEATH_WUMPUS) == 0) {//you if you bump than the only inputted percept should've been bump
             if ((percepts & STENCH) != 0) {
                 kb.tell(new Fact("Stench", location.x, false, location.y, false, false, null, null));
@@ -326,7 +326,7 @@ public class LogicExplorer extends Agent {
             Location loc = frontier.get(i);
             if (kb.ask(new Fact("Wumpus", loc.x, false, loc.y, false, true, null, null))) {
                 if (kb.ask(new Fact("Pit", loc.x, false, loc.y, false, true, null, null))) {
-                    //hopefully no obsticle is in frontier as it should be removed when found...
+                    //hopefully no obstacle is in frontier as it should be removed when found...
                     safeSpace = new Location(loc.x, loc.y);
                     return true;
 
