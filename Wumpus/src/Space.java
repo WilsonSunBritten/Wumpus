@@ -17,6 +17,7 @@ public class Space {
     }
 
     public void toggleWumpus() {
+        
         if (hasWumpus == true) {
             hasWumpus = false;
             filled = false;
