@@ -28,15 +28,15 @@ public class Driver {
              int[] prob = new int[3];
              System.out.println("Size of board: ");
  
-             int size =  10;//Integer.parseInt(dataIn.readLine());
+             int size =  Integer.parseInt(dataIn.readLine());
              System.out.print("% chance of generating pit: ");
-             prob[0] = 5;// Integer.parseInt(dataIn.readLine());
+             prob[0] =  Integer.parseInt(dataIn.readLine());
              System.out.println();
              System.out.print("% chance of generating obstacle: ");
-             prob[1] = 5;//Integer.parseInt(dataIn.readLine());
+             prob[1] = Integer.parseInt(dataIn.readLine());
              System.out.println("");
              System.out.print("% chance of generating wumpus: ");
-             prob[2] = 5;//Integer.parseInt(dataIn.readLine());
+             prob[2] = Integer.parseInt(dataIn.readLine());
              System.out.println("");
              game = new WumpusGame(size, prob);
          }
