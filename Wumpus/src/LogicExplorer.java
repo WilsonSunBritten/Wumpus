@@ -192,6 +192,7 @@ public class LogicExplorer extends Agent {
     }
 
     private void decideNextAction() {
+        world.addMajorDecision();
 
         if ((percepts & GLITTER) != 0) {
             move(GRAB);

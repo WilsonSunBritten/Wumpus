@@ -13,7 +13,7 @@ public class Driver {
         //tester.testPathFinder();
         //tester.testUnify();
        // tester.testInferenceEngine();
-       //makeGame();
+       makeGame();
         World world = new World("PerceptBoard.txt");
         world.startGame("LogicExplorer");
     }

@@ -1,16 +1,3 @@
-15
-I 0 W 0 0 0 0 W 0 0 I H W H 0 
-0 0 0 0 0 0 0 H H W H I I 0 0 
-0 W I W 0 0 0 I 0 0 0 I I 0 0 
-0 I S 0 0 0 0 I 0 0 H 0 0 W 0 
-0 0 W H 0 W 0 0 W 0 G 0 0 0 0 
-I W 0 I I 0 I W H 0 0 0 0 0 0 
-0 0 0 0 0 I W 0 I 0 0 0 0 0 I 
-0 0 0 H W H H 0 0 0 0 0 0 0 H 
-0 0 H W 0 I 0 0 0 H 0 0 H 0 I 
-0 H 0 W I 0 I 0 0 H H 0 0 0 0 
-0 0 0 0 0 0 0 0 H 0 0 0 0 H 0 
-0 H H 0 0 I H H 0 I 0 I 0 I 0 
-0 0 0 0 W 0 0 0 I I 0 H 0 W 0 
-H 0 0 0 I W W 0 H I 0 H 0 0 0 
-0 H 0 W W 0 0 H 0 0 0 0 I H 0 
+2
+0 G 
+0 S 

@@ -9,10 +9,11 @@ public final class World {
     public static final int GRAB = 1, MOVE = 2, TURN_LEFT = 3, TURN_RIGHT = 4, SHOOT = 5, QUIT = 6;
     protected final byte BREEZE = 0b00000001, STENCH = 0b0000010, BUMP = 0b00000100, GLITTER = 0b00001000, DEATH_PIT = 0b00010000, DEATH_WUMPUS = 0b00100000, SCREAM = 0b01000000;
 
+    private int majorDecisions = 0;
     private int arrowCount, x, y, direction = 0, score = 0, numMoves = 0, pitDeaths = 0, wumpusDeaths = 0, killedWumpus = 0;
     public static int size;
     private byte[][] perceptMap;
-
+    private Agent explorer;
     public World(String fileName) {
         importMap(fileName);
         for (int i = 0; i < perceptMap.length; i++) {
@@ -28,7 +29,6 @@ public final class World {
     }
 
     public void startGame(String id) {
-        Agent explorer;
         switch (id) {
             case "LogicExplorer":
                 explorer = new LogicExplorer(this, arrowCount, x, y, direction);
@@ -74,9 +74,14 @@ public final class World {
     public byte getPercepts() {
         return perceptMap[x][y];
     }
-
+    
+    public void addMajorDecision(){
+        majorDecisions++;
+    }
+    
     public void printStats() {
         System.out.println("Number of Actions: " + numMoves);
+        System.out.println("Number of major decisions: " + majorDecisions);
         System.out.println("Final score: " + score);
         System.out.println("Wumpus Deaths: " + wumpusDeaths);
         System.out.println("Pit Deaths: " + pitDeaths);
