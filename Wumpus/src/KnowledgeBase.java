@@ -225,7 +225,7 @@ public class KnowledgeBase {
                     if (toRemoveFact.predicate.equals("Wumpus")) {
                         if (toRemoveFact.variables.get(0).value == fact.variables.get(0).value && toRemoveFact.variables.get(1).value == fact.variables.get(1).value) {
                             if (toRemoveFact.not == fact.not) {
-                                clauses.get(i).facts.remove(toRemoveFact);
+                                toRemoveFact.not = true;
                                 break;
                             }
                         }
