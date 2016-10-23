@@ -132,7 +132,9 @@ public class ReactiveExplorer extends Agent {
             killWumpus();
         } else if ((percepts & DEATH_PIT) == DEATH_PIT) {
             Location forward = getForward();
-            safeMap[forward.x][forward.y] = false;
+            if (forward.x >= 0 && forward.x < World.size && forward.y >= 0 && forward.y < World.size) {
+                safeMap[forward.x][forward.y] = false;
+            }
         }
     }
 
