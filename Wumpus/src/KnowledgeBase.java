@@ -172,12 +172,14 @@ public class KnowledgeBase {
         rules.add(new Clause(new Fact("Pit", World.size, false, 1, true, true, null, null)));
 
         //Wumpus(x,y)=>!Pit(x,y)
-        //!Wumpus(x,y) v !Pit(x,y)
+        //!Wumpus(x,y) v !Pit(x,y) v !Obstacle
         Clause notWumpusOrNotPit = new Clause();
         Fact notWumpus = new Fact("Wumpus", 0, true, 1, true, true, null, null);
         Fact notPit = new Fact("Pit", 0, true, 1, true, true, null, null);
+       // Fact notObstacle = new Fact("Obstacle",0,true,1,true,true,null,null);
         notWumpusOrNotPit.facts.add(notWumpus);
         notWumpusOrNotPit.facts.add(notPit);
+       // notWumpusOrNotPit.facts.add(notObstacle);
         rules.add(notWumpusOrNotPit);
     }
 

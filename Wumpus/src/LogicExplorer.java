@@ -364,7 +364,7 @@ public class LogicExplorer extends Agent {
 
                 }
             }
-            if (kb.ask(new Fact("Pit", loc.x, false, loc.y, false, false, null, null)) || kb.ask(new Fact("Obsticle", loc.x, false, loc.y, false, false, null, null))) {
+            if (kb.ask(new Fact("Pit", loc.x, false, loc.y, false, false, null, null)) || kb.ask(new Fact("Obstacle", loc.x, false, loc.y, false, false, null, null))) {
                 //there is specifically a wumpus, pit, or obsticle at this position, don't navigate to it.
                 frontier.remove(i);
             } //else if (arrowCount == 0 && kb.ask(new Fact("Wumpus", loc.x, false, loc.y, false, false, null, null))) {
