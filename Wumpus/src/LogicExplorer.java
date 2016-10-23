@@ -201,8 +201,8 @@ public class LogicExplorer extends Agent {
             if (kb.ask(new Fact("Wumpus", getForward().x, false, getForward().y, false, true, null, null))) {
                 if (kb.ask(new Fact("Pit", getForward().x, false, getForward().y, false, true, null, null))) {
                     if (inFrontier(getForward())) {
-                        move(MOVE);
                         removeFromFrontier(getForward());
+                        move(MOVE);
                         return;
                     }
 
