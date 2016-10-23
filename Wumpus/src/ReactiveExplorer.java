@@ -9,7 +9,7 @@ public class ReactiveExplorer extends Agent {
     private static final int FORWARD = 0, LEFT = 1, BACK = 2, RIGHT = 3;
 
     public ReactiveExplorer(World world, int arrows, int x, int y, int direction) {
-        
+
         super(world, arrows, x, y, direction);
         prevLocation = location;
         percepts = world.getPercepts();
@@ -23,7 +23,7 @@ public class ReactiveExplorer extends Agent {
     }
 
     private void run() {
-        
+
         int i = 0;
         while (i < 1000) {
             move();
@@ -37,7 +37,7 @@ public class ReactiveExplorer extends Agent {
         if ((percepts & GLITTER) == GLITTER) {
             world.action(GRAB);
         }
-        
+
         System.out.println("Making new move");
 
         if ((percepts & STENCH) != STENCH && (percepts & BREEZE) != BREEZE) {       //all adjacent spaces are safe
@@ -70,7 +70,7 @@ public class ReactiveExplorer extends Agent {
                     break;
             }
         } else {    //if forward is safe, go forward
-            
+
             ArrayList<Integer> safeMoves = new ArrayList();
             if (getSafe(FORWARD)) {
                 safeMoves.add(FORWARD);
@@ -119,16 +119,18 @@ public class ReactiveExplorer extends Agent {
             }
         }
     }
-    
+
     private void processPercepts() {
-        
+
         if ((percepts & BUMP) == BUMP) {
-            return;
-        }
-        if ((percepts & DEATH_WUMPUS) == DEATH_WUMPUS) {
+            
+            Location forward = getForward();
+            if (forward.x >= 0 && forward.x < World.size && forward.y >= 0 && forward.y < World.size) {
+                safeMap[forward.x][forward.y] = false;
+            }
+        } else if ((percepts & DEATH_WUMPUS) == DEATH_WUMPUS) {
             killWumpus();
-        }
-        if ((percepts & DEATH_PIT) == DEATH_PIT) {
+        } else if ((percepts & DEATH_PIT) == DEATH_PIT) {
             Location forward = getForward();
             safeMap[forward.x][forward.y] = false;
         }
