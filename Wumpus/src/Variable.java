@@ -2,7 +2,7 @@
 public class Variable {
 
     boolean isVariable;
-    int value;
+    int value = -1;//default to avoid mixups
     IFunction function;
     int variableId;
     int modifier;
