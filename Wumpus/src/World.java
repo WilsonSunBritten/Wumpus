@@ -112,10 +112,33 @@ public final class World {
         System.out.println("");
     }
 
+    public void printAction(int action){
+        switch(action){
+            case GRAB:
+                System.out.println("GRAB");
+                break;
+            case MOVE:
+                System.out.println("MOVE");
+                break;
+            case TURN_LEFT:
+                System.out.println("TURN_LEFT");
+                break;
+            case TURN_RIGHT:
+                System.out.println("TURN_RIGHT");
+                break;
+            case SHOOT:
+                System.out.println("SHOOT");
+                break;
+            case QUIT:
+                System.out.println("QUIT");
+        }
+    }
     public byte action(int action) {
 
         printWorld();
-        System.out.println("Action: " + action + "\n");
+        System.out.print("World Action: ");
+        printAction(action);
+        System.out.println("");
         numMoves++;
         switch (action) {
             case GRAB:
@@ -301,6 +324,8 @@ public final class World {
                 }
             case QUIT:
                 System.out.println("Agent elected to end game.");
+                printStats();
+                System.out.println("Gold was not found");
                 System.exit(0);
                 break;
             default:

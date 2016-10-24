@@ -28,7 +28,7 @@ public class Driver {
             int[] prob = new int[3];
             System.out.println("Size of board: ");
 
-            int size = 5;//Integer.parseInt(dataIn.readLine());
+            int size = 20;//Integer.parseInt(dataIn.readLine());
             System.out.print("% chance of generating pit: ");
             prob[0] = 5;// Integer.parseInt(dataIn.readLine());
             System.out.println();
