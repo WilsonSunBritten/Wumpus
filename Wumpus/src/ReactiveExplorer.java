@@ -121,8 +121,7 @@ public class ReactiveExplorer extends Agent {
                 safeMap[forward.x][forward.y] = State.UNSAFE;
             }
         } else {
-            this.prevLocation = this.location;
-            this.location = getForward();
+            goForward();
         }
     }
 
@@ -167,6 +166,12 @@ public class ReactiveExplorer extends Agent {
             throw e;
         }
 
+    }
+    
+    private void goForward() {
+        
+        this.location = getForward();
+        this.prevLocation = this.location;
     }
 
     private void killWumpus() {
