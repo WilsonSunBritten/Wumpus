@@ -20,7 +20,7 @@ public class ReactiveExplorer extends Agent {
     private void run() {
 
         int i = 0;
-        while (i < 1000) {
+        while (i < 10000) {
             move();
             i++;
         }
@@ -167,11 +167,15 @@ public class ReactiveExplorer extends Agent {
         }
 
     }
-    
+
     private void goForward() {
-        
-        this.location = getForward();
-        this.prevLocation = this.location;
+
+        Location forward = getForward();
+        if (forward.x >= 0 && forward.x < World.size && forward.y >= 0 && forward.y < World.size) {
+            this.location = getForward();
+            this.prevLocation = this.location;
+        }
+
     }
 
     private void killWumpus() {
