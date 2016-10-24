@@ -39,23 +39,22 @@ public class ReactiveExplorer extends Agent {
             updateSafe();
             //go in random direction
             int rand = random.nextInt(3);
-            System.out.println("Safe space, action is : " + rand);
             switch (rand) {
-                case 0:     //try to go forward
-                    percepts = world.action(MOVE);
-                    processPercepts();
+                case FORWARD:     //try to go forward
+                    System.out.println("Safe space, action is : " + "Go forward");
+                    doAction(FORWARD, true);
                     break;
-                case 1:     //try to go left
-                    turnLeft();
-                    percepts = world.action(MOVE);
-                    processPercepts();
+                case LEFT:     //try to go left
+                    System.out.println("Safe space, action is : " + "Go left");
+                    doAction(LEFT, true);
                     break;
                 case 2:     //try go right
-                    turnRight();
-                    percepts = world.action(MOVE);
-                    processPercepts();
+                    
+                    System.out.println("Safe space, action is : " + "Go right");
+                    doAction(RIGHT, true);
                     break;
                 default:    //turn around
+                    System.out.println("Safe space, action is : " + "Move backwards");
                     turnRight();
                     turnRight();
                     percepts = world.action(MOVE);
@@ -76,36 +75,38 @@ public class ReactiveExplorer extends Agent {
             }
             if (safeMoves.size() > 0) {
                 int rand = random.nextInt(safeMoves.size());
+                doAction(safeMoves.get(rand), true);
                 percepts = world.action(safeMoves.get(rand) + 1);
             } else {
                 int rand = random.nextInt(3);
-                System.out.println("Unsafe space, action is : " + rand);
-                switch (rand) {
-                    case 0:
-                        percepts = world.action(MOVE);
-                        processPercepts();
-                        break;
-                    case 1:
-                        turnLeft();
-                        percepts = world.action(MOVE);
-                        processPercepts();
-                        break;
-                    case 2:
-                        turnRight();
-                        percepts = world.action(MOVE);
-                        processPercepts();
-                        break;
-                    default:
-                        turnRight();
-                        turnRight();
-                        percepts = world.action(MOVE);
-                        processPercepts();
-                        break;
-                }
+                System.out.println("No safe action, action is : " + rand);
+                doAction(rand, true);
             }
         }
     }
 
+    public void doAction(int rand, boolean processPercepts){
+        switch (rand) {
+                    case FORWARD:
+                        percepts = world.action(MOVE);
+                        break;
+                    case LEFT:
+                        turnLeft();
+                        percepts = world.action(MOVE);
+                        break;
+                    case RIGHT:
+                        turnRight();
+                        percepts = world.action(MOVE);
+                        break;
+                    case BACK:
+                        turnRight();
+                        turnRight();
+                        percepts = world.action(MOVE);
+                        break;
+                }
+        if(processPercepts)
+            processPercepts();
+    }
     private void processPercepts() {
 
         if ((percepts & BUMP) == BUMP) {
