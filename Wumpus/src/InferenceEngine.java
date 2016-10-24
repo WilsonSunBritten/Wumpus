@@ -75,13 +75,11 @@ public class InferenceEngine {
                     break;
                 }
             }
-            if (keepGoing)//if we didn't do any changes, keepGoing will be true, if we hit here, then we exhausted every clause comparison with no results, terminate
-            {
+            if (keepGoing) {
                 return false;
             }
         }
         return false;
-        //Step 3: If all facts become empty, return true, else if all facts are exhausted, return false
     }
 
     public void infer(Fact factStart) {
@@ -133,18 +131,10 @@ public class InferenceEngine {
                 }
             }
         }
-        //unify the two rules
-        //apply the unification substitution on a copy of the kb.rules fact thing
-        //remove the matching fact from that rule
-        //add the rule copy with the substitution to kb.clauses
     }
 
     public void infer(Clause clauseToCheck) {
-        //look in kb.rules, only use rules with a single fact
-        //for each such fact, go through the clause and look for a matching predicate
-        //if negations are opposite, apply unification, if unification exists..
-        //with the substitution, apply to copies of both
-        //strip fact from input clause 
+
         ArrayList<Clause> tempClone = new ArrayList<>(kb.rules);
         tempClone.addAll(kb.getClauses());
         ArrayList<Clause> kbClausesClone = new ArrayList<>();
@@ -177,10 +167,8 @@ public class InferenceEngine {
                         }
                         if (Unifier.equalWithSubs(fact, ruleFact, substitutions)) {
                             clause.facts.remove(fact);
-                            //System.out.println("Inferred:");
-                            //Clause.printClause(clause);
                             kb.addToClauses(clause);
-                            return;//the smaller clause will be inferred against again, no need to keep trying rules immediately.
+                            return;
                         }
                     }
                 }

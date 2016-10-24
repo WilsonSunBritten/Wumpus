@@ -3,9 +3,9 @@ import java.util.ArrayList;
 
 public class KnowledgeBase {
 
-    InferenceEngine inferenceEngine = new InferenceEngine(this);
-    private ArrayList<Clause> clauses = new ArrayList<>();
-    ArrayList<Clause> rules = new ArrayList<>();
+    protected final InferenceEngine inferenceEngine = new InferenceEngine(this);
+    protected final ArrayList<Clause> clauses = new ArrayList<>();
+    protected final ArrayList<Clause> rules = new ArrayList<>();
 
     public ArrayList<Clause> getClauses() {
         return clauses;
@@ -48,12 +48,7 @@ public class KnowledgeBase {
     }
 
     public void initializeRules() {
-        //Fact(String predicate, int var1Val, boolean var1Var, int var2Val, boolean var2Var, boolean not, IFunction var1Function, IFunction var2Function)
-        //Special predicate: Evaluate
 
-        //Stench(x,y)<=>(Wumpus(x-1,y) v Wumpus(x+1,y) v Wumpus(x,y-1) v Wumpus(x,y+1)
-        //Stench(x,y)=>(Wumpus(x-1,y) v Wumpus(x+1,y) v Wumpus(x,y-1) v Wumpus(x,y+1)
-        //!Stench(x,y) v Wumpus(x-1,y) v Wumpus(x+1,y) v Wumpus(x,y-1) v Wumpus(x,y+1)
         Clause stench = new Clause();
         Fact stenchXY = new Fact("Stench", 0, true, 1, true, true, null, null);
         Fact wumpusxminy = new Fact("Wumpus", 0, true, 1, true, false, new MinusFunction(), null);
@@ -66,10 +61,6 @@ public class KnowledgeBase {
         stench.facts.add(wumpusxymin);
         stench.facts.add(wumpusxyplus);
         rules.add(stench);
-        //(Wumpus(x-1,y) v Wumpus(x+1,y) v Wumpus(x,y-1) v Wumpus(x,y+1)) =>Stench(x,y)
-        //!(Wumpus(x-1,y) v Wumpus(x+1,y) v Wumpus(x,y-1) v Wumpus(x,y+1)) v Stench(x,y)
-        //(!Wumpus(x-1,y) ^ !Wumpus(x+1,y) ^ !Wumpus(x,y-1) ^ !Wumpus(x,y+1)) v Stench(x,y)
-        //(Stench(x,y) v !Wumpus(x-1,y)), (Stench(x,y) v !Wumpus(x+1,y)), (Stench(x,y) v !Wumpus(x,y-1)), (Stench(x,y) v !Wumpus(x,y+1)
         Clause stench1 = new Clause();
         Fact stenchXY1 = new Fact(stenchXY);
         stenchXY1.not = false;
@@ -106,8 +97,6 @@ public class KnowledgeBase {
         stench4.facts.add(wumpusxyplus1);
         rules.add(stench4);
 
-        //Breeze(x,y)<=>(Pit(x-1,y) v Pit(x+1,y) v Pit(x,y-1) v Pit(x, y+1)
-        //!Breeze(x,y) v Pit(x-1,y) v Pit(x+1,y) v Pit(x,y-1) v Pit(x, y+1)
         Clause breeze = new Clause();
         Fact breezeXY = new Fact("Breeze", 0, true, 1, true, true, null, null);
         Fact pitxminy = new Fact("Pit", 0, true, 1, true, false, new MinusFunction(), null);
@@ -159,40 +148,32 @@ public class KnowledgeBase {
         breeze4.facts.add(pitxyplus1);
         rules.add(breeze4);
 
-        //!Wumpus(-1,y) ^ !Wumpus(x,-1) ^ !Wumpus(x,World.size)^ !Wumpus(World.size,y)
-        //!Wumpus(-1,y), !Wumpus(x,-1), !Wumpus(x,World.size), !Wumpus(World.size,y)
         rules.add(new Clause(new Fact("Wumpus", -1, false, 1, true, true, null, null)));
         rules.add(new Clause(new Fact("Wumpus", 0, true, -1, false, true, null, null)));
         rules.add(new Clause(new Fact("Wumpus", 0, true, World.size, false, true, null, null)));
         rules.add(new Clause(new Fact("Wumpus", World.size, false, 1, true, true, null, null)));
-        //!Pit(-1,y), !Pit(x,-1), !Pit(x,World.size), !Wumpus(World.size,y)
         rules.add(new Clause(new Fact("Pit", -1, false, 1, true, true, null, null)));
         rules.add(new Clause(new Fact("Pit", 0, true, -1, false, true, null, null)));
         rules.add(new Clause(new Fact("Pit", 0, true, World.size, false, true, null, null)));
         rules.add(new Clause(new Fact("Pit", World.size, false, 1, true, true, null, null)));
 
-        //Wumpus(x,y)=>!Pit(x,y)
-        //!Wumpus(x,y) v !Pit(x,y)
         Clause notWumpusOrNotPit = new Clause();
         Fact notWumpus = new Fact("Wumpus", 0, true, 1, true, true, null, null);
         Fact notPit = new Fact("Pit", 0, true, 1, true, true, null, null);
-        // Fact notObstacle = new Fact("Obstacle",0,true,1,true,true,null,null);
         notWumpusOrNotPit.facts.add(notWumpus);
         notWumpusOrNotPit.facts.add(notPit);
         rules.add(notWumpusOrNotPit);
-       // !Wumpus(x,y) v !Obstacle(x,y)
         Clause notWumpusOrNotObstacle = new Clause();
-        Fact notObstacle = new Fact("Obstacle",0,true,1,true,true,null,null);
+        Fact notObstacle = new Fact("Obstacle", 0, true, 1, true, true, null, null);
         notWumpusOrNotObstacle.facts.add(new Fact(notWumpus));
         notWumpusOrNotObstacle.facts.add(notObstacle);
-        
+
         rules.add(notWumpusOrNotObstacle);
-        //!Pit v !Obstacle
         Clause notPitOrNotObstacle = new Clause();
         notPitOrNotObstacle.facts.add(new Fact(notObstacle));
         notPitOrNotObstacle.facts.add(new Fact(notPit));
         rules.add(notPitOrNotObstacle);
-        
+
     }
 
     public boolean ask(Fact fact) {

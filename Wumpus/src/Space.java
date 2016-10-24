@@ -1,12 +1,7 @@
 
 public class Space {
 
-    private boolean hasWumpus = false;
-    private boolean hasHole = false;
-    private boolean hasObstacle = false;
-    private boolean hasGold = false;
-    private boolean start;
-    private boolean filled = false;
+    private boolean hasWumpus = false, hasHole = false, hasObstacle = false, hasGold = false, start, filled = false;
 
     public Space() {
 
@@ -17,7 +12,7 @@ public class Space {
     }
 
     public void toggleWumpus() {
-        
+
         if (hasWumpus == true) {
             hasWumpus = false;
             filled = false;

@@ -51,4 +51,20 @@ public class Rule {
         System.out.println(")");
 
     }
+
+    class Quantifier {
+
+        private int variableId;
+        private boolean isExistential;
+
+        public void printQuantifier() {
+            if (isExistential) {
+                System.out.print("EXIST(");
+            } else {
+                System.out.print("FORALL(");
+            }
+            System.out.print((char) (variableId + 97) + ") ");
+        }
+    }
+
 }

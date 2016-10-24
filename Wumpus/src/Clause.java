@@ -2,7 +2,7 @@
 import java.util.ArrayList;
 
 /*
-    A clause contains a list of predicates
+ A clause contains a list of predicates
  */
 public class Clause {
 
@@ -18,15 +18,16 @@ public class Clause {
     }
 
     public Clause(Fact fact) {
-        
+
         facts.add(fact);
     }
-    
-    public static void printClause(Clause clause){
-        for(Fact fact : clause.facts){
+
+    public static void printClause(Clause clause) {
+        for (Fact fact : clause.facts) {
             fact.printFact();
-            if(fact != clause.facts.get(clause.facts.size()-1))
+            if (fact != clause.facts.get(clause.facts.size() - 1)) {
                 System.out.print(" v ");
+            }
         }
         System.out.println("");
     }

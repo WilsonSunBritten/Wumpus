@@ -3,13 +3,13 @@ public class MinusFunction implements IFunction {
 
     @Override
     public int process(int value) {
-        
+
         return value - 1;
     }
 
     @Override
     public Variable processVariable(Variable variable) {
-        
+
         Variable processedVariable = new Variable();
         processedVariable.function = variable.function;
         processedVariable.isVariable = variable.isVariable;

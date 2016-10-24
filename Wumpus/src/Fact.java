@@ -1,6 +1,10 @@
 
 import java.util.ArrayList;
 
+/*
+    A Fact contains a set of variables and a predicate string, extends object variable
+*/
+
 public class Fact extends Variable {
 
     protected ArrayList<Variable> variables = new ArrayList<>();

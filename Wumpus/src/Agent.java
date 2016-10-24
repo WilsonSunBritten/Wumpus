@@ -1,5 +1,9 @@
 
 import java.util.Random;
+/*
+ Agent super class, holds functions variables and constants relavent to both
+ logical and reactive exploreres
+ */
 
 public class Agent {
 
@@ -51,14 +55,6 @@ public class Agent {
         return (direction + 3) % 4;
     }
 
-    public enum State { //im not sure were going to need this
-
-        SAFE,
-        UNSAFE,
-        EXPLORED,
-        UNEXPLORED;
-    }
-
     public void updateLocation() {
         switch (direction) {
             case NORTH:
@@ -83,6 +79,14 @@ public class Agent {
         }
     }
 
+    public enum State {
+
+        SAFE,
+        UNSAFE,
+        EXPLORED,
+        UNEXPLORED;
+    }
+
     protected class Location {
 
         int x;
@@ -92,7 +96,7 @@ public class Agent {
             this.x = x;
             this.y = y;
         }
-        
+
         public boolean equals(Location location) {
             return (this.x == location.x && this.y == location.y);
         }

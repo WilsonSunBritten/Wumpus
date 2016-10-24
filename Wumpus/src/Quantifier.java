@@ -3,7 +3,7 @@ public class Quantifier {
 
     int variableId;
     char variableRep;
-    boolean isExistential; //if false, assumed universal...
+    boolean isExistential;
     boolean not;
 
     public void printQuantifier() {

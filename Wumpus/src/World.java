@@ -14,6 +14,7 @@ public final class World {
     public static int size;
     private byte[][] perceptMap;
     private Agent explorer;
+
     public World(String fileName) {
         importMap(fileName);
         for (byte[] cell : perceptMap) {
@@ -69,11 +70,11 @@ public final class World {
     public byte getPercepts() {
         return perceptMap[x][y];
     }
-    
-    public void addMajorDecision(){
+
+    public void addMajorDecision() {
         majorDecisions++;
     }
-    
+
     public void printStats() {
 
         System.out.println("Number of Actions: " + numMoves);
@@ -112,8 +113,8 @@ public final class World {
         System.out.println("");
     }
 
-    public void printAction(int action){
-        switch(action){
+    public void printAction(int action) {
+        switch (action) {
             case GRAB:
                 System.out.println("GRAB");
                 break;
@@ -133,6 +134,7 @@ public final class World {
                 System.out.println("QUIT");
         }
     }
+
     public byte action(int action) {
 
         printWorld();

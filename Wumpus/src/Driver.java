@@ -44,7 +44,7 @@ public class Driver {
             game = new WumpusGame("clean.txt");
         }
         World world = new World("PerceptBoard.txt");
-        world.startGame("ReactiveExplorer");
+        world.startGame("LogicExplorer");
         //Agent explorer = new ReactiveExplorer(world, world.getLocation(), world.direction,world.getPercepts(), world.arrowCount);
         //  World world = new World("PerceptBoard.txt");
         //world.startGame("LogicExplorer");

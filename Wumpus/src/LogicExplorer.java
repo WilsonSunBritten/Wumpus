@@ -4,11 +4,11 @@ import java.util.ArrayList;
 public class LogicExplorer extends Agent {
 
     private final KnowledgeBase kb;
-    private ArrayList<Location> frontier = new ArrayList<>();
-    private boolean[][] searchedPositions;
+    private final ArrayList<Location> frontier = new ArrayList<>();
+    private final boolean[][] searchedPositions;
     private Location safeSpace;
     private Location wumpusSpace;
-    private ArrayList<Integer> moveHistory = new ArrayList<>();
+    private final ArrayList<Integer> moveHistory = new ArrayList<>();
     boolean notFirstMove = false;
 
     public LogicExplorer(World world, int startingArrows, int startingX, int startingY, int direction) {
@@ -32,21 +32,7 @@ public class LogicExplorer extends Agent {
             decideNextAction();
         }
     }
-
-//    public void initializeFrontier() {
-//        if (location.x > 0) {
-//            frontier.add(new Location(location.x - 1, location.y));
-//        }
-//        if (location.x < World.size - 1) {
-//            frontier.add(new Location(location.x + 1, location.y));
-//        }
-//        if (location.y > 0) {
-//            frontier.add(new Location(location.x, location.y - 1));
-//        }
-//        if (location.y < World.size - 1) {
-//            frontier.add(new Location(location.x, location.y + 1));
-//        }
-//    }
+    
     @Override
     public void updateLocation() {
 
@@ -118,8 +104,9 @@ public class LogicExplorer extends Agent {
                 System.out.println("Explorer Action: shooting");
                 arrowCount--;
                 percepts = (byte) world.action(SHOOT);
-                if((percepts & SCREAM) != 0)
+                if ((percepts & SCREAM) != 0) {
                     processPercepts();
+                }
                 break;
             case QUIT:
                 System.out.println("no possible solution");
@@ -232,18 +219,16 @@ public class LogicExplorer extends Agent {
             Location goalLoc = frontier.get(frontier.size() - 1);
             goTo(goalLoc);
             turnToSpace(goalLoc);
-            //frontier.remove(frontier.size() - 1);
             move(MOVE);
-            //if(!kb.ask(new Fact("Wumpus",getForward().x,false,getForward().y,false,false,null,null)))
             removeFromFrontier(goalLoc);
             if (kb.ask(new Fact("Wumpus", getForward().x, false, getForward().y, false, false, null, null))) {
-                frontier.add(getForward());//since there is definitely a wumpus forward, put in frontier so we can kill it later maybe.
-            }//we add straight to frontier even if it was searched in this case, that's why it's not addToFrontier
+                frontier.add(getForward());
+            }
         }
     }
 
     public void turnToSpace(Location loc) {
-        
+
         if (loc.x < location.x) {
             switch (direction) {
                 case WEST:
@@ -338,9 +323,7 @@ public class LogicExplorer extends Agent {
             if (kb.ask(new Fact("Pit", loc.x, false, loc.y, false, false, null, null)) || kb.ask(new Fact("Obstacle", loc.x, false, loc.y, false, false, null, null))) {
                 //there is specifically a wumpus, pit, or obsticle at this position, don't navigate to it.
                 frontier.remove(i);
-            } //else if (arrowCount == 0 && kb.ask(new Fact("Wumpus", loc.x, false, loc.y, false, false, null, null))) {
-            //frontier.remove(i);
-            //}  We want wumpus so we can kill it...
+            }
         }
         return false;
     }
@@ -351,7 +334,6 @@ public class LogicExplorer extends Agent {
             System.out.println("Traversing to " + target.x + ", " + target.y);
             ArrayList<Location> path = new ArrayList<>();
             path = searchForPath(location.x, location.y, target.x, target.y, path);
-           // printPath(path);
             traversePath(path);
             if (checkAdjacent(target.x, target.y, location.x, location.y)) {
                 System.out.println("Done traversing to " + target.x + ", " + target.y);
@@ -374,7 +356,6 @@ public class LogicExplorer extends Agent {
         if (!this.location.equals(curLoc)) {
             path.add(curLoc);
         }
-       // printPath(path);
         traversed[curX][curY] = true;
         boolean done = false;
         if (checkAdjacent(curX, curY, goalX, goalY)) {
@@ -396,14 +377,13 @@ public class LogicExplorer extends Agent {
             if (path.size() > 0) {
                 path.remove(path.size() - 1);
             }
-         //   printPath(path);
         }
-        //traversed[curX][curY] = false;
         return done;
     }
 
     private void printPath(ArrayList<Location> path) {
         if (!path.isEmpty()) {
+            
             System.out.print("Path: ");
             for (Location l : path) {
                 System.out.print("[" + l.x + ", " + l.y + "] ");

@@ -1,11 +1,9 @@
 
 public class Variable {
 
-    boolean isVariable;
-    int value = -1;//default to avoid mixups
-    IFunction function;
-    int variableId;
-    int modifier;
+    protected boolean isVariable;
+    protected IFunction function;
+    protected int variableId, modifier, value = -1;
 
     public Variable(Variable var) {
 
